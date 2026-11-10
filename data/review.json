@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-11-09T23:55:48.381629+00:00",
+  "overall_status": "warning",
+  "counts": {
+    "pass": 13,
+    "warning": 7,
+    "fail": 0,
+    "not_evaluated": 1
+  },
+  "checks": [
+    {
+      "id": "model_registry",
+      "status": "pass"
+    },
+    {
+      "id": "common_cohort",
+      "status": "pass"
+    },
+    {
+      "id": "metric_source_agreement",
+      "status": "pass"
+    },
+    {
+      "id": "selection_protocol",
+      "status": "pass"
+    },
+    {
+      "id": "deployment_protocol",
+      "status": "pass"
+    },
+    {
+      "id": "no_external_reselection",
+      "status": "pass"
+    },
+    {
+      "id": "external_reuse",
+      "status": "warning"
+    },
+    {
+      "id": "foundation_map_scope",
+      "status": "pass"
+    },
+    {
+      "id": "cohort_comparison",
+      "status": "pass"
+    },
+    {
+      "id": "score_interpretation",
+      "status": "pass"
+    },
+    {
+      "id": "spatial_support",
+      "status": "pass"
+    },
+    {
+      "id": "catalog_provenance",
+      "status": "pass"
+    },
+    {
+      "id": "raster_presence",
+      "status": "pass"
+    },
+    {
+      "id": "archived_engineering_audit",
+      "status": "pass"
+    },
+    {
+      "id": "geographic_extrapolation",
+      "status": "warning"
+    },
+    {
+      "id": "provider_deduplication",
+      "status": "warning"
+    },
+    {
+      "id": "gbif_download_doi",
+      "status": "warning"
+    },
+    {
+      "id": "pretraining_overlap",
+      "status": "warning"
+    },
+    {
+      "id": "literature_coverage",
+      "status": "warning"
+    },
+    {
+      "id": "interpretation_semantics",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "croma_weight_license",
+      "status": "warning"
+    }
+  ]
+}

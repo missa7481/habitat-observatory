@@ -1,0 +1,21 @@
+{
+  "published_snapshot_at": "2026-11-10T00:28:19.841293+00:00",
+  "research_release_at": "2026-11-05T20:33:07.804974+00:00",
+  "reference_year": 2024,
+  "mode": "Public read-only research snapshot",
+  "included": [
+    "Aggregate benchmark metrics",
+    "Model and feature descriptions",
+    "Quantized global preview rasters",
+    "Scientific review snapshot"
+  ],
+  "excluded": [
+    "Raw occurrence and surveillance records",
+    "Institutional papers and local reports",
+    "Credentials and account configuration",
+    "Training and administration services",
+    "Full-resolution GeoTIFF products"
+  ],
+  "update_policy": "The public snapshot changes only after a reviewed release; local daily monitoring does not automatically publish data.",
+  "interpretation": "Retrospective relative habitat suitability, not calibrated presence probability, abundance, disease risk or a future forecast."
+}
