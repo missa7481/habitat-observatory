@@ -7,11 +7,11 @@ Intended website: https://missa7481.github.io/habitat-observatory/
 ## Research scope
 
 - Target of the global maps: *Aedes albopictus*, using 2024 environmental conditions.
-- 12 released model maps, 6 quality layers and 11 aggregate experiment collections.
+- 12 released model maps, 6 quality layers and 15 aggregate experiment collections.
 - Classical predictors and Earth-observation foundation representations, with their individual coverage and validation limits.
 - Model inputs, source attributions, metric definitions and a dated scientific review.
 
-The maps show retrospective relative habitat suitability. They are not calibrated probabilities of presence, mosquito abundance, disease risk or a future forecast. The NEON diagnostic has previously been examined; it is not a fresh blind test. Results do not establish universal superiority of foundation models.
+The maps show retrospective relative habitat suitability. They are not calibrated probabilities of presence, mosquito abundance, disease risk or a future forecast. The 2025 NEON diagnostic has previously been examined. Added 2026 provisional year-to-date temporal validation uses frozen 2024 predictors, mostly at revisited locations; it does not update model selection or maps. Results do not establish universal superiority of foundation models.
 
 ## Using the website
 
