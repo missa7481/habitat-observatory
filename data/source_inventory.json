@@ -1,0 +1,96 @@
+{
+  "species": "Aedes albopictus",
+  "reference_year": 2024,
+  "coverage_cell_degrees": 5,
+  "sources": [
+    {
+      "id": "training_sites",
+      "name": "Frozen development cohort",
+      "role": "Primary 2024 presence-background training and spatial development",
+      "locations": 1601,
+      "presence": 739,
+      "target_group_background": 862,
+      "country_count": 67,
+      "map_layer": "training_sites",
+      "source": "https://www.gbif.org/",
+      "limitation": "Target-group background locations are not confirmed absences; records reflect uneven observer effort."
+    },
+    {
+      "id": "mosquito_alert_candidates",
+      "name": "Mosquito Alert 2024 candidate subset",
+      "role": "Exploratory presence-only candidate; not used for training",
+      "locations": 600,
+      "country_count": 21,
+      "high_confidence_release_records": 4061,
+      "new_ids_vs_older_archive": 263,
+      "release_years": [
+        {
+          "year": 2024,
+          "high_confidence_records": 4061,
+          "unseen_older_archive": 263
+        },
+        {
+          "year": 2025,
+          "high_confidence_records": 3630,
+          "unseen_older_archive": 3630
+        },
+        {
+          "year": 2026,
+          "high_confidence_records": 7,
+          "unseen_older_archive": 7
+        }
+      ],
+      "map_layer": "mosquito_alert_candidates",
+      "source": "https://doi.org/10.5281/zenodo.18751762",
+      "limitation": "The selected 2024 subset lacks numeric location uncertainty and requires cross-provider deduplication; not independent validation."
+    },
+    {
+      "id": "globe_habitat_observations",
+      "name": "GLOBE Observer mosquito-habitat reports",
+      "role": "Auxiliary habitat observations; not species-presence labels",
+      "observations": 12316,
+      "coordinate_valid_observations": 12306,
+      "country_count": 74,
+      "species_claims": 48,
+      "expert_verified_species_claims": 0,
+      "map_layer": "globe_habitat_observations",
+      "source": "https://observer.globe.gov/get-data",
+      "limitation": "Habitat observations do not establish Aedes albopictus presence; species claims in this archive are not expert-verified."
+    },
+    {
+      "id": "neon_validation_sites",
+      "name": "NEON 2026 external survey diagnostic",
+      "role": "Temporal survey diagnostic; not used for training or model selection",
+      "locations": 373,
+      "detections": 24,
+      "map_layer": "neon_validation_sites",
+      "source": "https://data.neonscience.org/data-products/DP1.10043.001",
+      "limitation": "United States surveillance with method- and year-specific labels; previously examined and not a blind global validation."
+    },
+    {
+      "id": "gbif_2024_screen",
+      "name": "GBIF 2024 occurrence screen",
+      "role": "Source audit; records overlap the existing archive",
+      "records": 1278,
+      "coordinate_precision_le_500m": 720,
+      "unseen_local_precision_screen_pass": 0,
+      "map_layer": null,
+      "source": "https://www.gbif.org/",
+      "limitation": "The precision-screened 2024 records were already present in the local archive; do not count them as new independent sites."
+    },
+    {
+      "id": "gbif_2026_reserved",
+      "name": "GBIF 2026 occurrence screen",
+      "role": "Reserved presence-only candidate; not used for training",
+      "records": 1646,
+      "coordinate_precision_le_500m": 1014,
+      "map_layer": null,
+      "source": "https://www.gbif.org/",
+      "limitation": "No DOI-frozen download snapshot; presence-only records are not surveyed absences or independent validation."
+    }
+  ],
+  "abundance": {
+    "status": "not mapped",
+    "reason": "Available trap/count sources differ in effort, season, life stage, and spatial support; no harmonized globally dense target is available."
+  }
+}

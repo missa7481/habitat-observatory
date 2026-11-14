@@ -3,6 +3,7 @@
 Public, read-only research explorer for global mosquito habitat suitability.
 
 Intended website: https://missa7481.github.io/habitat-observatory/
+Research foundation page: https://missa7481.github.io/habitat-observatory/research.html
 
 ## Research scope
 
@@ -15,11 +16,11 @@ The maps show retrospective relative habitat suitability. They are not calibrate
 
 ## Using the website
 
-Choose an input group and learner, then switch layers or compare two models. The Models, Experiments, Data, Review and Methodology pages explain the available results. Map downloads contain quantized raster preview data, not full-resolution GeoTIFF products. Aggregate result tables can be downloaded from Experiments.
+Choose an input group and learner, then switch layers or compare two models. The Models, Experiments, Data, Review and Methodology pages explain the available results. The Research Foundation page adds an interactive 5-degree aggregate coverage map, candidate-source roles, a same-fold shallow MLP comparison and annotated feature-learning references. Map downloads contain quantized raster preview data, not full-resolution GeoTIFF products. Aggregate result tables can be downloaded from Experiments.
 
 ## Publication and updates
 
-This repository contains only the reviewed public presentation. No raw occurrence or surveillance records, credentials, local reports or training services are included. The website is a frozen snapshot; local daily source checks do not automatically publish updates.
+This repository contains only the reviewed public presentation. No raw occurrence or surveillance records, precise site coordinates, per-site predictions, credentials, local reports or training services are included. The new coverage layers use 5-degree polygon aggregates; the MLP file contains only fold-level summary metrics. The website is a frozen snapshot; local daily source checks do not automatically publish updates.
 
 Deploy using GitHub Pages, branch `main`, folder `/ (root)`. No build or secrets are required. Paths are configured for `/habitat-observatory/`; changes to the repository name require updating those paths.
 

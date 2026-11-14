@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research Foundation | Habitat Observatory</title>
+  <meta name="description" content="Global Aedes albopictus habitat mapping: source coverage, representation learning, spatial validation and limitations.">
+  <link rel="stylesheet" href="research.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Habitat <span>Observatory</span></a>
+    <nav aria-label="Research navigation">
+      <a href="index.html#explore">Global maps</a>
+      <a href="index.html#data">Data catalog</a>
+      <a href="index.html#methods">Methodology</a>
+      <a href="research.html" aria-current="page">Research foundation</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="kicker">RESEARCH FOUNDATION · *AEDES ALBOPICTUS*</span>
+      <h1>Map the evidence before mapping the habitat.</h1>
+      <p class="lede">A reproducible, spatially evaluated study of environmental predictors, satellite embeddings, broader observation coverage and lightweight nonlinear fusion.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="index.html#explore">Open the global habitat explorer</a>
+        <a class="button" href="data/source_inventory.json">Download source inventory</a>
+      </div>
+      <p class="caution"><strong>Interpretation:</strong> suitability ranks are not calibrated presence probabilities, mosquito abundance, or disease risk. Background records are not confirmed absences.</p>
+    </section>
+
+    <section class="stat-grid" id="source-stats" aria-label="Research dataset summary">
+      <p class="loading">Loading reviewed research snapshot…</p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">WHERE THE DATA ARE</span>
+          <h2>Observation coverage by source</h2>
+        </div>
+        <label class="select-label" for="coverage-source">Map source
+          <select id="coverage-source" disabled></select>
+        </label>
+      </div>
+      <div class="coverage-layout">
+        <div class="map-card">
+          <div class="map-topline">
+            <span id="coverage-title">Loading coverage…</span>
+            <span>5° × 5° aggregate cells</span>
+          </div>
+          <svg id="coverage-map" viewBox="0 0 720 360" role="img" aria-label="Aggregated global observation coverage map">
+            <rect class="map-ocean" x="0" y="0" width="720" height="360"></rect>
+            <g id="map-grid"></g>
+            <g id="map-cells"></g>
+          </svg>
+          <div class="map-axis"><span>180°W</span><span>0°</span><span>180°E</span></div>
+          <div class="map-legend"><span>Fewer records</span><i></i><span>More records</span></div>
+          <p class="map-note">Cells summarize records, not exact sites. This coverage view is not a land mask or a prediction layer. Select a colored cell for its source-specific counts.</p>
+        </div>
+        <aside class="coverage-detail" aria-live="polite">
+          <span class="kicker">SELECTED SOURCE</span>
+          <h3 id="coverage-source-name">Loading…</h3>
+          <p id="coverage-source-role"></p>
+          <div id="coverage-cell-detail" class="cell-detail">Coverage counts will appear here.</div>
+          <a id="coverage-source-link" target="_blank" rel="noopener">Official source ↗</a>
+        </aside>
+      </div>
+      <div id="source-cards" class="source-grid" aria-live="polite"></div>
+      <p class="download-row">
+        <a href="data/source_coverage_5deg.geojson">Coverage GeoJSON</a>
+        <a href="data/source_inventory.json">Source inventory JSON</a>
+        <a href="data/fusion_mlp_summary.json">Model comparison JSON</a>
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">REPRESENTATION LEARNING</span>
+          <h2>Compare ecological, pretrained and learned features</h2>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="method-card">
+          <span class="method-number">01</span>
+          <h3>Ecology-informed covariates</h3>
+          <p>Use 19 bioclimatic variables and the 41-feature environment recipe as interpretable baselines. Seasonality, rainfall lags, vegetation, surface water and urban context capture plausible mosquito ecology at their native scales.</p>
+          <small>Limits: global layers do not observe household containers or local control practices.</small>
+        </article>
+        <article class="method-card">
+          <span class="method-number">02</span>
+          <h3>Pretrained Earth-observation embeddings</h3>
+          <p>Compare the existing 64-dimensional annual AlphaEarth representation with ecological features. Frozen embeddings borrow from broad satellite pretraining; they are not independently interpretable environmental measurements.</p>
+          <small>Next candidates: SatMAE, AnySat, Prithvi-EO-2.0 and TerraMind released representations.</small>
+        </article>
+        <article class="method-card">
+          <span class="method-number">03</span>
+          <h3>Linear and early fusion</h3>
+          <p>Concatenate Environment41 and AlphaEarth64, then fit the established regularized GLM/RF baselines. A compact early-fusion MLP learns a nonlinear projection over the same 105 input features.</p>
+          <small>Scaling is fit on the training partition only; all six frozen outer spatial folds are retained.</small>
+        </article>
+        <article class="method-card">
+          <span class="method-number">04</span>
+          <h3>Nonlinear late fusion</h3>
+          <p>Train separate environment and embedding MLP experts. A small meta-MLP combines their spatially out-of-fold scores; inner scores use four grouped folds based on 5° cells.</p>
+          <small>This is a small-data ablation, not a new foundation model or evidence that more complex fusion will generalize better.</small>
+        </article>
+      </div>
+      <div id="fusion-callout" class="result-callout">Loading matched model results…</div>
+      <div class="table-wrap">
+        <table>
+          <caption>Mean Average Precision and ROC-AUC across the six spatial development folds</caption>
+          <thead><tr><th>Representation and learner</th><th>AP mean</th><th>Fold SD</th><th>ROC-AUC</th><th>Result source</th></tr></thead>
+          <tbody id="comparison-rows"><tr><td colspan="5">Loading frozen baselines and new MLP results…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Fold SD describes variation across the six spatial contexts; it is not a confidence interval. New MLP scores are point benchmarks only and have not been projected into a new global map.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">PAPERS THAT INFORM THE METHODS</span>
+          <h2>Advanced representation learning and data fusion</h2>
+        </div>
+      </div>
+      <div class="paper-grid">
+        <article class="paper-card">
+          <span class="paper-tag">Species-distribution modeling · preprint</span>
+          <h3>OCELOT: Planetary-Scale Species Distribution Modeling with Satellite Foundation Embeddings</h3>
+          <p>Combines coordinates and satellite embeddings with bias-aware cell sampling and shared taxonomic structure. A useful design precedent for relative occurrence—not a guarantee of gains at mosquito-data scale.</p>
+          <a href="https://arxiv.org/abs/2611.00284v2" target="_blank" rel="noopener">van Merriënboer et al. (2026), arXiv:2611.00284 ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Temporal and multispectral pretraining</span>
+          <h3>SatMAE: Pre-training Transformers for Temporal and Multi-Spectral Satellite Imagery</h3>
+          <p>Masked-autoencoder design for time-series and multispectral satellite structure; motivates testing frozen seasonal representations rather than pretraining on the small mosquito cohort.</p>
+          <a href="https://arxiv.org/abs/2207.08051" target="_blank" rel="noopener">Cong et al. (2022), NeurIPS ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Multimodal and scale-adaptive EO · preprint</span>
+          <h3>AnySat: One Earth Observation Model for Many Resolutions, Scales, and Modalities</h3>
+          <p>Self-supervised JEPA with scale-adaptive encoders across varied sensors. Relevant where satellite resolution and modality coverage vary geographically.</p>
+          <a href="https://arxiv.org/abs/2412.14123" target="_blank" rel="noopener">Astruc et al. (2024), arXiv:2412.14123 ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Multitemporal EO foundation model · preprint</span>
+          <h3>Prithvi-EO-2.0: A Versatile Multi-Temporal Foundation Model for Earth Observation Applications</h3>
+          <p>A large multispectral time-series model; practical for this project as a released frozen encoder or parameter-efficient adaptation, not from-scratch pretraining.</p>
+          <a href="https://arxiv.org/abs/2412.02732" target="_blank" rel="noopener">Szwarcman et al. (2024), arXiv:2412.02732 ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Generative multimodal EO · arXiv version</span>
+          <h3>TerraMind: Large-Scale Generative Multimodality for Earth Observation</h3>
+          <p>Studies multimodal fusion across geospatial modalities. Generated or imputed modalities should be treated as model outputs, not additional independent ecological evidence.</p>
+          <a href="https://arxiv.org/abs/2504.11171" target="_blank" rel="noopener">Jakubik et al. (2025), arXiv:2504.11171 ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Pseudo-absence design · peer-reviewed</span>
+          <h3>On the selection and effectiveness of pseudo-absences for species distribution modeling with deep learning</h3>
+          <p>Shows why background selection, imbalance and spatial evaluation are central design choices for deep SDMs; pseudo-absences remain design-dependent.</p>
+          <a href="https://doi.org/10.1016/j.ecoinf.2024.102623" target="_blank" rel="noopener">Zbinden et al. (2024), Ecological Informatics ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Deep SDM benchmark · peer-reviewed</span>
+          <h3>The Performance and Potential of Deep Learning for Predicting Species Distributions</h3>
+          <p>Large like-for-like comparison motivates conventional baselines, spatial holdouts and leakage checks before adding more complex networks.</p>
+          <a href="https://doi.org/10.1111/geb.70184" target="_blank" rel="noopener">Kellenberger et al. (2026), Global Ecology and Biogeography ↗</a>
+        </article>
+        <article class="paper-card">
+          <span class="paper-tag">Mosquito ecology and remote sensing · peer-reviewed</span>
+          <h3>Comparing Satellite and Ground-Based Measurements of Environmental Suitability for Vector Mosquitoes in an Urban Landscape</h3>
+          <p>Direct *Aedes albopictus* evidence for comparing satellite-derived land/climate features with weather and in-situ microclimate; the study is regional, not a global transfer test.</p>
+          <a href="https://doi.org/10.1093/jme/tjac145" target="_blank" rel="noopener">McMahon et al. (2022), Journal of Medical Entomology ↗</a>
+        </article>
+      </div>
+      <p class="paper-note">Foundation-model papers establish representation-learning methods on Earth-observation tasks; they do not establish mosquito-distribution accuracy. Preprints are labeled as such. Released weights and datasets retain their own licenses.</p>
+    </section>
+
+    <section class="section limitations">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">LIMITATIONS AND NEXT STEPS</span>
+          <h2>More observations do not automatically mean more labels.</h2>
+        </div>
+      </div>
+      <div class="limit-grid">
+        <article><h3>Coverage gaps</h3><p>Sampling remains clustered, and the 2026 independent survey evidence is U.S.-focused. Global maps in poorly sampled tropical and remote areas are extrapolations.</p></article>
+        <article><h3>Observation semantics</h3><p>GBIF, citizen-science claims, habitat reports and trap surveys have different error, effort and detection processes. They are kept in separate roles rather than pooled as interchangeable labels.</p></article>
+        <article><h3>Abundance is deferred</h3><p>Available counts differ by trap type, duration, season, life stage and spatial grain. No globally standardized abundance target is suitable for a continuous world map.</p></article>
+        <article><h3>Next model milestone</h3><p>First secure more independent tropical surveys, a DOI-frozen occurrence snapshot and fresh spatial validation. Only then consider mapping the new MLP or adapting additional pretrained encoders.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Reviewed research snapshot · *Aedes albopictus* · reference environment 2024</span>
+    <a href="index.html#explore">Return to global maps ↗</a>
+  </footer>
+  <script src="research.js"></script>
+</body>
+</html>

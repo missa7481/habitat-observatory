@@ -1,5 +1,5 @@
 {
-  "published_snapshot_at": "2026-11-14T02:12:55.392906+00:00",
+  "published_snapshot_at": "2026-11-14T08:21:37.983Z",
   "research_release_at": "2026-11-05T20:33:07.804974+00:00",
   "reference_year": 2024,
   "mode": "Public read-only research snapshot",
@@ -7,10 +7,14 @@
     "Aggregate benchmark metrics",
     "Model and feature descriptions",
     "Quantized global preview rasters",
-    "Scientific review snapshot"
+    "Scientific review snapshot",
+    "Source-specific coverage aggregated to 5-degree cells",
+    "Six-fold shallow MLP representation comparison",
+    "Annotated feature-learning and data-fusion bibliography"
   ],
   "excluded": [
     "Raw occurrence and surveillance records",
+    "Precise site coordinates and per-site predictions",
     "Institutional papers and local reports",
     "Credentials and account configuration",
     "Training and administration services",

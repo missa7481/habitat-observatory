@@ -1,0 +1,216 @@
+{
+  "species": "Aedes albopictus",
+  "reference_year": 2024,
+  "training_sites": 1601,
+  "evaluation": {
+    "endpoint": "presence-background ranking",
+    "outer_spatial_folds": 6,
+    "preprocessing": "StandardScaler fit separately inside each training fold",
+    "inner_fusion": "Four-fold StratifiedGroupKFold using 5-degree spatial cells; nonlinear MLP meta-learner fit to out-of-fold modality scores",
+    "notes": [
+      "Background sites are not confirmed absences.",
+      "Fold standard deviations are descriptive, not confidence intervals.",
+      "Frozen MaxNet, GLM and RF results were not refit by this experiment.",
+      "The MLP results are a point benchmark, not a released global prediction map."
+    ]
+  },
+  "training_protocol": {
+    "feature_scaling": "StandardScaler is fitted only on each model's training partition.",
+    "model_config": {
+      "activation": "relu",
+      "alpha": 0.01,
+      "batch_size": 128,
+      "early_stopping": true,
+      "learning_rate_init": 0.001,
+      "max_iter": 300,
+      "n_iter_no_change": 20,
+      "solver": "adam",
+      "validation_fraction": 0.15
+    },
+    "effective_batch_size": "min(128, training partition size after the internal early-stopping split)",
+    "architectures": {
+      "Environment41": [
+        32,
+        16
+      ],
+      "AlphaEarth64": [
+        32,
+        16
+      ],
+      "early_fusion_Environment_AlphaEarth105": [
+        64,
+        32
+      ],
+      "late_fusion_experts": [
+        32,
+        16
+      ],
+      "late_fusion_meta_mlp": [
+        4
+      ]
+    },
+    "random_seed_scheme": "Base seed 2026 plus 100 per outer context, with fixed offsets per model."
+  },
+  "models": [
+    {
+      "representation": "BioClim19",
+      "display_name": "BioClim19 · BRT",
+      "learner": "BRT",
+      "AP_mean": 0.7130142504983711,
+      "AP_fold_SD": 0.03628286150076197,
+      "AUC_mean": 0.7985078772191408,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "BioClim19",
+      "display_name": "BioClim19 · GLM",
+      "learner": "GLM",
+      "AP_mean": 0.5934830427759022,
+      "AP_fold_SD": 0.06856730350234229,
+      "AUC_mean": 0.6784462281623268,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "BioClim19",
+      "display_name": "BioClim19 · MaxNet",
+      "learner": "MaxNet",
+      "AP_mean": 0.676956584543619,
+      "AP_fold_SD": 0.056876424007759344,
+      "AUC_mean": 0.7768354505211201,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "BioClim19",
+      "display_name": "BioClim19 · RF",
+      "learner": "RF",
+      "AP_mean": 0.7188661619179552,
+      "AP_fold_SD": 0.0407590427920647,
+      "AUC_mean": 0.8000821270541322,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment41",
+      "display_name": "Environment 41 · BRT",
+      "learner": "BRT",
+      "AP_mean": 0.7938333934126033,
+      "AP_fold_SD": 0.035471818524165456,
+      "AUC_mean": 0.84209046177575,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment41",
+      "display_name": "Environment 41 · GLM",
+      "learner": "GLM",
+      "AP_mean": 0.6971010564730517,
+      "AP_fold_SD": 0.06497225046732352,
+      "AUC_mean": 0.7724649309112991,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment41",
+      "display_name": "Environment 41 · MaxNet",
+      "learner": "MaxNet",
+      "AP_mean": 0.7728947997327955,
+      "AP_fold_SD": 0.03620703130308414,
+      "AUC_mean": 0.8292368705928966,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment41",
+      "display_name": "Environment 41 · RF",
+      "learner": "RF",
+      "AP_mean": 0.7919860450352297,
+      "AP_fold_SD": 0.058256012799319266,
+      "AUC_mean": 0.8431368423180877,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "AlphaEarth64",
+      "display_name": "AlphaEarth 64 · GLM",
+      "learner": "GLM",
+      "AP_mean": 0.8111459187413178,
+      "AP_fold_SD": 0.04373824597244943,
+      "AUC_mean": 0.8695203370738566,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "AlphaEarth64",
+      "display_name": "AlphaEarth 64 · RF",
+      "learner": "RF",
+      "AP_mean": 0.8006960637392669,
+      "AP_fold_SD": 0.05114668230528948,
+      "AUC_mean": 0.8577247138947847,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment_AlphaEarth105",
+      "display_name": "Early fusion · Environment + AlphaEarth · GLM",
+      "learner": "GLM",
+      "AP_mean": 0.8103341954306634,
+      "AP_fold_SD": 0.03231524327754789,
+      "AUC_mean": 0.8741288237339186,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "Environment_AlphaEarth105",
+      "display_name": "Early fusion · Environment + AlphaEarth · RF",
+      "learner": "RF",
+      "AP_mean": 0.8098199844019374,
+      "AP_fold_SD": 0.05018655907599496,
+      "AUC_mean": 0.8633320072073977,
+      "folds": 6,
+      "source": "frozen upstream benchmark"
+    },
+    {
+      "representation": "AlphaEarth64",
+      "learner": "MLPClassifier",
+      "AP_mean": 0.8097966489281984,
+      "AP_fold_SD": 0.04532001918020838,
+      "AUC_mean": 0.8635253192692036,
+      "folds": 6,
+      "display_name": "AlphaEarth 64 · MLP",
+      "source": "new fold-aligned MLP experiment"
+    },
+    {
+      "representation": "Environment41",
+      "learner": "MLPClassifier",
+      "AP_mean": 0.7600373012829215,
+      "AP_fold_SD": 0.06559306309496163,
+      "AUC_mean": 0.8010240720984921,
+      "folds": 6,
+      "display_name": "Environment 41 · MLP",
+      "source": "new fold-aligned MLP experiment"
+    },
+    {
+      "representation": "Environment_AlphaEarth105",
+      "learner": "MLPClassifier",
+      "AP_mean": 0.814605351633324,
+      "AP_fold_SD": 0.03658342872359065,
+      "AUC_mean": 0.8659602693344307,
+      "folds": 6,
+      "display_name": "Early fusion · Environment + AlphaEarth · MLP",
+      "source": "new fold-aligned MLP experiment"
+    },
+    {
+      "representation": "Nonlinear_late_fusion",
+      "learner": "MLPClassifier",
+      "AP_mean": 0.7862226480026443,
+      "AP_fold_SD": 0.07198243023663738,
+      "AUC_mean": 0.846025641811222,
+      "folds": 6,
+      "display_name": "Nonlinear late fusion · stacked MLP · MLP",
+      "source": "new fold-aligned MLP experiment"
+    }
+  ]
+}
