@@ -1,0 +1,1136 @@
+{
+ "generated": "2026-11-16",
+ "designs": [
+  {
+   "id": "random5",
+   "label": "Random",
+   "desc": "Random 5-fold cells: interpolation reference, optimistic"
+  },
+  {
+   "id": "block5",
+   "label": "Block 5°",
+   "desc": "5° spatial blocks, 5 folds"
+  },
+  {
+   "id": "block10",
+   "label": "Block 10°",
+   "desc": "10° spatial blocks, 5 folds"
+  },
+  {
+   "id": "block20",
+   "label": "Block 20°",
+   "desc": "20° spatial blocks, 5 folds"
+  },
+  {
+   "id": "loro",
+   "label": "Leave region out",
+   "desc": "Train on five world regions, test on the sixth"
+  },
+  {
+   "id": "env",
+   "label": "Env. cluster out",
+   "desc": "Hold out one of five climate clusters"
+  },
+  {
+   "id": "zone",
+   "label": "Climate zone out",
+   "desc": "Hold out tropical, arid, temperate or cold"
+  },
+  {
+   "id": "temporal",
+   "label": "Temporal",
+   "desc": "Train 2022–2024 reports, test 2025"
+  },
+  {
+   "id": "spatiotemp",
+   "label": "Space-time",
+   "desc": "2025 reports in held-out 10° blocks"
+  }
+ ],
+ "holdout": {
+  "models": [
+   {
+    "id": "RF",
+    "label": "Random forest"
+   },
+   {
+    "id": "HGB",
+    "label": "Gradient boosting"
+   },
+   {
+    "id": "MLP+Coords",
+    "label": "MLP + coordinates"
+   },
+   {
+    "id": "MLP",
+    "label": "MLP (early fusion)"
+   },
+   {
+    "id": "HiCo",
+    "label": "HiCo hierarchy"
+   },
+   {
+    "id": "GatedMoE",
+    "label": "Gated mixture of experts"
+   },
+   {
+    "id": "GLM",
+    "label": "Multinomial GLM"
+   },
+   {
+    "id": "kNN-geo",
+    "label": "kNN geographic"
+   },
+   {
+    "id": "Prior",
+    "label": "Class prior"
+   }
+  ],
+  "AUC": {
+   "RF": {
+    "random5": 0.7969,
+    "block5": 0.7751,
+    "block10": 0.7658,
+    "block20": 0.7532,
+    "loro": 0.6969,
+    "env": 0.6976,
+    "zone": 0.7026,
+    "temporal": 0.8204,
+    "spatiotemp": 0.7661
+   },
+   "HGB": {
+    "random5": 0.7873,
+    "block5": 0.758,
+    "block10": 0.751,
+    "block20": 0.7337,
+    "loro": 0.6667,
+    "env": 0.6611,
+    "zone": 0.6693,
+    "temporal": 0.8041,
+    "spatiotemp": 0.7507
+   },
+   "MLP+Coords": {
+    "random5": 0.789,
+    "block5": 0.774,
+    "block10": 0.7582,
+    "block20": 0.7482,
+    "loro": 0.6736,
+    "env": 0.6853,
+    "zone": 0.6929,
+    "temporal": 0.7941,
+    "spatiotemp": 0.78
+   },
+   "MLP": {
+    "random5": 0.7858,
+    "block5": 0.7666,
+    "block10": 0.757,
+    "block20": 0.7389,
+    "loro": 0.6428,
+    "env": 0.6829,
+    "zone": 0.6984,
+    "temporal": 0.7923,
+    "spatiotemp": 0.7736
+   },
+   "HiCo": {
+    "random5": 0.7777,
+    "block5": 0.7618,
+    "block10": 0.7535,
+    "block20": 0.7304,
+    "loro": 0.6491,
+    "env": 0.6698,
+    "zone": 0.6784,
+    "temporal": 0.7754,
+    "spatiotemp": 0.7519
+   },
+   "GatedMoE": {
+    "random5": 0.7818,
+    "block5": 0.7583,
+    "block10": 0.7575,
+    "block20": 0.7373,
+    "loro": 0.6366,
+    "env": 0.6634,
+    "zone": 0.687,
+    "temporal": 0.7864,
+    "spatiotemp": 0.7396
+   },
+   "GLM": {
+    "random5": 0.7722,
+    "block5": 0.7587,
+    "block10": 0.7393,
+    "block20": 0.7374,
+    "loro": 0.6637,
+    "env": 0.6708,
+    "zone": 0.675,
+    "temporal": 0.7779,
+    "spatiotemp": 0.7502
+   },
+   "kNN-geo": {
+    "random5": 0.7816,
+    "block5": 0.7397,
+    "block10": 0.7328,
+    "block20": 0.702,
+    "loro": 0.519,
+    "env": 0.6438,
+    "zone": 0.6566,
+    "temporal": 0.7961,
+    "spatiotemp": 0.7237
+   },
+   "Prior": {
+    "random5": 0.5,
+    "block5": 0.5,
+    "block10": 0.5,
+    "block20": 0.5,
+    "loro": 0.5,
+    "env": 0.5,
+    "zone": 0.5,
+    "temporal": 0.5,
+    "spatiotemp": 0.5
+   }
+  },
+  "nll": {
+   "RF": {
+    "random5": 0.8639,
+    "block5": 0.9275,
+    "block10": 0.9293,
+    "block20": 1.0254,
+    "loro": 1.3017,
+    "env": 1.0384,
+    "zone": 1.1156,
+    "temporal": 0.8799,
+    "spatiotemp": 1.0188
+   },
+   "HGB": {
+    "random5": 0.8893,
+    "block5": 0.9489,
+    "block10": 0.9385,
+    "block20": 1.0297,
+    "loro": 1.3762,
+    "env": 1.0698,
+    "zone": 1.1516,
+    "temporal": 0.924,
+    "spatiotemp": 1.0258
+   },
+   "MLP+Coords": {
+    "random5": 0.8603,
+    "block5": 0.8932,
+    "block10": 0.9171,
+    "block20": 0.9934,
+    "loro": 1.3314,
+    "env": 1.024,
+    "zone": 1.135,
+    "temporal": 0.9747,
+    "spatiotemp": 0.9842
+   },
+   "MLP": {
+    "random5": 0.879,
+    "block5": 0.9437,
+    "block10": 0.9379,
+    "block20": 1.0107,
+    "loro": 1.4283,
+    "env": 1.0368,
+    "zone": 1.1163,
+    "temporal": 0.9851,
+    "spatiotemp": 1.0045
+   },
+   "HiCo": {
+    "random5": 0.883,
+    "block5": 0.958,
+    "block10": 0.9489,
+    "block20": 1.0342,
+    "loro": 1.5729,
+    "env": 1.0955,
+    "zone": 1.2262,
+    "temporal": 0.9926,
+    "spatiotemp": 1.0265
+   },
+   "GatedMoE": {
+    "random5": 0.8902,
+    "block5": 0.9579,
+    "block10": 0.9421,
+    "block20": 1.0058,
+    "loro": 1.4461,
+    "env": 1.1126,
+    "zone": 1.2053,
+    "temporal": 0.9991,
+    "spatiotemp": 1.0246
+   },
+   "GLM": {
+    "random5": 0.9263,
+    "block5": 0.9844,
+    "block10": 0.9901,
+    "block20": 1.0219,
+    "loro": 1.3681,
+    "env": 1.1189,
+    "zone": 1.2405,
+    "temporal": 1.0259,
+    "spatiotemp": 1.0663
+   },
+   "kNN-geo": {
+    "random5": 0.8836,
+    "block5": 0.9502,
+    "block10": 0.9797,
+    "block20": 1.0639,
+    "loro": 1.7447,
+    "env": 1.2059,
+    "zone": 1.2139,
+    "temporal": 0.9602,
+    "spatiotemp": 1.0573
+   },
+   "Prior": {
+    "random5": 1.1395,
+    "block5": 1.1413,
+    "block10": 1.1473,
+    "block20": 1.2345,
+    "loro": 1.4648,
+    "env": 1.2466,
+    "zone": 1.4089,
+    "temporal": 1.1981,
+    "spatiotemp": 1.2005
+   }
+  },
+  "n_splits": 41
+ },
+ "optimism": {
+  "RF": 0.1,
+  "MLP": 0.143,
+  "kNN-geo": 0.2626
+ },
+ "prior_shift": {
+  "rows": [
+   {
+    "model": "Random forest",
+    "none": 1.3017,
+    "oracle": 1.0703,
+    "em": 12.6266
+   },
+   {
+    "model": "Gradient boosting",
+    "none": 1.3762,
+    "oracle": 1.1335,
+    "em": 6.2621
+   },
+   {
+    "model": "MLP (early fusion)",
+    "none": 1.4283,
+    "oracle": 1.2385,
+    "em": 10.8154
+   },
+   {
+    "model": "HiCo hierarchy",
+    "none": 1.5729,
+    "oracle": 1.3926,
+    "em": 10.5595
+   }
+  ],
+  "heldout_prior": 1.0565
+ },
+ "weighting": [
+  {
+   "id": "Reliability",
+   "label": "Local reliability",
+   "inner_gain": 0.0372,
+   "outer_gain": 0.039,
+   "AUC_block10": 0.7602,
+   "AUC_loro": 0.6082,
+   "AUC_env": 0.6888
+  },
+  {
+   "id": "Equal",
+   "label": "Equal weights",
+   "inner_gain": 0.0,
+   "outer_gain": 0.0,
+   "AUC_block10": 0.7695,
+   "AUC_loro": 0.6361,
+   "AUC_env": 0.6979
+  },
+  {
+   "id": "Stack-region",
+   "label": "Stacked by region",
+   "inner_gain": 0.0966,
+   "outer_gain": -0.0232,
+   "AUC_block10": 0.7706,
+   "AUC_loro": 0.6112,
+   "AUC_env": 0.7095
+  },
+  {
+   "id": "Theory",
+   "label": "Theory-fixed",
+   "inner_gain": -0.0351,
+   "outer_gain": -0.0329,
+   "AUC_block10": 0.7486,
+   "AUC_loro": 0.6661,
+   "AUC_env": 0.6857
+  },
+  {
+   "id": "Uncertainty",
+   "label": "Inverse variance",
+   "inner_gain": null,
+   "outer_gain": -0.0331,
+   "AUC_block10": 0.69,
+   "AUC_loro": 0.6346,
+   "AUC_env": 0.6587
+  },
+  {
+   "id": "Stack-global",
+   "label": "Stacked (global)",
+   "inner_gain": 0.064,
+   "outer_gain": -0.0589,
+   "AUC_block10": 0.7644,
+   "AUC_loro": 0.6077,
+   "AUC_env": 0.6923
+  },
+  {
+   "id": "Attn-env",
+   "label": "Attention (environment)",
+   "inner_gain": 0.0687,
+   "outer_gain": -0.1679,
+   "AUC_block10": 0.7631,
+   "AUC_loro": 0.5997,
+   "AUC_env": 0.6828
+  },
+  {
+   "id": "Attn-support",
+   "label": "Attention (env + support)",
+   "inner_gain": 0.0746,
+   "outer_gain": -0.1968,
+   "AUC_block10": 0.7571,
+   "AUC_loro": 0.6357,
+   "AUC_env": 0.6966
+  }
+ ],
+ "invariance": {
+  "Drivers (Clim+Land)": {
+   "block10": 0.7194,
+   "env": 0.6567,
+   "loro": 0.6636,
+   "zone": 0.6194
+  },
+  "Drivers+Human": {
+   "block10": 0.7296,
+   "env": 0.6642,
+   "loro": 0.6556,
+   "zone": 0.6425
+  },
+  "Drivers+Human+AE_perp": {
+   "block10": 0.7279,
+   "env": 0.6657,
+   "loro": 0.6579,
+   "zone": 0.665
+  },
+  "ERM": {
+   "block10": 0.7483,
+   "env": 0.688,
+   "loro": 0.6874,
+   "zone": 0.6829
+  },
+  "GroupDRO": {
+   "block10": 0.7514,
+   "env": 0.6797,
+   "loro": 0.6743,
+   "zone": 0.6735
+  },
+  "V-REx l=1": {
+   "block10": 0.7504,
+   "env": 0.6763,
+   "loro": 0.6841,
+   "zone": 0.6847
+  },
+  "V-REx l=10": {
+   "block10": 0.7474,
+   "env": 0.6716,
+   "loro": 0.6843,
+   "zone": 0.6806
+  }
+ },
+ "proxy": {
+  "AUC": {
+   "AE": {
+    "block10": 0.7509,
+    "loro": 0.6238,
+    "zone": 0.6855
+   },
+   "AE_hat (driver-explained)": {
+    "block10": 0.6908,
+    "loro": 0.6032,
+    "zone": 0.6222
+   },
+   "AE_perp (residual)": {
+    "block10": 0.6251,
+    "loro": 0.5337,
+    "zone": 0.5548
+   },
+   "Drivers+Human": {
+    "block10": 0.7128,
+    "loro": 0.6558,
+    "zone": 0.6577
+   }
+  },
+  "r2": 0.1144
+ },
+ "transfer_na_eu": {
+  "Climate": 0.6587,
+  "Landscape": 0.5552,
+  "Human": 0.5261,
+  "AlphaEarth": 0.5713,
+  "All": 0.592
+ },
+ "decay": {
+  "Attn-support [block]": {
+   "block10": 0.7638,
+   "env": 0.6766,
+   "loro": 0.6393,
+   "zone": 0.6918
+  },
+  "Attn-support [mixed]": {
+   "block10": 0.7608,
+   "env": 0.6739,
+   "loro": 0.6559,
+   "zone": 0.6841
+  },
+  "Decay [block]": {
+   "block10": 0.7695,
+   "env": 0.6965,
+   "loro": 0.6781,
+   "zone": 0.697
+  },
+  "Decay [mixed]": {
+   "block10": 0.771,
+   "env": 0.6947,
+   "loro": 0.6908,
+   "zone": 0.6864
+  },
+  "Equal": {
+   "block10": 0.7681,
+   "env": 0.6984,
+   "loro": 0.6658,
+   "zone": 0.6997
+  },
+  "Only:All (MLP)": {
+   "block10": 0.7542,
+   "env": 0.6763,
+   "loro": 0.6633,
+   "zone": 0.6824
+  },
+  "Stack [block]": {
+   "block10": 0.766,
+   "env": 0.6963,
+   "loro": 0.6286,
+   "zone": 0.7087
+  },
+  "Stack [mixed]": {
+   "block10": 0.7567,
+   "env": 0.6953,
+   "loro": 0.632,
+   "zone": 0.7055
+  }
+ },
+ "decay_tests": {
+  "vs_gate": {
+   "wins": 17,
+   "n": 20,
+   "p": 0.0026
+  },
+  "vs_equal": {
+   "wins": 10,
+   "n": 20,
+   "p": 1.0
+  }
+ },
+ "rho_km": {
+  "block": 1822.0,
+  "mixed": 714.0
+ },
+ "pool": [
+  {
+   "model": "MLP",
+   "features": "+pool",
+   "block10": 0.7596,
+   "env": 0.691,
+   "loro": 0.6993,
+   "zone": 0.6958
+  },
+  {
+   "model": "MLP",
+   "features": "base",
+   "block10": 0.7447,
+   "env": 0.6779,
+   "loro": 0.658,
+   "zone": 0.6773
+  },
+  {
+   "model": "RF",
+   "features": "+pool",
+   "block10": 0.7679,
+   "env": 0.6987,
+   "loro": 0.7103,
+   "zone": 0.7088
+  },
+  {
+   "model": "RF",
+   "features": "base",
+   "block10": 0.7612,
+   "env": 0.6945,
+   "loro": 0.6995,
+   "zone": 0.7073
+  }
+ ],
+ "coherence": {
+  "arms": [
+   {
+    "id": "RF",
+    "label": "Random forest, scales mapped separately",
+    "coherent": false,
+    "AUC_block10": 0.7612,
+    "AUC_loro": 0.6995,
+    "AUC_env": 0.6945,
+    "AUC_zone": 0.7073,
+    "nll_block10": 0.9304,
+    "nll_loro": 1.2893,
+    "nll_env": 1.04,
+    "nll_zone": 1.1132
+   },
+   {
+    "id": "RF+Recon",
+    "label": "Random forest + HiCo reconciliation",
+    "coherent": true,
+    "AUC_block10": 0.7613,
+    "AUC_loro": 0.6864,
+    "AUC_env": 0.6957,
+    "AUC_zone": 0.7032,
+    "nll_block10": 0.9403,
+    "nll_loro": 1.2932,
+    "nll_env": 1.0394,
+    "nll_zone": 1.1279
+   },
+   {
+    "id": "HiCo-RF",
+    "label": "HiCo with random-forest local term",
+    "coherent": true,
+    "AUC_block10": 0.7682,
+    "AUC_loro": 0.661,
+    "AUC_env": 0.6827,
+    "AUC_zone": 0.6529,
+    "nll_block10": 0.9105,
+    "nll_loro": 1.3945,
+    "nll_env": 1.086,
+    "nll_zone": 1.2721
+   },
+   {
+    "id": "HiCo",
+    "label": "HiCo (original)",
+    "coherent": true,
+    "AUC_block10": 0.7408,
+    "AUC_loro": 0.6545,
+    "AUC_env": 0.6811,
+    "AUC_zone": 0.6475,
+    "nll_block10": 0.9718,
+    "nll_loro": 1.4375,
+    "nll_env": 1.0726,
+    "nll_zone": 1.3175
+   }
+  ],
+  "flip_min": 0.0369,
+  "flip_max": 0.0723,
+  "tests": {
+   "RF+Recon": {
+    "wins": 9,
+    "n": 20,
+    "p": 0.8238,
+    "mean_diff": -0.0044
+   },
+   "HiCo-RF": {
+    "wins": 6,
+    "n": 20,
+    "p": 0.1153,
+    "mean_diff": -0.0236
+   },
+   "HiCo": {
+    "wins": 2,
+    "n": 20,
+    "p": 0.0004,
+    "mean_diff": -0.0339
+   }
+  }
+ },
+ "hico_cv": [
+  {
+   "model": "MLPEarly",
+   "test_nll": 0.9501,
+   "AUC_Ae_albopictus": 0.8255,
+   "AUC_Ae_aegypti": 0.9184,
+   "AUC_Culex": 0.5509,
+   "AUC_Anopheles": 0.6451,
+   "AUC_mean": 0.7349
+  },
+  {
+   "model": "Single:AlphaEarth",
+   "test_nll": 0.9387,
+   "AUC_Ae_albopictus": 0.8291,
+   "AUC_Ae_aegypti": 0.9148,
+   "AUC_Culex": 0.5491,
+   "AUC_Anopheles": 0.6332,
+   "AUC_mean": 0.7315
+  },
+  {
+   "model": "LinearEarly",
+   "test_nll": 1.0071,
+   "AUC_Ae_albopictus": 0.7752,
+   "AUC_Ae_aegypti": 0.8968,
+   "AUC_Culex": 0.5847,
+   "AUC_Anopheles": 0.6397,
+   "AUC_mean": 0.7241
+  },
+  {
+   "model": "GatedMoE",
+   "test_nll": 0.9655,
+   "AUC_Ae_albopictus": 0.8239,
+   "AUC_Ae_aegypti": 0.8931,
+   "AUC_Culex": 0.5552,
+   "AUC_Anopheles": 0.6171,
+   "AUC_mean": 0.7223
+  },
+  {
+   "model": "HiCo",
+   "test_nll": 0.9828,
+   "AUC_Ae_albopictus": 0.7811,
+   "AUC_Ae_aegypti": 0.9035,
+   "AUC_Culex": 0.5651,
+   "AUC_Anopheles": 0.6381,
+   "AUC_mean": 0.7219
+  },
+  {
+   "model": "HiCoMoE",
+   "test_nll": 0.9847,
+   "AUC_Ae_albopictus": 0.7768,
+   "AUC_Ae_aegypti": 0.9006,
+   "AUC_Culex": 0.5522,
+   "AUC_Anopheles": 0.6381,
+   "AUC_mean": 0.7169
+  },
+  {
+   "model": "LateRankEnsemble",
+   "test_nll": null,
+   "AUC_Ae_albopictus": 0.7513,
+   "AUC_Ae_aegypti": 0.8835,
+   "AUC_Culex": 0.5439,
+   "AUC_Anopheles": 0.6391,
+   "AUC_mean": 0.7044
+  },
+  {
+   "model": "Single:Landscape",
+   "test_nll": 1.0743,
+   "AUC_Ae_albopictus": 0.6378,
+   "AUC_Ae_aegypti": 0.8441,
+   "AUC_Culex": 0.5125,
+   "AUC_Anopheles": 0.5906,
+   "AUC_mean": 0.6463
+  },
+  {
+   "model": "Single:Climate",
+   "test_nll": 1.1312,
+   "AUC_Ae_albopictus": 0.5544,
+   "AUC_Ae_aegypti": 0.7778,
+   "AUC_Culex": 0.5541,
+   "AUC_Anopheles": 0.5875,
+   "AUC_mean": 0.6185
+  },
+  {
+   "model": "Single:Human",
+   "test_nll": 1.1073,
+   "AUC_Ae_albopictus": 0.6486,
+   "AUC_Ae_aegypti": 0.7216,
+   "AUC_Culex": 0.5005,
+   "AUC_Anopheles": 0.5859,
+   "AUC_mean": 0.6142
+  }
+ ],
+ "external": {
+  "GatedMoE (composition only)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.3619,
+   "Kraemer Ae. aegypti · all": 0.378,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.2147,
+   "Kraemer Ae. albopictus · all": 0.3658,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.6583
+  },
+  "GatedMoE x support (two-part)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.7281,
+   "Kraemer Ae. aegypti · all": 0.7694,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.6487,
+   "Kraemer Ae. albopictus · all": 0.7988,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.9274
+  },
+  "HiCo (composition only)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.557,
+   "Kraemer Ae. aegypti · all": 0.5713,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.4792,
+   "Kraemer Ae. albopictus · all": 0.5693,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.7432
+  },
+  "HiCo x support (two-part)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8205,
+   "Kraemer Ae. aegypti · all": 0.849,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.7787,
+   "Kraemer Ae. albopictus · all": 0.8686,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.9212
+  },
+  "HiCoMoE (composition only)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.547,
+   "Kraemer Ae. aegypti · all": 0.5593,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.4422,
+   "Kraemer Ae. albopictus · all": 0.5511,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.7889
+  },
+  "HiCoMoE x support (two-part)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8231,
+   "Kraemer Ae. aegypti · all": 0.8523,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.7651,
+   "Kraemer Ae. albopictus · all": 0.8622,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.912
+  },
+  "MLPEarly (composition only)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.4837,
+   "Kraemer Ae. aegypti · all": 0.5029,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.3392,
+   "Kraemer Ae. albopictus · all": 0.4489,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.8006
+  },
+  "MLPEarly x support (two-part)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8241,
+   "Kraemer Ae. aegypti · all": 0.8588,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.7459,
+   "Kraemer Ae. albopictus · all": 0.856,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.9306
+  }
+ },
+ "oadsdm": [
+  {
+   "model": "PB-GLM-sklearn",
+   "PB_AP": 0.7841,
+   "PB_AP_sd": 0.0428,
+   "AT_AUC": 0.5329,
+   "AT_AUC_sd": 0.1643,
+   "NEON_fold_AUC": 0.9102,
+   "NEON_OOF_AUC": 0.8989,
+   "NEON_OOF_AP": 0.3716
+  },
+  {
+   "model": "Pooled",
+   "PB_AP": 0.7705,
+   "PB_AP_sd": 0.0261,
+   "AT_AUC": 0.5215,
+   "AT_AUC_sd": 0.1621,
+   "NEON_fold_AUC": 0.8993,
+   "NEON_OOF_AUC": 0.8961,
+   "NEON_OOF_AP": 0.3905
+  },
+  {
+   "model": "ISDM-noBias",
+   "PB_AP": 0.7698,
+   "PB_AP_sd": 0.0264,
+   "AT_AUC": 0.5176,
+   "AT_AUC_sd": 0.1556,
+   "NEON_fold_AUC": 0.8982,
+   "NEON_OOF_AUC": 0.8946,
+   "NEON_OOF_AP": 0.3952
+  },
+  {
+   "model": "OA-DSDM",
+   "PB_AP": 0.7759,
+   "PB_AP_sd": 0.0255,
+   "AT_AUC": 0.5223,
+   "AT_AUC_sd": 0.1666,
+   "NEON_fold_AUC": 0.8991,
+   "NEON_OOF_AUC": 0.8902,
+   "NEON_OOF_AP": 0.3761
+  },
+  {
+   "model": "PB",
+   "PB_AP": 0.7864,
+   "PB_AP_sd": 0.0364,
+   "AT_AUC": 0.5409,
+   "AT_AUC_sd": 0.2005,
+   "NEON_fold_AUC": 0.8921,
+   "NEON_OOF_AUC": 0.8825,
+   "NEON_OOF_AP": 0.3112
+  },
+  {
+   "model": "OA-ISDM-linear",
+   "PB_AP": 0.7523,
+   "PB_AP_sd": 0.037,
+   "AT_AUC": 0.5413,
+   "AT_AUC_sd": 0.1979,
+   "NEON_fold_AUC": 0.8793,
+   "NEON_OOF_AUC": 0.8783,
+   "NEON_OOF_AP": 0.2808
+  },
+  {
+   "model": "SurveyOnly",
+   "PB_AP": 0.5836,
+   "PB_AP_sd": 0.0755,
+   "AT_AUC": 0.551,
+   "AT_AUC_sd": 0.1946,
+   "NEON_fold_AUC": 0.8471,
+   "NEON_OOF_AUC": 0.8586,
+   "NEON_OOF_AP": 0.2249
+  },
+  {
+   "model": "PB-linear",
+   "PB_AP": 0.7766,
+   "PB_AP_sd": 0.0379,
+   "AT_AUC": 0.531,
+   "AT_AUC_sd": 0.1888,
+   "NEON_fold_AUC": 0.8689,
+   "NEON_OOF_AUC": 0.8548,
+   "NEON_OOF_AP": 0.2691
+  }
+ ],
+ "effort_r2": [
+  {
+   "effort_covariate": "worldpop_2024_density",
+   "predictors": "AlphaEarth64",
+   "spatial_cv_R2": 0.8212
+  },
+  {
+   "effort_covariate": "worldpop_2024_density",
+   "predictors": "EnvEco37",
+   "spatial_cv_R2": 0.6122
+  },
+  {
+   "effort_covariate": "built_fraction",
+   "predictors": "AlphaEarth64",
+   "spatial_cv_R2": 0.8762
+  },
+  {
+   "effort_covariate": "built_fraction",
+   "predictors": "EnvEco37",
+   "spatial_cv_R2": 0.7713
+  },
+  {
+   "effort_covariate": "night_lights",
+   "predictors": "AlphaEarth64",
+   "spatial_cv_R2": 0.8159
+  },
+  {
+   "effort_covariate": "night_lights",
+   "predictors": "EnvEco37",
+   "spatial_cv_R2": 0.7238
+  },
+  {
+   "effort_covariate": "accessibility_2015_minutes",
+   "predictors": "AlphaEarth64",
+   "spatial_cv_R2": 0.4874
+  },
+  {
+   "effort_covariate": "accessibility_2015_minutes",
+   "predictors": "EnvEco37",
+   "spatial_cv_R2": 0.4221
+  }
+ ],
+ "foundation": [
+  {
+   "representation": "BioClim19",
+   "learner": "BRT",
+   "AP": 0.713,
+   "AP_sd": 0.0363,
+   "AUC": 0.7985
+  },
+  {
+   "representation": "BioClim19",
+   "learner": "GLM",
+   "AP": 0.5935,
+   "AP_sd": 0.0686,
+   "AUC": 0.6784
+  },
+  {
+   "representation": "BioClim19",
+   "learner": "MaxNet",
+   "AP": 0.677,
+   "AP_sd": 0.0569,
+   "AUC": 0.7768
+  },
+  {
+   "representation": "BioClim19",
+   "learner": "RF",
+   "AP": 0.7189,
+   "AP_sd": 0.0408,
+   "AUC": 0.8001
+  },
+  {
+   "representation": "Environment41",
+   "learner": "BRT",
+   "AP": 0.7938,
+   "AP_sd": 0.0355,
+   "AUC": 0.8421
+  },
+  {
+   "representation": "Environment41",
+   "learner": "GLM",
+   "AP": 0.6971,
+   "AP_sd": 0.065,
+   "AUC": 0.7725
+  },
+  {
+   "representation": "Environment41",
+   "learner": "MaxNet",
+   "AP": 0.7729,
+   "AP_sd": 0.0362,
+   "AUC": 0.8292
+  },
+  {
+   "representation": "Environment41",
+   "learner": "RF",
+   "AP": 0.792,
+   "AP_sd": 0.0583,
+   "AUC": 0.8431
+  },
+  {
+   "representation": "AlphaEarth64",
+   "learner": "GLM",
+   "AP": 0.8111,
+   "AP_sd": 0.0437,
+   "AUC": 0.8695
+  },
+  {
+   "representation": "AlphaEarth64",
+   "learner": "RF",
+   "AP": 0.8007,
+   "AP_sd": 0.0511,
+   "AUC": 0.8577
+  },
+  {
+   "representation": "Environment_AlphaEarth105",
+   "learner": "GLM",
+   "AP": 0.8103,
+   "AP_sd": 0.0323,
+   "AUC": 0.8741
+  },
+  {
+   "representation": "Environment_AlphaEarth105",
+   "learner": "RF",
+   "AP": 0.8098,
+   "AP_sd": 0.0502,
+   "AUC": 0.8633
+  },
+  {
+   "representation": "AlphaEarth64",
+   "learner": "MLP",
+   "AP": 0.8098,
+   "AP_sd": 0.0453,
+   "AUC": 0.8635
+  },
+  {
+   "representation": "Environment41",
+   "learner": "MLP",
+   "AP": 0.76,
+   "AP_sd": 0.0656,
+   "AUC": 0.801
+  },
+  {
+   "representation": "Environment_AlphaEarth105",
+   "learner": "MLP",
+   "AP": 0.8146,
+   "AP_sd": 0.0366,
+   "AUC": 0.866
+  },
+  {
+   "representation": "Nonlinear_late_fusion",
+   "learner": "MLP",
+   "AP": 0.7862,
+   "AP_sd": 0.072,
+   "AUC": 0.846
+  }
+ ],
+ "ledger": [
+  {
+   "id": "I1-01",
+   "level": "Validation",
+   "title": "Nine holdout designs, nine baselines",
+   "status": "baseline-candidate",
+   "next": "Decompose transfer error (I1-02, I1-03)."
+  },
+  {
+   "id": "I1-02",
+   "level": "Spatial-Model",
+   "title": "Error vs distance, density and environmental novelty",
+   "status": "baseline-candidate",
+   "next": "Ask why models barely beat the prior in NLL far from data (I1-03)."
+  },
+  {
+   "id": "I1-03",
+   "level": "Scientific",
+   "title": "Transfer loss is class-prior (species-pool) shift",
+   "status": "baseline-candidate",
+   "next": "I5-01 exogenous species-pool covariate."
+  },
+  {
+   "id": "I2-01",
+   "level": "Fusion",
+   "title": "Seven weighting strategies for five experts",
+   "status": "rejected",
+   "next": "Regime-matched inner OOF and monotone support constraints (I4-01)."
+  },
+  {
+   "id": "I3-01",
+   "level": "Scientific",
+   "title": "Region-to-region transfer matrix by modality",
+   "status": "inconclusive",
+   "next": "Invariance training and proxy decomposition (I3-02, I3-03b)."
+  },
+  {
+   "id": "I3-02",
+   "level": "Spatial-Model",
+   "title": "Invariance penalties and causal feature subsets",
+   "status": "rejected",
+   "next": "Treat region-level prior explicitly rather than penalising risk variance."
+  },
+  {
+   "id": "I3-03",
+   "level": "Representation",
+   "title": "AlphaEarth proxy decomposition (corrected)",
+   "status": "baseline-candidate",
+   "next": "Let AE dominate near data and fade under novelty (I4-01)."
+  },
+  {
+   "id": "I4-01",
+   "level": "Spatial-Model",
+   "title": "Support-decay fusion with regime-matched training",
+   "status": "inconclusive",
+   "next": "Fusion weighting is not the binding constraint; the regional prior is (I1-03)."
+  },
+  {
+   "id": "I5-01",
+   "level": "Data",
+   "title": "Exogenous species-pool covariate (Kraemer)",
+   "status": "inconclusive",
+   "next": "Data RSI: species-pool layer for all classes; Spatial-Model RSI: pool term as the macro level of HiCo (see proposal P1)."
+  },
+  {
+   "id": "P1",
+   "level": "Spatial-Model",
+   "title": "Proposal: Pool-Niche-Support (PNS) hierarchical model",
+   "status": "proposed",
+   "next": "I6: build pool layer for all classes, then the PNS ablation: drop a_s / drop decay / drop r_s / replace exogenous prior with uniform."
+  },
+  {
+   "id": "M1",
+   "level": "Scientific",
+   "title": "Meta-lessons for the research strategy",
+   "status": "infrastructure",
+   "next": "Encode (1)-(3) in the shared experiment harness (rsi/common.py) before I6."
+  },
+  {
+   "id": "I6-01",
+   "level": "Spatial-Model",
+   "title": "Does HiCo's hierarchy cost accuracy? Coherence vs a strong flat model",
+   "status": "baseline-candidate",
+   "next": "Keep HiCo as the coherence operator; fill its macro term with the species-pool layer (P1), not with a learned net on parent-mean covariates."
+  }
+ ],
+ "ledger_counts": {
+  "baseline-candidate": 9,
+  "inconclusive": 5,
+  "rejected": 3,
+  "proposed": 1,
+  "infrastructure": 1
+ }
+}

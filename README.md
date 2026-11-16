@@ -16,7 +16,7 @@ The maps show retrospective relative habitat suitability. They are not calibrate
 
 ## Using the website
 
-Choose an input group and learner, then switch layers or compare two models. The Models, Experiments, Data, Review and Methodology pages explain the available results. The Research Foundation page adds an interactive 5-degree aggregate coverage map, candidate-source roles, a same-fold shallow MLP comparison and annotated feature-learning references. Map downloads contain quantized raster preview data, not full-resolution GeoTIFF products. Aggregate result tables can be downloaded from Experiments.
+Choose an input group and learner, then switch layers or compare two models. The Models, Experiments, Data, Review and Methodology pages explain the available results. The Research Foundation page presents the model development: four model families (foundation fusion benchmark, observation-aware SDM, HiCo-Fuse, recursive research loop), ten fusion methods with their measured outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, experiment details, findings and the research ledger, alongside the 5-degree aggregate coverage map, source roles and annotated references. Its numbers come from `data/model_benchmarks.json` (aggregate metrics only). Code and full benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping Map downloads contain quantized raster preview data, not full-resolution GeoTIFF products. Aggregate result tables can be downloaded from Experiments.
 
 ## Publication and updates
 
