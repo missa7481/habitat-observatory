@@ -1,42 +1,27 @@
-# Habitat Observatory
+# Habitat Observatory · HiCo-Fuse
 
-Public, read-only research explorer for global mosquito habitat suitability.
+Public website for **HiCo-Fuse**, a hierarchical, coherent framework for global mosquito vector and disease habitat mapping from Earth-observation fusion.
 
 Website: https://missa7481.github.io/habitat-observatory/
+Code and benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping
 
-## Research scope
+## Sections
 
-- Target of the global maps: *Aedes albopictus*, using 2024 environmental conditions.
-- 12 released model maps, 6 quality layers and 15 aggregate experiment collections.
-- Classical predictors and Earth-observation foundation representations, with their individual coverage and validation limits.
-- Model inputs, source attributions, metric definitions and a dated scientific review.
+- **Framework** (home): the HiCo-Fuse architecture as an interactive diagram (data → modality encoders → gated fusion → coherent macro/micro hierarchy → two-part vector maps and disease layers), the coherence result with global → regional → city zooms, external validation, fusion comparison, modality-gate maps, extensions under test and current status.
+- **Maps**: global 0.2° views of *Ae. albopictus*, *Ae. aegypti*, *Culex*, *Anopheles*, dengue/chikungunya/Zika, West Nile and malaria indices, and community support.
+- **Evidence**: the research loop: headline findings, an interactive benchmark of nine models under nine spatial and temporal holdout designs, ten fusion methods, experiments (coherence, weighting, invariance, support decay, species pool, observation-aware SDM, foundation benchmark), model families and the research ledger.
+- **Methods**: data sources and roles, the 105 features, research pipeline, validation designs, limitations and terms.
 
-The maps show retrospective relative habitat suitability. They are not calibrated probabilities of presence, mosquito abundance, disease risk or a future forecast. The 2025 NEON diagnostic has previously been examined. Added 2026 provisional year-to-date temporal validation uses frozen 2024 predictors, mostly at revisited locations; it does not update model selection or maps. Results do not establish universal superiority of foundation models.
+## Files
 
-## Using the website
+- `index.html`, `assets/site.css`, `assets/site.js`: the whole site (no build step, no external scripts).
+- `assets/hico/*.webp`: rendered map previews (`rsi/render_framework_maps.py` in the code repository).
+- `data/model_benchmarks.json`: aggregate metrics only (`rsi/build_observatory_data.py`).
 
-The site has five sections with one shared header. Research is the landing page.
+## Data policy
 
-- **Research** (home): headline results from the model development work: four transfer metrics, five key findings and links to the evidence.
-- **Maps**: interactive explorer of the 12 released *Ae. albopictus* suitability maps, with quality layers (coverage, extrapolation, model disagreement) and two-model comparison.
-- **Models**: four model families, ten fusion methods with outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, the experiment results, and the evidence behind the released maps (inputs × learners matrix, development and NEON performance, foundation encoders, 15 downloadable result tables).
-- **Data**: sources and their roles, 5-degree aggregate coverage by source, and the feature dictionary.
-- **Methods**: what is mapped, the research pipeline, validation designs, limitations, terms and metrics, the research ledger, release review and methods literature.
+No raw occurrence or surveillance records, site coordinates, per-site or per-cell predictions, or credentials are published. Maps are rendered previews of relative suitability, not presence probabilities, abundance or disease risk.
 
-Research numbers come from `data/model_benchmarks.json` (aggregate metrics only). `research.html` redirects to the home page.
+Independent research prototype; not an official NASA product. Original datasets keep their licenses.
 
-Map downloads contain quantized raster previews, not full-resolution GeoTIFF products. Code and full benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping
-
-## Publication and updates
-
-This repository contains only the reviewed public presentation. No raw occurrence or surveillance records, precise site coordinates, per-site predictions, credentials, local reports or training services are included. The new coverage layers use 5-degree polygon aggregates; the MLP file contains only fold-level summary metrics. The website is a frozen snapshot; local daily source checks do not automatically publish updates.
-
-Deploy using GitHub Pages, branch `main`, folder `/ (root)`. No build or secrets are required. All paths are relative, so the site also runs from a local static server.
-
-## Attribution and reuse
-
-See the Data page and foundation-model cards for original providers and license conditions. Original datasets and model weights retain their respective licenses. Public access to this repository does not itself grant a blanket reuse license. This release does not redistribute original datasets or model weights.
-
-## Provenance
-
-`data/release.json` records release scope and dates. `data/catalog.json` contains aggregate benchmarks and source links; `data/review.json` records the scientific audit snapshot.
+Deploy with GitHub Pages from branch `main`, folder `/ (root)`. All paths are relative, so the site also runs from any local static server.
