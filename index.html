@@ -4,30 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Habitat Observatory — Global Mosquito Habitat Research</title>
-<meta name="description" content="Global mosquito habitat maps, model evidence, input data and methods, with Earth-observation data fusion research.">
+<meta name="description" content="Global mosquito habitat research: Earth-observation fusion models tested under nine spatial and temporal holdout designs, with twelve released habitat maps.">
 <meta name="theme-color" content="#05080f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="en/style.css">
+<link rel="stylesheet" href="en/research.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='12' fill='%230B3D91'/%3E%3Cellipse cx='20' cy='20' rx='18' ry='6' transform='rotate(-24 20 20)' fill='none' stroke='%23FC3D21' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
-  <a class="brand" href="#explore">
+  <a class="brand" href="#research">
     <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="#0B3D91"/><path d="M10 17c4 2 10 1 14-2m-13 9c5-1 11 0 15 3" stroke="#9cc3ff" stroke-width="1.2" fill="none"/><ellipse cx="20" cy="20" rx="18" ry="6" transform="rotate(-24 20 20)" fill="none" stroke="#FC3D21" stroke-width="2"/></svg>
     <span>Habitat <b>Observatory</b><small>Global vector habitat research</small></span>
   </a>
   <nav aria-label="Site">
+    <a href="#research" data-page="research">Research</a>
     <a href="#explore" data-page="explore">Maps</a>
     <a href="#models" data-page="models">Models</a>
-    <a href="research.html">Research</a>
     <a href="#data" data-page="data">Data</a>
     <a href="#methods" data-page="methods">Methods</a>
   </nav>
 </header>
-<div class="context-bar">
+<div class="context-bar" hidden>
   <div><span class="context-dot"></span><b><i>Aedes albopictus</i></b><span class="separator">/</span><span>Asian tiger mosquito</span><span class="tag">2024 environment</span></div>
   <div class="context-right"><span id="connection">Loading research snapshot</span><button id="refresh" title="Reload published snapshot" aria-label="Reload published snapshot">↻</button></div>
 </div>
@@ -35,8 +36,68 @@
 <main id="main">
 <div id="fatal" class="error" hidden></div>
 
+<!-- ============================================================ RESEARCH (landing) -->
+<section id="page-research" class="page rs">
+<section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="kicker"><i class="pulse" aria-hidden="true"></i>Research foundation · Earth-observation fusion</span>
+        <h1>Mosquito habitat models, tested where they have <em>never seen data</em>.</h1>
+        <p class="lede">Climate, landscape, human footprint and AlphaEarth satellite embeddings, fused by ten methods. Four model families are benchmarked under nine ways of holding out the world, and a research loop records why each one succeeds or fails.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#explore">Explore the global maps</a>
+          <a class="button ghost" href="#benchmark">See the benchmark</a>
+        </div>
+      </div>
+      <figure class="globe">
+        <div class="hud"><span id="hud-layer">HiCo-Fuse · <i>Ae. albopictus</i> · 0.2°</span><span id="hud-pos">LAT —  LON —</span></div>
+        <div class="globe-frame" id="globe-frame">
+          <img id="globe-map" src="assets/maps/map_albopictus.webp" width="1800" height="725" alt="Global map of predicted relative report share for the selected mosquito class">
+          <svg class="graticule" viewBox="0 0 360 145" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="60" x2="60" y1="0" y2="145"/><line x1="120" x2="120" y1="0" y2="145"/><line x1="180" x2="180" y1="0" y2="145"/>
+            <line x1="240" x2="240" y1="0" y2="145"/><line x1="300" x2="300" y1="0" y2="145"/>
+            <line x1="0" x2="360" y1="25" y2="25"/><line x1="0" x2="360" y1="55" y2="55"/><line class="eq" x1="0" x2="360" y1="85" y2="85"/><line x1="0" x2="360" y1="115" y2="115"/>
+          </svg>
+          <span class="scan" aria-hidden="true"></span>
+        </div>
+        <div class="globe-controls">
+          <div class="seg" role="group" aria-label="Mosquito class">
+            <button type="button" data-map="albopictus" data-name="Ae. albopictus" aria-pressed="true"><i>Ae. albopictus</i></button>
+            <button type="button" data-map="aegypti" data-name="Ae. aegypti" aria-pressed="false"><i>Ae. aegypti</i></button>
+            <button type="button" data-map="culex" data-name="Culex" aria-pressed="false"><i>Culex</i></button>
+            <button type="button" data-map="anopheles" data-name="Anopheles" aria-pressed="false"><i>Anopheles</i></button>
+          </div>
+          <div class="ramp-legend"><span>Low</span><i></i><span>High share percentile</span></div>
+        </div>
+        <figcaption>HiCo-Fuse two-part model, percentile of predicted report share among land cells, 85°N–60°S. A model view, not validated occurrence. The results below show where it does not transfer.</figcaption>
+      </figure>
+    </div>
+    <div class="telemetry" id="telemetry" role="list" aria-label="Headline results"></div>
+  </section>
+
+  <div class="rs-main">
+    <section class="section" id="findings">
+      <div class="section-head">
+        <span class="kicker">Key results</span>
+        <h2>The binding constraint is not the fusion layer</h2>
+      </div>
+      <p class="section-lede">Five results from 41 holdout splits and five redesign iterations.</p>
+      <div class="finding-grid" id="finding-grid"></div>
+    </section>
+    <section class="section" id="next">
+      <div class="section-head"><span class="kicker">Explore the evidence</span><h2>Where to look next</h2></div>
+      <div class="next-grid">
+        <a class="card next" href="#explore"><span class="kicker">Maps</span><h3>Twelve global habitat maps</h3><p>Compare input representations and learners, with coverage and disagreement layers.</p><span class="go">Open maps →</span></a>
+        <a class="card next" href="#models"><span class="kicker">Models</span><h3>Model families, fusion and benchmark</h3><p>Four model families, ten fusion methods, and nine models under nine holdout designs.</p><span class="go">Open models →</span></a>
+        <a class="card next" href="#data"><span class="kicker">Data</span><h3>Sources and coverage</h3><p>Observation sources, 5° coverage maps and the 105-feature dictionary.</p><span class="go">Open data →</span></a>
+        <a class="card next" href="#methods"><span class="kicker">Methods</span><h3>Pipeline, validation and limits</h3><p>How experiments are chosen and tested, what the maps cannot say, and the research ledger.</p><span class="go">Open methods →</span></a>
+      </div>
+    </section>
+  </div>
+</section>
+
 <!-- ============================================================ MAPS -->
-<section id="page-explore" class="page explorer">
+<section id="page-explore" class="page explorer" hidden>
   <section class="dataset-overview" aria-label="Dataset size">
     <div><h2>Released global maps</h2><p>12 models · 4 input representations × 4 learners<br>2024 training · NEON temporal checks</p></div>
     <div class="dataset-stat"><strong>1,601</strong><span>Training locations</span><small>Shared across all 12 maps</small></div>
@@ -117,11 +178,101 @@
 <section id="page-models" class="page content-page" hidden>
   <div class="page-title">
     <div>
-      <span class="overline">02 · Map models</span>
-      <h1>The evidence behind the released maps.</h1>
-      <p>Twelve global <i>Ae. albopictus</i> maps from four input representations and four learners, selected on one 1,601-site spatial development cohort and checked against NEON surveys. New model families and fusion methods are on the <a href="research.html">Research</a> page.</p>
+      <span class="overline">Models</span>
+      <h1>How the models were built and tested.</h1>
+      <p class="jump"><a href="#families">Model families</a><a href="#fusion">Fusion methods</a><a href="#benchmark">Benchmark</a><a href="#experiments">Experiments</a><a href="#released-models">Released maps</a></p>
     </div>
-    <span class="status-pill">Versioned results</span>
+  </div>
+  <div class="rs rs-block">
+    <section class="section" id="families">
+      <div class="section-head">
+        <span class="kicker">01 · Model families</span>
+        <h2>Four model families, built in sequence</h2>
+        <p>Each family started from what the previous one could not do. Scores are only comparable within a family, because tasks and labels differ.</p>
+      </div>
+      <div class="family-grid" id="families-grid"></div>
+    </section>
+    <section class="section" id="fusion">
+      <div class="section-head">
+        <span class="kicker">02 · Fusion methods</span>
+        <h2>Ten ways to combine Earth-observation evidence</h2>
+        <p>From simple concatenation to constrained, support-aware pooling. Each card states the rule, what it assumes and what the holdout benchmark showed.</p>
+      </div>
+      <div class="filter-row" role="group" aria-label="Filter fusion methods">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="kept" aria-pressed="false">Kept</button>
+        <button type="button" data-filter="mixed" aria-pressed="false">Inconclusive</button>
+        <button type="button" data-filter="rejected" aria-pressed="false">Rejected</button>
+      </div>
+      <div class="fusion-grid" id="fusion-grid"></div>
+    </section>
+    <section class="section" id="benchmark">
+      <div class="section-head">
+        <span class="kicker">03 · Holdout benchmark</span>
+        <h2>Nine models under nine ways of holding out the world</h2>
+        <p>Multinomial composition of Culicidae reports (<i>Ae. albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i>, <i>Anopheles</i>, other) in 7,004 cells at 0.05°, with 105 features. Select a holdout design and a metric.</p>
+      </div>
+      <div class="bench-controls">
+        <div class="seg light" role="group" aria-label="Metric" id="metric-seg">
+          <button type="button" data-metric="AUC" aria-pressed="true">Mean AUC</button>
+          <button type="button" data-metric="nll" aria-pressed="false">Log-loss</button>
+        </div>
+        <div class="design-chips" role="group" aria-label="Holdout design" id="design-chips"></div>
+      </div>
+      <div class="bench-layout">
+        <div class="card">
+          <div class="card-top"><span id="bar-title">Leave region out</span><span class="muted" id="bar-desc"></span></div>
+          <div id="bench-bars" class="chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>All designs</span><span class="muted">Darker = better · selected design outlined</span></div>
+          <div class="table-wrap"><table class="heat" id="heat-table"></table></div>
+        </div>
+      </div>
+      <p class="note" id="bench-note"></p>
+    </section>
+    <section class="section" id="experiments">
+      <div class="section-head">
+        <span class="kicker">04 · Experiments</span>
+        <h2>What each redesign tested</h2>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Experiments" id="exp-tabs">
+        <button role="tab" id="tab-weighting" aria-controls="panel-weighting" aria-selected="true">Weighting</button>
+        <button role="tab" id="tab-causal" aria-controls="panel-causal" aria-selected="false">Causality &amp; invariance</button>
+        <button role="tab" id="tab-decay" aria-controls="panel-decay" aria-selected="false">Support decay</button>
+        <button role="tab" id="tab-pool" aria-controls="panel-pool" aria-selected="false">Species pool</button>
+        <button role="tab" id="tab-coherence" aria-controls="panel-coherence" aria-selected="false">Coherence</button>
+        <button role="tab" id="tab-foundation" aria-controls="panel-foundation" aria-selected="false">Foundation fusion</button>
+        <button role="tab" id="tab-oadsdm" aria-controls="panel-oadsdm" aria-selected="false">Observation-aware SDM</button>
+        <button role="tab" id="tab-hico" aria-controls="panel-hico" aria-selected="false">HiCo-Fuse</button>
+      </div>
+      <div class="card tab-panel" role="tabpanel" id="panel-weighting" aria-labelledby="tab-weighting"></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-causal" aria-labelledby="tab-causal" hidden></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-decay" aria-labelledby="tab-decay" hidden></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-pool" aria-labelledby="tab-pool" hidden></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-coherence" aria-labelledby="tab-coherence" hidden></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-foundation" aria-labelledby="tab-foundation" hidden>
+        <h3>Representation and fusion benchmark · <i>Ae. albopictus</i> presence vs target-group background</h3>
+        <div id="fusion-callout" class="callout">Loading matched model results…</div>
+        <div class="table-wrap">
+          <table>
+            <caption>Mean average precision and ROC-AUC across the six spatial development folds</caption>
+            <thead><tr><th>Representation and learner</th><th class="num">AP mean</th><th class="num">Fold SD</th><th class="num">ROC-AUC</th><th>Result source</th></tr></thead>
+            <tbody id="comparison-rows"><tr><td colspan="5">Loading frozen baselines and new MLP results…</td></tr></tbody>
+          </table>
+        </div>
+        <p class="note">Fold SD describes variation across the six spatial contexts; it is not a confidence interval. Background records are not confirmed absences. The twelve released maps built from these baselines are compared <a href="#released-models">below</a>.</p>
+      </div>
+      <div class="card tab-panel" role="tabpanel" id="panel-oadsdm" aria-labelledby="tab-oadsdm" hidden></div>
+      <div class="card tab-panel" role="tabpanel" id="panel-hico" aria-labelledby="tab-hico" hidden></div>
+    </section>
+    <section class="section" id="released-models">
+      <div class="section-head">
+        <span class="kicker">05 · Released map models</span>
+        <h2>The evidence behind the twelve released maps</h2>
+        <p>Global <i>Ae. albopictus</i> maps from four input representations and four learners, selected on one 1,601-site spatial development cohort and checked against NEON surveys.</p>
+      </div>
+    </section>
   </div>
   <div class="callout">Average Precision (AP) summarises how well positive sites are ranked. Development and NEON diagnostic scores use different labels, regions and prevalence; their difference is not a measure of global accuracy loss.</div>
   <div class="section-heading"><h2>Inputs × prediction models</h2><span>Select a combination to open its map.</span></div>
@@ -137,18 +288,20 @@
   <div id="model-table" class="panel table-container"></div>
   <div class="section-heading"><h2>Earth-observation foundation encoders</h2><span>Point benchmarks and global deployment are separate milestones.</span></div>
   <div id="foundation-cards" class="card-grid"></div>
-  <div class="section-heading" id="experiments"><h2>Full result tables</h2><span>15 collections · filter, page through or download any table as CSV</span></div>
-  <div class="experiment-workspace">
-    <aside id="experiment-menu" class="experiment-menu"></aside>
-    <article id="experiment-detail" class="panel padded"></article>
-  </div>
+  <details class="result-tables" id="result-tables">
+    <summary><b>Full result tables</b><span>15 collections · filter, page through or download any table as CSV</span></summary>
+    <div class="experiment-workspace">
+      <aside id="experiment-menu" class="experiment-menu"></aside>
+      <article id="experiment-detail" class="panel padded"></article>
+    </div>
+  </details>
 </section>
 
 <!-- ============================================================ DATA -->
 <section id="page-data" class="page content-page" hidden>
   <div class="page-title">
     <div>
-      <span class="overline">04 · Data &amp; inputs</span>
+      <span class="overline">Data</span>
       <h1>Know what the models learn from.</h1>
       <p>Observation labels, environmental predictors, satellite embeddings and independent surveys each play a separate role.</p>
     </div>
@@ -197,9 +350,9 @@
 <section id="page-methods" class="page content-page" hidden>
   <div class="page-title">
     <div>
-      <span class="overline">05 · Methods &amp; review</span>
+      <span class="overline">Methods</span>
       <h1>Make every result interpretable.</h1>
-      <p>What is mapped, how models are validated, what each metric means, how the release was reviewed and which literature informs the methods.</p>
+      <p class="jump"><a href="#pipeline">Pipeline</a><a href="#validation">Validation</a><a href="#limits">Limits</a><a href="#terms">Terms</a><a href="#ledger">Ledger</a><a href="#review">Release review</a></p>
     </div>
   </div>
   <div class="panel padded method-intro">
@@ -209,7 +362,25 @@
     <p>Neither is a forecast, a calibrated presence probability, an abundance estimate or a disease-risk map. This is a frozen public snapshot, not a live system.</p>
   </div>
 
-  <div class="section-heading"><h2>How models are validated</h2><span>Random splits are a reference only; transfer designs are the headline</span></div>
+  <div class="rs rs-block">
+    <section class="section" id="pipeline">
+      <div class="section-head">
+        <span class="kicker">Research pipeline</span>
+        <h2>Every experiment is chosen by the last one's failure</h2>
+        <p>The project runs as a recursive loop. Each iteration records its question, hypothesis, holdout design, result, failure and next step in a structured ledger, so rejected ideas are not retried without new evidence.</p>
+      </div>
+      <ol class="pipeline">
+        <li><b>Data</b><span>iNaturalist reports, surveys, external compendia</span></li>
+        <li><b>Representation</b><span>Climate · landscape · human · AlphaEarth 64-D</span></li>
+        <li><b>Fusion</b><span>10 methods, from concatenation to support decay</span></li>
+        <li><b>Spatial model</b><span>Flat, hierarchical, observation-aware</span></li>
+        <li><b>Validation</b><span>9 holdout designs, paired sign tests</span></li>
+        <li><b>Diagnosis</b><span>Distance, novelty, prior shift, proxies</span></li>
+        <li class="redesign"><b>Redesign</b><span>Next hypothesis from the observed failure</span></li>
+      </ol>
+    </section>
+  </div>
+  <div class="section-heading" id="validation"><h2>How models are validated</h2><span>Random splits are a reference only; transfer designs are the headline</span></div>
   <div class="design-grid">
     <article class="panel"><b>Random</b><p>Random 5-fold cells. Mostly interpolation; optimistic.</p></article>
     <article class="panel"><b>Spatial blocks · 5° / 10° / 20°</b><p>Hold out whole blocks; the scale curve shows how skill decays with distance.</p></article>
@@ -219,14 +390,45 @@
     <article class="panel"><b>Temporal · space-time</b><p>Train on 2022–2024, test on 2025, alone or in held-out blocks.</p></article>
   </div>
 
-  <div class="section-heading"><h2>Terms and metrics</h2><span>Plain-language definitions with worked examples</span></div>
-  <div id="glossary" class="card-grid"></div>
+  <div class="rs rs-block">
+    <section class="section" id="limits">
+      <div class="section-head">
+        <span class="kicker">Limitations</span>
+        <h2>What the benchmark cannot yet answer</h2>
+      </div>
+      <div class="limit-grid">
+        <article class="card"><h3>Regional species pool</h3><p>Which species have arrived in a region cannot be learned from environment. The next data milestone is a species-pool layer for all five classes from checklists and non-iNaturalist records.</p></article>
+        <article class="card"><h3>Data deserts</h3><p>Africa has 75 report cells and Latin America is weakest for every model. Global maps there are extrapolations; no architecture replaces absent evidence.</p></article>
+        <article class="card"><h3>Observation bias</h3><p>AlphaEarth encodes human footprint (spatial-CV R² up to 0.88), so report-based models can learn where people report. Surveys spanning the urban gradient are needed to separate effort from habitat.</p></article>
+        <article class="card"><h3>Not risk or abundance</h3><p>Maps rank relative habitat suitability or report composition. They are not calibrated presence probabilities, abundance, disease risk or forecasts.</p></article>
+      </div>
+    </section>
+  </div>
+  <details class="result-tables" id="terms">
+    <summary><b>Terms and metrics</b><span>Plain-language definitions with worked examples</span></summary>
+    <div class="experiment-workspace"><div id="glossary" class="card-grid"></div></div>
+  </details>
 
-  <div class="section-heading" id="review"><h2>Release review</h2><span id="audit-time"></span></div>
+  <div class="rs rs-block">
+    <section class="section" id="ledger">
+      <div class="section-head">
+        <span class="kicker">Research ledger</span>
+        <h2>Ledger of iterations</h2>
+        <p>One structured entry per experiment, with what improved, what failed and the next step it set.</p>
+      </div>
+      <div class="filter-row" role="group" aria-label="Filter ledger" id="ledger-filter"></div>
+      <div class="card"><div class="table-wrap"><table id="ledger-table"></table></div></div>
+    </section>
+  </div>
+  <details class="result-tables" id="review">
+    <summary><b>Release review</b><span id="audit-time"></span></summary>
+    <div class="experiment-workspace">
   <div class="callout">This public site does not run training or inspect new data. Changes appear here only after a reviewed publication.</div>
   <div id="release-summary" class="panel padded"></div>
   <div id="audit-cards" class="card-grid" style="margin-top:16px"></div>
 
+    </div>
+  </details>
   <div class="section-heading"><h2>Methods literature</h2><span>Preprints are labelled; method papers do not establish mosquito-scale accuracy</span></div>
   <div class="paper-grid">
     <article class="panel"><span class="tag">Species distribution · preprint</span><b>OCELOT: planetary-scale SDM with satellite foundation embeddings</b><p>Coordinates plus satellite embeddings with bias-aware sampling.</p><a href="https://arxiv.org/abs/2611.00284v2" target="_blank" rel="noopener">van Merriënboer et al. (2026) ↗</a></article>
@@ -247,12 +449,14 @@
   <div>
     <span class="footer-notice">Independent research prototype · not an official NASA product</span>
     <p>Data: iNaturalist via GBIF; WorldClim, ERA5-Land, MODIS, JRC, WorldPop, GHSL, VIIRS; Google AlphaEarth Foundations 2024; Kraemer et al. (2015); NEON; Austrian AGES surveillance. Original datasets keep their licenses. Only aggregate results and map previews are shown.</p>
-    <p>Code and benchmark tables: <a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">github.com/missa7481/NASA_Global_Habitat_Mapping ↗</a></p>
+    <p>Code and benchmark tables: <a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">github.com/missa7481/NASA_Global_Habitat_Mapping ↗</a> · <span id="generated"></span></p>
   </div>
 </footer>
 <div id="toast" role="status" hidden></div>
+<div class="tip" id="tip" hidden></div>
 <script src="en/content.js"></script>
 <script src="en/app.js"></script>
 <script src="en/coverage.js"></script>
+<script src="en/research.js"></script>
 </body>
 </html>

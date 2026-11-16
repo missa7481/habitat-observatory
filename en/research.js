@@ -1,6 +1,6 @@
 'use strict';
-
-/* Research foundation page. Every number is read from data/*.json (aggregate results only). */
+/* Research components on Research, Models and Methods pages. Every number is read from data/*.json (aggregate results only). */
+(() => {
 
 const byId = id => document.getElementById(id);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -9,7 +9,7 @@ const f3 = (v, k = 3) => (v === null || v === undefined || !Number.isFinite(Numb
 const sgn = (v, k = 3) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(k);
 const pct = v => `${Math.round(v * 100)}%`;
 const svgNS = 'http://www.w3.org/2000/svg';
-const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const css = name => getComputedStyle(document.querySelector('.rs') || document.documentElement).getPropertyValue(name).trim();
 
 const SEQ = ['#f3f7fd', '#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
 
@@ -64,14 +64,6 @@ function initGlobe() {
   frame.addEventListener('pointerleave', () => { byId('hud-pos').textContent = 'LAT —  LON —'; });
 }
 
-/* ------------------------------------------------------------------ section navigation */
-function initSubnav() {
-  const links = [...document.querySelectorAll('.subnav a')];
-  const io = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (entry.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === `#${entry.target.id}`));
-  }), { rootMargin: '-40% 0px -55% 0px' });
-  links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
-}
 
 /* ------------------------------------------------------------------ foundation comparison table */
 function renderComparison() {
@@ -426,11 +418,10 @@ function renderLedger(filter = 'all') {
 /* ------------------------------------------------------------------ main */
 async function main() {
   initGlobe();
-  initSubnav();
   initTabs();
   try {
     B = await getJSON('data/model_benchmarks.json');
-    byId('generated').textContent = `Benchmark data generated ${B.generated}`;
+    if (byId('generated')) byId('generated').textContent = `Benchmark data generated ${B.generated}`;
     renderTelemetry(); renderFamilies(); renderFusion(); initBenchmark();
     renderWeighting(); renderCausal(); renderDecay(); renderPool(); renderCoherence(); renderOADSDM(); renderHiCo();
     renderFindings(); renderLedger();
@@ -448,3 +439,4 @@ async function main() {
 }
 
 main();
+})();

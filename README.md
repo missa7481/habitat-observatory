@@ -3,7 +3,6 @@
 Public, read-only research explorer for global mosquito habitat suitability.
 
 Website: https://missa7481.github.io/habitat-observatory/
-Research page: https://missa7481.github.io/habitat-observatory/research.html
 
 ## Research scope
 
@@ -16,13 +15,15 @@ The maps show retrospective relative habitat suitability. They are not calibrate
 
 ## Using the website
 
-The site has five sections with one shared header:
+The site has five sections with one shared header. Research is the landing page.
 
+- **Research** (home): headline results from the model development work: four transfer metrics, five key findings and links to the evidence.
 - **Maps**: interactive explorer of the 12 released *Ae. albopictus* suitability maps, with quality layers (coverage, extrapolation, model disagreement) and two-model comparison.
-- **Models**: evidence behind the released maps: inputs × learners matrix, development and NEON diagnostic performance, foundation encoders and all 15 result tables (filter or download as CSV).
-- **Research**: model development and fusion research: four model families, ten fusion methods with outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, experiments, findings and the research ledger. Numbers come from `data/model_benchmarks.json` (aggregate metrics only).
+- **Models**: four model families, ten fusion methods with outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, the experiment results, and the evidence behind the released maps (inputs × learners matrix, development and NEON performance, foundation encoders, 15 downloadable result tables).
 - **Data**: sources and their roles, 5-degree aggregate coverage by source, and the feature dictionary.
-- **Methods**: what is mapped, validation designs, terms and metrics, release review and methods literature.
+- **Methods**: what is mapped, the research pipeline, validation designs, limitations, terms and metrics, the research ledger, release review and methods literature.
+
+Research numbers come from `data/model_benchmarks.json` (aggregate metrics only). `research.html` redirects to the home page.
 
 Map downloads contain quantized raster previews, not full-resolution GeoTIFF products. Code and full benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping
 
