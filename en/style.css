@@ -4,3 +4,139 @@
 *{font-family:Arial,Helvetica,sans-serif}body{color:#263c38}.app-header{border-top:4px solid #24543b}.brand{color:#254c3a}.brand-mark{border-radius:3px;background:#315f45}.panel{border-radius:5px;box-shadow:0 2px 10px #203d2a08}.map-heading{background:#f5f5ed;border-bottom:1px solid #d4ddd2}.map-heading h2{color:#365747}.map-year{color:#526e57;background:#fffef7}.factor-card.active{background:#edf3e8;border-color:#86a78b;box-shadow:inset 3px 0 #3e7250}.factor-card small,.muted,.overline{color:#65796e}.legend{border-radius:3px}.dataset-overview{grid-column:1/-1;background:#fffef9;border:1px solid #d7ded2;border-left:4px solid #355f43;border-radius:4px;padding:12px 18px;display:grid;grid-template-columns:1.2fr repeat(4,1fr);gap:16px;align-items:center}.dataset-overview h2{margin:0 0 4px;font-size:14px}.dataset-overview p{margin:0;font-size:10px;color:#63766a}.dataset-stat{border-left:1px solid #dce2d7;padding-left:16px}.dataset-stat strong{display:block;font-size:25px;line-height:1.2;color:#2f6045;font-weight:700;font-variant-numeric:tabular-nums}.dataset-stat span{display:block;font-size:11px;margin:4px 0}.dataset-stat small{display:block;font-size:9px;color:#607267}.explorer{grid-template-rows:auto minmax(0,1fr);min-height:760px}.check input{accent-color:#316546}button:hover{background:#eef3e8;border-color:#8ca88b}a:hover{color:#1d513b}:focus-visible{outline-color:#5e8d73!important}
 @media(max-width:1100px){.explorer{grid-template-rows:auto}.dataset-overview{grid-template-columns:repeat(4,1fr)}.dataset-overview>div:first-child{grid-column:1/-1}.dataset-stat{padding-left:10px}}
 @media(max-width:600px){.dataset-overview{grid-template-columns:repeat(2,1fr);gap:12px}.dataset-stat strong{font-size:22px}}
+
+/* ======================================================================
+   NASA Earth-observation theme (shared with research.html)
+   Deep-space header, NASA blue (#0b3d91) and red (#fc3d21) accents,
+   Public Sans + IBM Plex Mono, clean white data panels.
+   ====================================================================== */
+:root{--nasa-blue:#0b3d91;--nasa-red:#fc3d21;--space:#05080f;--hud:#8cc8ff;--ink:#0b1220;--ink-2:#44505f;--ink-3:#6b7685;--muted:#6b7685;--rule:#dde3eb;--line:#dde3eb;--bg:#f4f6f9;--surface:#fff;--surface-2:#eef2f7;--accent-ink:#1f5fbf;--accent-soft:#e5edfa;--blue:#1f5fbf;--teal:#1f5fbf;--font:"Public Sans","Segoe UI",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--shadow:0 1px 2px rgba(11,18,32,.04)}
+body,body *{font-family:var(--font)}
+body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}a:hover{color:var(--nasa-blue)}
+:focus-visible{outline:2px solid var(--nasa-red)!important;outline-offset:2px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;padding:8px 12px;z-index:50}.skip:focus{left:8px}
+.overline,.tag,.tiny-tag,.status-pill,.badge,th,.map-axis,.glossary-term,.formula,.data-flow div>span,.experiment-menu small,code{font-family:var(--mono)!important}
+
+/* header (identical to research.html) */
+.site-header{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:20px;padding:10px max(16px,env(safe-area-inset-left));background:rgba(5,8,15,.96);backdrop-filter:blur(10px);border-bottom:1px solid rgba(140,200,255,.14);color:#fff}
+.site-header .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;white-space:nowrap;font-size:16px;font-weight:500}
+.site-header .brand>span{display:flex;flex-direction:column;line-height:1.1}
+.site-header .brand b{font-weight:800}
+.site-header .brand small{font:500 10px var(--mono)!important;letter-spacing:.14em;text-transform:uppercase;color:var(--hud);margin-top:3px}
+.site-header nav{margin-left:auto;display:flex;gap:2px;height:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
+.site-header nav a{display:block;color:#c6d2e2;text-decoration:none;font-size:14px;font-weight:500;padding:8px 12px;border-radius:6px;white-space:nowrap}
+.site-header nav a::after{display:none!important}
+.site-header nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.site-header nav a[aria-current="page"],.site-header nav a.active{color:#fff;box-shadow:inset 0 -2px 0 var(--nasa-red);border-radius:0}
+
+/* context bar */
+.context-bar{background:#0b1424;color:#b2bfce;border-bottom:1px solid rgba(140,200,255,.12);font-size:12.5px;padding:8px max(16px,env(safe-area-inset-left))}
+.context-bar b{color:#fff;font-weight:600}.context-dot{background:var(--nasa-red);box-shadow:0 0 8px var(--nasa-red)}.separator{color:#44505f}
+.context-bar .tag{background:transparent;border:1px solid rgba(140,200,255,.3);padding:3px 8px;border-radius:4px;color:var(--hud);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.context-right{font-size:12px}.context-right button{color:var(--hud)}
+
+/* surfaces and controls */
+.panel{border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow)}
+button{border-color:var(--rule);border-radius:6px}button:hover{background:var(--accent-soft);border-color:#b9cbe6}
+select,input[type=search]{border-color:var(--rule);border-radius:6px;font-size:13.5px}
+.overline{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+.tiny-tag,.status-pill{background:var(--accent-soft);color:var(--nasa-blue);border:0;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.callout{font-size:14px;color:var(--ink-2);background:var(--accent-soft);border:0;border-left:4px solid var(--nasa-blue);border-radius:0 8px 8px 0;line-height:1.6}
+.badge{font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+.badge.pass,.badge.unchanged,.badge.baseline_recorded,.badge.completed{color:#006300;background:#e3f3e3}
+.badge.warning,.badge.changed,.badge.manual_review,.badge.awaiting_protocol_review{color:#8a5a00;background:#fdf3dc}
+.badge.fail,.badge.error,.badge.failed{color:#b42318;background:#fdeceb}
+
+/* map explorer */
+.explorer{background:var(--bg)}
+.dataset-overview{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--nasa-blue);border-radius:12px}
+.dataset-overview h2{font-size:16px;font-weight:800}.dataset-overview p{font-size:12px;color:var(--ink-3)}
+.dataset-stat{border-left-color:var(--rule)}.dataset-stat strong{color:var(--ink);font-weight:800;font-size:26px}.dataset-stat span{font-size:12.5px;font-weight:600}.dataset-stat small{font-size:11px;color:var(--ink-3)}
+.panel-heading h1{font-size:14px;font-weight:700}
+.control-body>label,.label-row,.check,.switch-row{font-size:12px}
+.factor-card{background:var(--surface);border-color:var(--rule)}
+.factor-card.active{background:var(--accent-soft);border-color:#9db8e3;box-shadow:inset 3px 0 var(--nasa-blue)}
+.factor-card b{font-size:12.5px}.factor-card small{font-size:10.5px;color:var(--ink-3)}
+.factor-icon,.factor-card[data-factor] .factor-icon{background:var(--accent-soft);color:var(--nasa-blue)}
+.check input{accent-color:var(--nasa-blue)}.switch-row input:checked{background:var(--nasa-blue)}
+.scale-card{background:var(--surface-2);border-color:var(--rule)}.scale-card dl>div{font-size:11.5px}.scale-card p{font-size:10.5px}
+.control-footer{font-size:11px;color:var(--ink-3);background:var(--surface-2)}
+.live-dot{background:var(--nasa-red)}
+.map-stage{background:#dbe6f2}
+.layer-toolbar{background:rgba(255,255,255,.96)}
+.segmented{background:var(--surface-2)}.segmented button{font-size:11.5px;color:var(--ink-3)}.segmented button.active{color:#fff;background:var(--nasa-blue);box-shadow:none}
+.map-heading{background:transparent;border:0}.map-heading .overline{font-size:10px}.map-heading h2{color:var(--ink);font-size:14px;font-weight:700}
+.map-year{color:var(--nasa-blue);font-family:var(--mono)!important}
+.map-bottom{font-size:11px}
+.benchmark-strip h3{font-size:13px;font-weight:700}.strip-heading a,.strip-footer{font-size:11px}
+.mini-chart .bar{background:#9ec5f4}.mini-chart button.active .bar{background:var(--nasa-blue)}.mini-chart button.active .bar-label{color:var(--nasa-blue)}
+.bar-value,.bar-label{font-size:9.5px}
+.inspector-tabs button{font-size:12px;color:var(--ink-3)}.inspector-tabs button.active{color:var(--ink);border-bottom-color:var(--nasa-red)}
+.result-hero{background:var(--accent-soft);border:0;border-left:4px solid var(--nasa-blue)}
+.result-hero>span{font-size:11.5px;color:var(--ink-2)}.result-hero strong{color:var(--nasa-blue);font-weight:800}.result-hero small{font-size:10.5px;color:var(--ink-3)}
+.result-subtitle{font-size:12px;color:var(--ink-2)}
+.score-grid span,.score-grid small{font-size:10.5px;color:var(--ink-3)}.score-grid b{color:var(--ink);font-weight:700}
+.chart-title{font-size:11.5px;color:var(--ink-2)}.score-bars .score-bar{font-size:11px}
+.score-bar i>b{background:var(--nasa-blue)}.score-bar:last-child i>b{background:#3987e5}.coverage-track i{background:var(--nasa-blue)}
+.small-note{font-size:11px;color:var(--ink-3)}
+.probe-card{background:var(--surface-2);border-color:var(--rule)}.probe-card p{font-size:12px;color:var(--ink-2)}
+.inspector-note{background:#fff8f6;border-top-color:#fbd5cd}.inspector-note p{font-size:11px;color:#8a3a2b}.note-icon{color:var(--nasa-red)}
+.quality-option{font-size:12.5px}.quality-option.active{background:var(--accent-soft);border-color:#9db8e3}.quality-option small{font-size:11px}
+.inspector-list{font-size:12px;color:var(--ink-2)}
+
+/* content pages */
+.content-page{max-width:1240px;padding:44px max(16px,env(safe-area-inset-left)) 56px}
+.page-title{margin-bottom:28px;align-items:flex-end}
+.page-title h1{font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:10px 0 12px}
+.page-title p{font-size:16px;color:var(--ink-2);max-width:70ch}
+.page-title input{min-width:260px}
+.section-heading{margin:44px 0 14px;align-items:flex-end}
+.section-heading h2{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.section-heading>span{font-size:13px;color:var(--ink-3)}
+.padded{padding:22px}
+table{font-size:13.5px;font-variant-numeric:tabular-nums}
+th{background:transparent;color:var(--ink-3);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border-bottom:1.5px solid var(--ink-3)}
+td{border-bottom-color:var(--rule)}tr.selected{background:var(--accent-soft)}
+.matrix button{font-size:16px;font-weight:700;color:var(--ink);background:var(--surface)}
+.matrix button small{font-size:10.5px;color:var(--ink-3);font-weight:500}
+.matrix button.selected{background:var(--accent-soft);border-color:var(--nasa-blue);color:var(--nasa-blue)}
+.card-grid{gap:14px}.card-grid .panel{padding:20px;border-top:3px solid var(--nasa-blue)}
+.card-grid h2{font-size:17px;font-weight:800;color:var(--ink)}
+.card-grid p,.card-grid details{font-size:13.5px;color:var(--ink-2)}
+.card-grid .strength{color:var(--ink-2)}
+.experiment-menu button{font-size:13px;color:var(--ink-2)}.experiment-menu small{font-size:10.5px;color:var(--ink-3)}
+.experiment-menu button.active{background:var(--surface);border-color:var(--rule);color:var(--ink);box-shadow:inset 3px 0 var(--nasa-red)}
+.experiment-intro{font-size:14px;color:var(--ink-2);line-height:1.7}
+.experiment-tools button,.pager{font-size:12.5px}
+.data-flow{gap:12px}.data-flow div>span{color:var(--nasa-blue);font-size:20px;font-weight:600}.data-flow b{font-size:15px}.data-flow small{font-size:12px;color:var(--ink-3)}.data-flow>i{color:var(--nasa-red)}
+.stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.stat{background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--nasa-blue);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.stat strong{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}.stat span{font-weight:600}.stat small{font-size:12.5px;color:var(--ink-3)}
+.coverage-layout{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:16px}
+#coverage-map{width:100%;height:auto;display:block;border-radius:8px}
+.map-ocean{fill:var(--surface-2)}.grid-line{stroke:var(--rule);stroke-width:1}
+.coverage-cell{cursor:pointer;stroke:#fff;stroke-width:.6}.coverage-cell:hover,.coverage-cell:focus{stroke:var(--ink);stroke-width:1.2;outline:none}
+.map-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:6px}
+.map-legend{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--ink-3);margin:8px 0 0}.map-legend i{width:160px;height:8px;border-radius:4px}
+.coverage-detail{display:flex;flex-direction:column;gap:10px}.coverage-detail h2{font-size:19px;font-weight:800;margin:0}.coverage-detail p{font-size:13.5px;margin:0;color:var(--ink-2)}
+.cell-detail{background:var(--surface-2);border-radius:8px;padding:12px;font-size:13.5px}
+.select-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.method-intro h2{font-size:22px;font-weight:800}.method-intro p{font-size:15px;color:var(--ink-2);max-width:80ch}
+.design-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.design-grid .panel{padding:16px 18px;border-left:3px solid var(--nasa-blue)}.design-grid b{font-size:15px}.design-grid p{font-size:13.5px;color:var(--ink-2);margin:6px 0 0}
+.design-grid .panel:nth-child(3){border-left-color:var(--nasa-red)}
+.glossary-term{font-size:20px;font-weight:600;color:var(--nasa-blue)}
+.formula{background:var(--surface-2);border-left:3px solid var(--nasa-blue);color:var(--ink);font-size:12.5px;border-radius:0 6px 6px 0}
+.audit-heading h3{font-size:14.5px;font-weight:700}
+.paper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.paper-grid .panel{padding:16px;display:flex;flex-direction:column;gap:8px}.paper-grid b{font-size:15px}.paper-grid p{font-size:13px;color:var(--ink-2);margin:0}.paper-grid a{margin-top:auto;font-size:13px;font-weight:600}
+.tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);background:none;border:0;padding:0}
+.reference small{font-size:12.5px;color:var(--ink-3)}.reference a{font-weight:600}
+.ref-list{columns:2;column-gap:28px;margin:10px 0 0;padding-left:18px;font-size:12.5px}.ref-list li{margin:4px 0;break-inside:avoid;overflow-wrap:anywhere}
+.site-footer{background:var(--space);color:#b2bfce;padding:32px max(16px,env(safe-area-inset-left)) 48px;font-size:13.5px}
+.site-footer>div{max-width:900px;display:flex;flex-direction:column;gap:10px}.site-footer p{margin:0}.site-footer a{color:var(--hud)}
+.footer-notice{font:600 11px var(--mono)!important;letter-spacing:.12em;text-transform:uppercase;color:var(--nasa-red)}
+#toast{background:var(--nasa-blue)}
+@media(max-width:1000px){.stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.coverage-layout{grid-template-columns:1fr}}
+@media(max-width:720px){.site-header{flex-wrap:wrap;gap:8px}.site-header nav{order:3;width:100%;margin-left:0;justify-content:flex-start}.site-header nav a{padding:8px 9px;font-size:13px}.site-header .brand small{display:none}.ref-list{columns:1}.page-title input{min-width:0;width:100%}}

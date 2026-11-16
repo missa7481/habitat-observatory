@@ -11,15 +11,9 @@ const pct = v => `${Math.round(v * 100)}%`;
 const svgNS = 'http://www.w3.org/2000/svg';
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-const SOURCE_COLORS = {
-  training_sites: '#2a78d6',
-  mosquito_alert_candidates: '#eb6834',
-  globe_habitat_observations: '#1baf7a',
-  neon_validation_sites: '#c98500',
-};
 const SEQ = ['#f3f7fd', '#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
 
-let inventory, coverage, comparison, B;
+let comparison, B;
 const state = { design: 'loro', metric: 'AUC' };
 
 async function getJSON(path) {
@@ -79,107 +73,7 @@ function initSubnav() {
   links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
 }
 
-/* ------------------------------------------------------------------ coverage (existing data) */
-function sourceCountText(source) {
-  const parts = [];
-  if (source.locations) parts.push(`${formatNumber(source.locations)} locations`);
-  if (source.observations) {
-    parts.push(`${formatNumber(source.observations)} observations`);
-    if (source.coordinate_valid_observations !== undefined) parts.push(`${formatNumber(source.coordinate_valid_observations)} with valid coordinates`);
-  }
-  if (source.records) {
-    parts.push(`${formatNumber(source.records)} records`);
-    if (source.coordinate_precision_le_500m !== undefined) parts.push(`${formatNumber(source.coordinate_precision_le_500m)} pass the ≤500 m screen`);
-  }
-  if (source.high_confidence_release_records) parts.push(`${formatNumber(source.high_confidence_release_records)} high-confidence 2024 release records`);
-  if (source.country_count) parts.push(`${formatNumber(source.country_count)} countries`);
-  if (source.presence !== undefined) parts.push(`${formatNumber(source.presence)} presences · ${formatNumber(source.target_group_background)} target-group background`);
-  if (source.detections !== undefined) parts.push(`${formatNumber(source.detections)} detections`);
-  if (source.species_claims !== undefined) parts.push(`${formatNumber(source.species_claims)} species claims · ${formatNumber(source.expert_verified_species_claims)} expert-verified`);
-  return parts.join(' · ');
-}
-
-function renderStats() {
-  const s = id => inventory.sources.find(source => source.id === id);
-  const training = s('training_sites'), alert = s('mosquito_alert_candidates'), globe = s('globe_habitat_observations'), neon = s('neon_validation_sites');
-  byId('source-stats').innerHTML = [
-    [training.locations, 'Core development cohort', `${training.presence} presences · ${training.target_group_background} background`],
-    [7004, 'Multi-species report cells', '0.05° cells · 5 Culicidae classes · 2022–2025'],
-    [globe.coordinate_valid_observations, 'GLOBE habitat reports', `${globe.country_count} countries · no expert-verified claims`],
-    [neon.locations, 'NEON independent 2026 sites', `${neon.detections} detections · U.S. diagnostic`],
-    [alert.locations, 'Mosquito Alert candidates', `${alert.country_count} countries · not used for training`],
-  ].map(([value, label, note]) => `<article class="stat-card"><strong>${formatNumber(value)}</strong><span>${esc(label)}</span><small>${esc(note)}</small></article>`).join('');
-}
-
-function renderSourceCards() {
-  byId('source-cards').innerHTML = inventory.sources.map(source => `
-    <article class="source-card">
-      <span class="source-role">${esc(source.role)}</span>
-      <h3>${esc(source.name)}</h3>
-      <p class="source-count">${esc(sourceCountText(source))}</p>
-      <p class="source-limit">${esc(source.limitation)}</p>
-      ${source.release_years ? `<p>${source.release_years.map(item => `${item.year}: ${formatNumber(item.high_confidence_records)} high-confidence`).join(' · ')}</p>` : ''}
-      <a href="${esc(source.source)}" target="_blank" rel="noopener">Source record ↗</a>
-    </article>`).join('');
-}
-
-function drawGrid() {
-  const group = byId('map-grid');
-  for (let x = 0; x <= 360; x += 60) group.append(line(x * 2, 0, x * 2, 360, 'grid-line'));
-  for (let y = 0; y <= 180; y += 30) group.append(line(0, y * 2, 720, y * 2, 'grid-line'));
-}
-function line(x1, y1, x2, y2, cls) {
-  const l = document.createElementNS(svgNS, 'line');
-  Object.entries({ x1, y1, x2, y2, class: cls }).forEach(([k, v]) => l.setAttribute(k, String(v)));
-  return l;
-}
-
-function sourceDetails(source, p) {
-  if (source.map_layer === 'training_sites') return `${formatNumber(p.training_sites)} training locations: ${formatNumber(p.training_presence)} presences and ${formatNumber(p.training_background)} target-group background records.`;
-  if (source.map_layer === 'mosquito_alert_candidates') return `${formatNumber(p.mosquito_alert_candidates)} selected candidate locations. Exploratory presence-only records, not training labels.`;
-  if (source.map_layer === 'globe_habitat_observations') return `${formatNumber(p.globe_habitat_observations)} habitat observations; ${formatNumber(p.globe_species_claims)} coordinate-valid species claims, of which ${formatNumber(p.globe_verified_species_claims)} are expert-verified.`;
-  return `${formatNumber(p.neon_validation_sites)} validation sites; ${formatNumber(p.neon_detections)} detections. Kept separate from the 2024 training cohort.`;
-}
-
-function renderCell(source, feature, maxCount) {
-  const ring = feature.geometry.coordinates[0];
-  const [west, south] = ring[0], east = ring[1][0], north = ring[2][1];
-  const value = Number(feature.properties[source.map_layer] || 0);
-  if (!value) return null;
-  const rect = document.createElementNS(svgNS, 'rect');
-  const attrs = { x: (west + 180) * 2, y: (90 - north) * 2, width: (east - west) * 2, height: (north - south) * 2,
-    fill: SOURCE_COLORS[source.map_layer], 'fill-opacity': 0.2 + 0.78 * Math.sqrt(value / maxCount), class: 'coverage-cell',
-    tabindex: 0, role: 'button', 'aria-label': `${formatNumber(value)} records in one 5 degree cell`, 'data-tip': `${formatNumber(value)} records · 5° × 5° cell` };
-  Object.entries(attrs).forEach(([k, v]) => rect.setAttribute(k, String(v)));
-  const show = () => { byId('coverage-cell-detail').textContent = sourceDetails(source, feature.properties); };
-  rect.addEventListener('click', show);
-  rect.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
-  return rect;
-}
-
-function renderCoverage(source) {
-  const group = byId('map-cells');
-  group.replaceChildren();
-  byId('coverage-title').textContent = source.name;
-  byId('coverage-source-name').textContent = source.name;
-  byId('coverage-source-role').textContent = source.role;
-  byId('coverage-source-link').href = source.source;
-  byId('coverage-cell-detail').textContent = 'Select a coloured 5° cell to inspect aggregate counts; no point coordinates are published.';
-  const maxCount = Math.max(1, ...coverage.features.map(f => Number(f.properties[source.map_layer] || 0)));
-  coverage.features.forEach(f => { const c = renderCell(source, f, maxCount); if (c) group.append(c); });
-  byId('coverage-map').setAttribute('aria-label', `Global ${source.name} coverage aggregated to 5 degree cells`);
-  document.querySelector('.map-legend i').style.background = `linear-gradient(90deg, ${css('--surface-2')}, ${SOURCE_COLORS[source.map_layer]})`;
-}
-
-function renderCoverageChoices() {
-  const sources = inventory.sources.filter(source => source.map_layer);
-  const select = byId('coverage-source');
-  select.innerHTML = sources.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
-  select.disabled = false;
-  select.addEventListener('change', () => { const s = sources.find(x => x.id === select.value); if (s) renderCoverage(s); });
-  renderCoverage(sources[0]);
-}
-
+/* ------------------------------------------------------------------ foundation comparison table */
 function renderComparison() {
   const models = comparison.models;
   byId('comparison-rows').innerHTML = models.map(m => `
@@ -545,14 +439,10 @@ async function main() {
     byId('families-grid').innerHTML = '<p class="loading">Model benchmark data could not be loaded.</p>';
   }
   try {
-    [inventory, coverage, comparison] = await Promise.all([
-      getJSON('data/source_inventory.json'), getJSON('data/source_coverage_5deg.geojson'), getJSON('data/fusion_mlp_summary.json'),
-    ]);
-    renderStats(); renderSourceCards(); drawGrid(); renderCoverageChoices(); renderComparison();
+    comparison = await getJSON('data/fusion_mlp_summary.json');
+    renderComparison();
   } catch (error) {
-    console.error('Unable to load research snapshot:', error);
-    byId('source-stats').innerHTML = '<p class="loading">The reviewed data snapshot could not be loaded.</p>';
-    byId('coverage-title').textContent = 'Coverage data unavailable';
+    console.error('Unable to load the foundation comparison:', error);
     byId('comparison-rows').innerHTML = '<tr><td colspan="5">Model results could not be loaded.</td></tr>';
   }
 }

@@ -15,15 +15,16 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="index.html">
+    <a class="brand" href="index.html#explore">
       <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="#0B3D91"/><path d="M10 17c4 2 10 1 14-2m-13 9c5-1 11 0 15 3" stroke="#9cc3ff" stroke-width="1.2" fill="none"/><ellipse cx="20" cy="20" rx="18" ry="6" transform="rotate(-24 20 20)" fill="none" stroke="#FC3D21" stroke-width="2"/></svg>
       <span>Habitat <b>Observatory</b><small>Global vector habitat research</small></span>
     </a>
     <nav aria-label="Site">
-      <a href="index.html#explore">Global maps</a>
-      <a href="index.html#data">Data catalog</a>
-      <a href="index.html#methods">Methodology</a>
-      <a href="research.html" aria-current="page">Research foundation</a>
+      <a href="index.html#explore">Maps</a>
+      <a href="index.html#models">Models</a>
+      <a href="research.html" aria-current="page">Research</a>
+      <a href="index.html#data">Data</a>
+      <a href="index.html#methods">Methods</a>
     </nav>
   </header>
 
@@ -68,7 +69,7 @@
     <div class="subnav-inner">
       <a href="#loop">Pipeline</a><a href="#data">Data</a><a href="#families">Model families</a><a href="#fusion">Fusion methods</a>
       <a href="#benchmark">Benchmark</a><a href="#experiments">Experiments</a><a href="#findings">Findings</a><a href="#ledger">Ledger</a>
-      <a href="#papers">Papers</a><a href="#limits">Limits</a>
+      <a href="#limits">Limits</a>
     </div>
   </nav>
 
@@ -92,40 +93,16 @@
 
     <section class="section" id="data">
       <div class="section-head">
-        <span class="kicker">02 · Where the data are</span>
-        <h2>Observation coverage by source</h2>
-        <p>Sources keep separate roles: training labels, exploratory candidates, habitat reports and independent surveys are never pooled into one label.</p>
+        <span class="kicker">02 · Data</span>
+        <h2>One shared dataset for every research model</h2>
+        <p>All composition models below use the same inputs and labels, so differences come from the model and the fusion method, not the data. Sources, coverage maps and the full feature dictionary are on the <a href="index.html#data">Data page</a>.</p>
       </div>
-      <div class="stat-grid" id="source-stats" aria-label="Research dataset summary"><p class="loading">Loading reviewed research snapshot…</p></div>
-      <div class="coverage-layout">
-        <div class="card map-card">
-          <div class="card-top">
-            <span id="coverage-title">Loading coverage…</span>
-            <label class="select-label" for="coverage-source">Source
-              <select id="coverage-source" disabled></select>
-            </label>
-          </div>
-          <svg id="coverage-map" viewBox="0 0 720 360" role="img" aria-label="Aggregated global observation coverage map">
-            <rect class="map-ocean" x="0" y="0" width="720" height="360"></rect>
-            <g id="map-grid"></g>
-            <g id="map-cells"></g>
-          </svg>
-          <div class="map-axis"><span>180°W</span><span>0°</span><span>180°E</span></div>
-          <div class="map-legend"><span>Fewer records</span><i></i><span>More records</span></div>
-          <p class="note">5° × 5° aggregate cells summarize records, not exact sites. Select a coloured cell for its counts.</p>
-        </div>
-        <aside class="card coverage-detail" aria-live="polite">
-          <span class="kicker">Selected source</span>
-          <h3 id="coverage-source-name">Loading…</h3>
-          <p id="coverage-source-role"></p>
-          <div id="coverage-cell-detail" class="cell-detail">Coverage counts will appear here.</div>
-          <a id="coverage-source-link" target="_blank" rel="noopener">Official source ↗</a>
-        </aside>
+      <div class="stat-grid">
+        <article class="stat-card"><strong>7,004</strong><span>Report cells at 0.05°</span><small>iNaturalist research-grade Culicidae, 2022–2025</small></article>
+        <article class="stat-card"><strong>5</strong><span>Mosquito classes</span><small><i>Ae. albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i>, <i>Anopheles</i>, other</small></article>
+        <article class="stat-card"><strong>105</strong><span>Input features</span><small>Climate 26 · landscape 11 · human 4 · AlphaEarth 64</small></article>
+        <article class="stat-card"><strong>1,601</strong><span>Foundation-stage sites</span><small><i>Ae. albopictus</i> presence vs background, 2024</small></article>
       </div>
-      <details class="disclosure">
-        <summary>All sources and their admission limits</summary>
-        <div id="source-cards" class="source-grid" aria-live="polite"></div>
-      </details>
     </section>
 
     <section class="section" id="families">
@@ -208,7 +185,7 @@
             <tbody id="comparison-rows"><tr><td colspan="5">Loading frozen baselines and new MLP results…</td></tr></tbody>
           </table>
         </div>
-        <p class="note">Fold SD describes variation across the six spatial contexts; it is not a confidence interval. Background records are not confirmed absences.</p>
+        <p class="note">Fold SD describes variation across the six spatial contexts; it is not a confidence interval. Background records are not confirmed absences. The twelve released maps built from these baselines are compared on the <a href="index.html#models">Models page</a>.</p>
       </div>
       <div class="card tab-panel" role="tabpanel" id="panel-oadsdm" aria-labelledby="tab-oadsdm" hidden></div>
       <div class="card tab-panel" role="tabpanel" id="panel-hico" aria-labelledby="tab-hico" hidden></div>
@@ -232,26 +209,9 @@
       <div class="card"><div class="table-wrap"><table id="ledger-table"></table></div></div>
     </section>
 
-    <section class="section" id="papers">
-      <div class="section-head">
-        <span class="kicker">09 · Methods literature</span>
-        <h2>Representation learning and data fusion references</h2>
-      </div>
-      <div class="paper-grid">
-        <article class="paper-card"><span class="tag">Species distribution · preprint</span><h3>OCELOT: Planetary-Scale Species Distribution Modeling with Satellite Foundation Embeddings</h3><p>Coordinates plus satellite embeddings with bias-aware sampling; a design precedent for relative occurrence, not a guarantee at mosquito-data scale.</p><a href="https://arxiv.org/abs/2611.00284v2" target="_blank" rel="noopener">van Merriënboer et al. (2026) ↗</a></article>
-        <article class="paper-card"><span class="tag">Temporal multispectral pretraining</span><h3>SatMAE</h3><p>Masked-autoencoder pretraining for time-series and multispectral imagery; motivates frozen seasonal representations.</p><a href="https://arxiv.org/abs/2207.08051" target="_blank" rel="noopener">Cong et al. (2022), NeurIPS ↗</a></article>
-        <article class="paper-card"><span class="tag">Multimodal EO · preprint</span><h3>AnySat</h3><p>Scale-adaptive self-supervised encoders across sensors; relevant where resolution and modality coverage vary.</p><a href="https://arxiv.org/abs/2412.14123" target="_blank" rel="noopener">Astruc et al. (2024) ↗</a></article>
-        <article class="paper-card"><span class="tag">EO foundation model · preprint</span><h3>Prithvi-EO-2.0</h3><p>Multitemporal multispectral foundation model; practical here as a frozen encoder or parameter-efficient adaptation.</p><a href="https://arxiv.org/abs/2412.02732" target="_blank" rel="noopener">Szwarcman et al. (2024) ↗</a></article>
-        <article class="paper-card"><span class="tag">Generative multimodal EO</span><h3>TerraMind</h3><p>Fusion across geospatial modalities; generated modalities are model outputs, not independent evidence.</p><a href="https://arxiv.org/abs/2504.11171" target="_blank" rel="noopener">Jakubik et al. (2025) ↗</a></article>
-        <article class="paper-card"><span class="tag">Pseudo-absences · peer-reviewed</span><h3>Pseudo-absences for deep SDMs</h3><p>Background selection, imbalance and spatial evaluation are central design choices.</p><a href="https://doi.org/10.1016/j.ecoinf.2024.102623" target="_blank" rel="noopener">Zbinden et al. (2024) ↗</a></article>
-        <article class="paper-card"><span class="tag">Deep SDM benchmark · peer-reviewed</span><h3>Deep learning for species distributions</h3><p>Motivates conventional baselines, spatial holdouts and leakage checks before complex networks.</p><a href="https://doi.org/10.1111/geb.70184" target="_blank" rel="noopener">Kellenberger et al. (2026) ↗</a></article>
-        <article class="paper-card"><span class="tag">Mosquito remote sensing · peer-reviewed</span><h3>Satellite vs ground suitability for vector mosquitoes</h3><p>Direct <i>Ae. albopictus</i> evidence comparing satellite features with in-situ microclimate; regional, not a global transfer test.</p><a href="https://doi.org/10.1093/jme/tjac145" target="_blank" rel="noopener">McMahon et al. (2022) ↗</a></article>
-      </div>
-    </section>
-
     <section class="section" id="limits">
       <div class="section-head">
-        <span class="kicker">10 · Limitations and next steps</span>
+        <span class="kicker">09 · Limitations and next steps</span>
         <h2>What the benchmark cannot yet answer</h2>
       </div>
       <div class="limit-grid">
@@ -269,7 +229,7 @@
       <p>Data: iNaturalist research-grade observations via GBIF; WorldClim, ERA5-Land, MODIS, JRC, WorldPop, GHSL, VIIRS; Google AlphaEarth Foundations 2024; Kraemer et al. (2015); NEON; Austrian AGES surveillance. Original datasets keep their licenses. Only aggregate results are shown; no observation coordinates.</p>
       <p>Code and full benchmark tables: <a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">github.com/missa7481/NASA_Global_Habitat_Mapping ↗</a> · <span id="generated"></span></p>
     </div>
-    <a href="index.html#explore" class="button ghost">Return to global maps ↗</a>
+    <a href="index.html#explore" class="button ghost">Open the global maps ↗</a>
   </footer>
   <div class="tip" id="tip" hidden></div>
   <script src="research.js"></script>

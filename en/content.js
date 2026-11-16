@@ -52,6 +52,11 @@ const AUDIT_COPY={
 const GLOSSARY=[
  ['AP','Average Precision','A ranking metric: precision at each score threshold is weighted by the increase in recall. It is not accuracy or abundance probability.','AP = Σₖ (Rₖ − Rₖ₋₁) Pₖ','For ranked labels [1, 0, 1, 0, 1], AP = (1 + 2/3 + 3/5) / 3 ≈ 0.756. Scores also depend on prevalence and observation design.'],
  ['AUC','Area Under the Receiver Operating Characteristic Curve','Measures positive–negative ranking discrimination. It is different from AP.'],
+ ['Log-loss','Multinomial negative log-likelihood','How much probability the model gave to the classes actually reported, averaged over reports. Lower is better; it rewards calibration, not only ranking.','−(1/N) Σ log p(observed class)','A model that always predicts the training class mix sets the reference: beating it means the covariates add information.'],
+ ['LORO','Leave one region out','Train on five world regions and test on the sixth. The main test of transfer to places the model has never seen.'],
+ ['Class prior shift','Regional species-mix shift','Different regions report different species mixes because of introduction history. Re-weighting predictions to the true regional mix shows how much error comes from this shift rather than from the habitat relationship.'],
+ ['Fusion','Combining data sources','Early fusion concatenates inputs; late fusion combines separate expert predictions; gated or support-decay fusion lets weights vary with context or distance to training data.'],
+ ['Coherence','Global-to-local consistency','A coarse cell equals the average of its fine cells, so a city map never contradicts the country map. HiCo enforces this exactly.','A_s(P) = log mean_{x∈P} exp η_s(x)'],
  ['Percentile','Training-score percentile','A score’s rank relative to the training reference distribution.','','A value of 80 is above about 80% of training-reference scores; it is not an 80% probability of presence.'],
  ['SD / CI / Δ','Standard deviation / Confidence interval / Difference','SD describes dispersion; CI describes a statistical interval; Δ is the candidate result minus its comparator.'],
  ['X / Y','Predictors / Outcome','X contains environmental variables or embeddings. In the main training task, Y identifies presence records versus target-group background; background is not confirmed absence.'],

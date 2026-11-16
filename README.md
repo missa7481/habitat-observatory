@@ -2,8 +2,8 @@
 
 Public, read-only research explorer for global mosquito habitat suitability.
 
-Intended website: https://missa7481.github.io/habitat-observatory/
-Research foundation page: https://missa7481.github.io/habitat-observatory/research.html
+Website: https://missa7481.github.io/habitat-observatory/
+Research page: https://missa7481.github.io/habitat-observatory/research.html
 
 ## Research scope
 
@@ -16,13 +16,21 @@ The maps show retrospective relative habitat suitability. They are not calibrate
 
 ## Using the website
 
-Choose an input group and learner, then switch layers or compare two models. The Models, Experiments, Data, Review and Methodology pages explain the available results. The Research Foundation page presents the model development: four model families (foundation fusion benchmark, observation-aware SDM, HiCo-Fuse, recursive research loop), ten fusion methods with their measured outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, experiment details, findings and the research ledger, alongside the 5-degree aggregate coverage map, source roles and annotated references. Its numbers come from `data/model_benchmarks.json` (aggregate metrics only). Code and full benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping Map downloads contain quantized raster preview data, not full-resolution GeoTIFF products. Aggregate result tables can be downloaded from Experiments.
+The site has five sections with one shared header:
+
+- **Maps**: interactive explorer of the 12 released *Ae. albopictus* suitability maps, with quality layers (coverage, extrapolation, model disagreement) and two-model comparison.
+- **Models**: evidence behind the released maps: inputs × learners matrix, development and NEON diagnostic performance, foundation encoders and all 15 result tables (filter or download as CSV).
+- **Research**: model development and fusion research: four model families, ten fusion methods with outcomes, an interactive benchmark of nine models under nine spatial and temporal holdout designs, experiments, findings and the research ledger. Numbers come from `data/model_benchmarks.json` (aggregate metrics only).
+- **Data**: sources and their roles, 5-degree aggregate coverage by source, and the feature dictionary.
+- **Methods**: what is mapped, validation designs, terms and metrics, release review and methods literature.
+
+Map downloads contain quantized raster previews, not full-resolution GeoTIFF products. Code and full benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping
 
 ## Publication and updates
 
 This repository contains only the reviewed public presentation. No raw occurrence or surveillance records, precise site coordinates, per-site predictions, credentials, local reports or training services are included. The new coverage layers use 5-degree polygon aggregates; the MLP file contains only fold-level summary metrics. The website is a frozen snapshot; local daily source checks do not automatically publish updates.
 
-Deploy using GitHub Pages, branch `main`, folder `/ (root)`. No build or secrets are required. Paths are configured for `/habitat-observatory/`; changes to the repository name require updating those paths.
+Deploy using GitHub Pages, branch `main`, folder `/ (root)`. No build or secrets are required. All paths are relative, so the site also runs from a local static server.
 
 ## Attribution and reuse
 

@@ -22,23 +22,6 @@
   --radius: 12px;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #070b13; --surface: #0e1522; --surface-2: #131c2c; --ink: #e8eef6; --ink-2: #b2bfce; --ink-3: #8794a6;
-    --rule: #1f2a3b; --accent-ink: #8cc8ff; --accent-soft: #12233d;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-    --ok: #4cc96a; --ok-bg: #12291a; --bad: #ff8a7a; --bad-bg: #2d1414; --mid: #f0c062; --mid-bg: #2b2210; --prop: #8cc8ff; --prop-bg: #12233d;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #070b13; --surface: #0e1522; --surface-2: #131c2c; --ink: #e8eef6; --ink-2: #b2bfce; --ink-3: #8794a6;
-  --rule: #1f2a3b; --accent-ink: #8cc8ff; --accent-soft: #12233d;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-  --ok: #4cc96a; --ok-bg: #12291a; --bad: #ff8a7a; --bad-bg: #2d1414; --mid: #f0c062; --mid-bg: #2b2210; --prop: #8cc8ff; --prop-bg: #12233d;
-  color-scheme: dark;
-}
-
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 116px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
