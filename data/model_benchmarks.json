@@ -1040,6 +1040,1079 @@
    "AUC": 0.846
   }
  ],
+ "hico": {
+  "cv": [
+   {
+    "model": "MLPEarly",
+    "test_nll": 0.9501,
+    "AUC_Ae_albopictus": 0.8255,
+    "AUC_Ae_aegypti": 0.9184,
+    "AUC_Culex": 0.5509,
+    "AUC_Anopheles": 0.6451,
+    "AP_Ae_albopictus": 0.5739,
+    "AP_Ae_aegypti": 0.5068,
+    "AP_Culex": 0.1033,
+    "AP_Anopheles": 0.1464,
+    "AUC_mean": 0.7349
+   },
+   {
+    "model": "Single:AlphaEarth",
+    "test_nll": 0.9387,
+    "AUC_Ae_albopictus": 0.8291,
+    "AUC_Ae_aegypti": 0.9148,
+    "AUC_Culex": 0.5491,
+    "AUC_Anopheles": 0.6332,
+    "AP_Ae_albopictus": 0.5799,
+    "AP_Ae_aegypti": 0.4933,
+    "AP_Culex": 0.1016,
+    "AP_Anopheles": 0.145,
+    "AUC_mean": 0.7315
+   },
+   {
+    "model": "LinearEarly",
+    "test_nll": 1.0071,
+    "AUC_Ae_albopictus": 0.7752,
+    "AUC_Ae_aegypti": 0.8968,
+    "AUC_Culex": 0.5847,
+    "AUC_Anopheles": 0.6397,
+    "AP_Ae_albopictus": 0.5044,
+    "AP_Ae_aegypti": 0.4145,
+    "AP_Culex": 0.1089,
+    "AP_Anopheles": 0.1439,
+    "AUC_mean": 0.7241
+   },
+   {
+    "model": "GatedMoE",
+    "test_nll": 0.9655,
+    "AUC_Ae_albopictus": 0.8239,
+    "AUC_Ae_aegypti": 0.8931,
+    "AUC_Culex": 0.5552,
+    "AUC_Anopheles": 0.6171,
+    "AP_Ae_albopictus": 0.5744,
+    "AP_Ae_aegypti": 0.4693,
+    "AP_Culex": 0.1024,
+    "AP_Anopheles": 0.1321,
+    "AUC_mean": 0.7223
+   },
+   {
+    "model": "LateRankEnsemble",
+    "test_nll": null,
+    "AUC_Ae_albopictus": 0.7513,
+    "AUC_Ae_aegypti": 0.8835,
+    "AUC_Culex": 0.5439,
+    "AUC_Anopheles": 0.6391,
+    "AP_Ae_albopictus": 0.5046,
+    "AP_Ae_aegypti": 0.442,
+    "AP_Culex": 0.0953,
+    "AP_Anopheles": 0.1432,
+    "AUC_mean": 0.7044
+   },
+   {
+    "model": "Single:Landscape",
+    "test_nll": 1.0743,
+    "AUC_Ae_albopictus": 0.6378,
+    "AUC_Ae_aegypti": 0.8441,
+    "AUC_Culex": 0.5125,
+    "AUC_Anopheles": 0.5906,
+    "AP_Ae_albopictus": 0.3536,
+    "AP_Ae_aegypti": 0.4393,
+    "AP_Culex": 0.0898,
+    "AP_Anopheles": 0.1228,
+    "AUC_mean": 0.6463
+   },
+   {
+    "model": "Single:Climate",
+    "test_nll": 1.1312,
+    "AUC_Ae_albopictus": 0.5544,
+    "AUC_Ae_aegypti": 0.7778,
+    "AUC_Culex": 0.5541,
+    "AUC_Anopheles": 0.5875,
+    "AP_Ae_albopictus": 0.3191,
+    "AP_Ae_aegypti": 0.3286,
+    "AP_Culex": 0.0998,
+    "AP_Anopheles": 0.1135,
+    "AUC_mean": 0.6185
+   },
+   {
+    "model": "Single:Human",
+    "test_nll": 1.1073,
+    "AUC_Ae_albopictus": 0.6486,
+    "AUC_Ae_aegypti": 0.7216,
+    "AUC_Culex": 0.5005,
+    "AUC_Anopheles": 0.5859,
+    "AP_Ae_albopictus": 0.3853,
+    "AP_Ae_aegypti": 0.2088,
+    "AP_Culex": 0.0888,
+    "AP_Anopheles": 0.1182,
+    "AUC_mean": 0.6142
+   },
+   {
+    "model": "HiCo",
+    "test_nll": 0.9828,
+    "AUC_Ae_albopictus": 0.7811,
+    "AUC_Ae_aegypti": 0.9035,
+    "AUC_Culex": 0.5651,
+    "AUC_Anopheles": 0.6381,
+    "AP_Ae_albopictus": 0.5263,
+    "AP_Ae_aegypti": 0.4613,
+    "AP_Culex": 0.1038,
+    "AP_Anopheles": 0.1445,
+    "AUC_mean": 0.7219
+   },
+   {
+    "model": "HiCoMoE",
+    "test_nll": 0.9847,
+    "AUC_Ae_albopictus": 0.7768,
+    "AUC_Ae_aegypti": 0.9006,
+    "AUC_Culex": 0.5522,
+    "AUC_Anopheles": 0.6381,
+    "AP_Ae_albopictus": 0.5199,
+    "AP_Ae_aegypti": 0.4718,
+    "AP_Culex": 0.1027,
+    "AP_Anopheles": 0.1421,
+    "AUC_mean": 0.7169
+   },
+   {
+    "model": "HiCo-climA",
+    "test_nll": 1.0499,
+    "AUC_Ae_albopictus": 0.7089,
+    "AUC_Ae_aegypti": 0.8629,
+    "AUC_Culex": 0.5522,
+    "AUC_Anopheles": 0.6257,
+    "AP_Ae_albopictus": 0.4237,
+    "AP_Ae_aegypti": 0.4219,
+    "AP_Culex": 0.102,
+    "AP_Anopheles": 0.1196,
+    "AUC_mean": 0.6874
+   },
+   {
+    "model": "HiCoMoE-climA",
+    "test_nll": 1.0956,
+    "AUC_Ae_albopictus": 0.6808,
+    "AUC_Ae_aegypti": 0.8662,
+    "AUC_Culex": 0.5363,
+    "AUC_Anopheles": 0.6139,
+    "AP_Ae_albopictus": 0.405,
+    "AP_Ae_aegypti": 0.4055,
+    "AP_Culex": 0.0954,
+    "AP_Anopheles": 0.1218,
+    "AUC_mean": 0.6743
+   }
+  ],
+  "multires": [
+   {
+    "arm": "HiCo",
+    "test_nll": 0.9828,
+    "AUC_Ae_albopictus": 0.7811,
+    "AUC_Ae_aegypti": 0.9035,
+    "AP_Ae_albopictus": 0.5263,
+    "AP_Ae_aegypti": 0.4613,
+    "trop_AUC_Ae_albopictus": 0.6642,
+    "trop_AUC_Ae_aegypti": 0.7415
+   },
+   {
+    "arm": "HiCo+Kcoarse",
+    "test_nll": 1.0019,
+    "AUC_Ae_albopictus": 0.7836,
+    "AUC_Ae_aegypti": 0.8812,
+    "AP_Ae_albopictus": 0.5371,
+    "AP_Ae_aegypti": 0.4227,
+    "trop_AUC_Ae_albopictus": 0.6484,
+    "trop_AUC_Ae_aegypti": 0.7498
+   },
+   {
+    "arm": "MLPEarly",
+    "test_nll": 0.9501,
+    "AUC_Ae_albopictus": 0.8255,
+    "AUC_Ae_aegypti": 0.9184,
+    "AP_Ae_albopictus": 0.5739,
+    "AP_Ae_aegypti": 0.5068,
+    "trop_AUC_Ae_albopictus": 0.6745,
+    "trop_AUC_Ae_aegypti": 0.7525
+   },
+   {
+    "arm": "MLPEarly+Kfine",
+    "test_nll": 0.9926,
+    "AUC_Ae_albopictus": 0.7831,
+    "AUC_Ae_aegypti": 0.9199,
+    "AP_Ae_albopictus": 0.5155,
+    "AP_Ae_aegypti": 0.4849,
+    "trop_AUC_Ae_albopictus": 0.5943,
+    "trop_AUC_Ae_aegypti": 0.7411
+   }
+  ],
+  "external": [
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "MLPEarly (composition only)",
+    "n_pos": 6056,
+    "AUC": 0.4489
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "MLPEarly (composition only)",
+    "n_pos": 2375,
+    "AUC": 0.3392
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "GatedMoE (composition only)",
+    "n_pos": 6056,
+    "AUC": 0.3658
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "GatedMoE (composition only)",
+    "n_pos": 2375,
+    "AUC": 0.2147
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "HiCo (composition only)",
+    "n_pos": 6056,
+    "AUC": 0.5693
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCo (composition only)",
+    "n_pos": 2375,
+    "AUC": 0.4792
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "HiCoMoE (composition only)",
+    "n_pos": 6056,
+    "AUC": 0.5511
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCoMoE (composition only)",
+    "n_pos": 2375,
+    "AUC": 0.4422
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "MLPEarly x support (two-part)",
+    "n_pos": 6056,
+    "AUC": 0.856
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "MLPEarly x support (two-part)",
+    "n_pos": 2375,
+    "AUC": 0.7459
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "GatedMoE x support (two-part)",
+    "n_pos": 6056,
+    "AUC": 0.7988
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "GatedMoE x support (two-part)",
+    "n_pos": 2375,
+    "AUC": 0.6487
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "HiCo x support (two-part)",
+    "n_pos": 6056,
+    "AUC": 0.8686
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCo x support (two-part)",
+    "n_pos": 2375,
+    "AUC": 0.7787
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": "all",
+    "model": "HiCoMoE x support (two-part)",
+    "n_pos": 6056,
+    "AUC": 0.8622
+   },
+   {
+    "dataset": "Kraemer Ae. albopictus",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCoMoE x support (two-part)",
+    "n_pos": 2375,
+    "AUC": 0.7651
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "MLPEarly (composition only)",
+    "n_pos": 7253,
+    "AUC": 0.5029
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "MLPEarly (composition only)",
+    "n_pos": 3613,
+    "AUC": 0.4837
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "GatedMoE (composition only)",
+    "n_pos": 7253,
+    "AUC": 0.378
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "GatedMoE (composition only)",
+    "n_pos": 3613,
+    "AUC": 0.3619
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "HiCo (composition only)",
+    "n_pos": 7253,
+    "AUC": 0.5713
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCo (composition only)",
+    "n_pos": 3613,
+    "AUC": 0.557
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "HiCoMoE (composition only)",
+    "n_pos": 7253,
+    "AUC": 0.5593
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCoMoE (composition only)",
+    "n_pos": 3613,
+    "AUC": 0.547
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "MLPEarly x support (two-part)",
+    "n_pos": 7253,
+    "AUC": 0.8588
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "MLPEarly x support (two-part)",
+    "n_pos": 3613,
+    "AUC": 0.8241
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "GatedMoE x support (two-part)",
+    "n_pos": 7253,
+    "AUC": 0.7694
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "GatedMoE x support (two-part)",
+    "n_pos": 3613,
+    "AUC": 0.7281
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "HiCo x support (two-part)",
+    "n_pos": 7253,
+    "AUC": 0.849
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCo x support (two-part)",
+    "n_pos": 3613,
+    "AUC": 0.8205
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": "all",
+    "model": "HiCoMoE x support (two-part)",
+    "n_pos": 7253,
+    "AUC": 0.8523
+   },
+   {
+    "dataset": "Kraemer Ae. aegypti",
+    "subset": ">~110 km from iNat reports",
+    "model": "HiCoMoE x support (two-part)",
+    "n_pos": 3613,
+    "AUC": 0.8231
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "MLPEarly (composition only)",
+    "n_pos": 24,
+    "AUC": 0.8006
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "GatedMoE (composition only)",
+    "n_pos": 24,
+    "AUC": 0.6583
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "HiCo (composition only)",
+    "n_pos": 24,
+    "AUC": 0.7432
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "HiCoMoE (composition only)",
+    "n_pos": 24,
+    "AUC": 0.7889
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "MLPEarly x support (two-part)",
+    "n_pos": 24,
+    "AUC": 0.9306
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "GatedMoE x support (two-part)",
+    "n_pos": 24,
+    "AUC": 0.9274
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "HiCo x support (two-part)",
+    "n_pos": 24,
+    "AUC": 0.9212
+   },
+   {
+    "dataset": "NEON 2026 Ae. albopictus",
+    "subset": "373 sites",
+    "model": "HiCoMoE x support (two-part)",
+    "n_pos": 24,
+    "AUC": 0.912
+   }
+  ],
+  "coherence": [
+   {
+    "model": "MLPEarly",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Ae_albopictus",
+    "median_abs_log_ratio": 2.1778,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7245,
+    "share_parents_off_by_more_than_2x": 0.8182,
+    "spearman_coarse_vs_aggregated": 0.7707
+   },
+   {
+    "model": "MLPEarly",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Ae_aegypti",
+    "median_abs_log_ratio": 4.4182,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7974,
+    "share_parents_off_by_more_than_2x": 0.8804,
+    "spearman_coarse_vs_aggregated": 0.5829
+   },
+   {
+    "model": "MLPEarly",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Culex",
+    "median_abs_log_ratio": 1.342,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7613,
+    "share_parents_off_by_more_than_2x": 0.7293,
+    "spearman_coarse_vs_aggregated": 0.5778
+   },
+   {
+    "model": "MLPEarly",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Anopheles",
+    "median_abs_log_ratio": 1.112,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7179,
+    "share_parents_off_by_more_than_2x": 0.6636,
+    "spearman_coarse_vs_aggregated": 0.6192
+   },
+   {
+    "model": "GatedMoE",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Ae_albopictus",
+    "median_abs_log_ratio": 2.599,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.6469,
+    "share_parents_off_by_more_than_2x": 0.8246,
+    "spearman_coarse_vs_aggregated": 0.7624
+   },
+   {
+    "model": "GatedMoE",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Ae_aegypti",
+    "median_abs_log_ratio": 4.6909,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7608,
+    "share_parents_off_by_more_than_2x": 0.89,
+    "spearman_coarse_vs_aggregated": 0.4645
+   },
+   {
+    "model": "GatedMoE",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Culex",
+    "median_abs_log_ratio": 1.3531,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.76,
+    "share_parents_off_by_more_than_2x": 0.7702,
+    "spearman_coarse_vs_aggregated": 0.4898
+   },
+   {
+    "model": "GatedMoE",
+    "coarse_reference": "separately fitted 0.5-deg model",
+    "class": "Anopheles",
+    "median_abs_log_ratio": 1.2007,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.7155,
+    "share_parents_off_by_more_than_2x": 0.7037,
+    "spearman_coarse_vs_aggregated": 0.4381
+   },
+   {
+    "model": "HiCo",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Ae_albopictus",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCo",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Ae_aegypti",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCo",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Culex",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCo",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Anopheles",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCoMoE",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Ae_albopictus",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCoMoE",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Ae_aegypti",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCoMoE",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Culex",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   },
+   {
+    "model": "HiCoMoE",
+    "coarse_reference": "own macro term A (intensity-space ensemble)",
+    "class": "Anopheles",
+    "median_abs_log_ratio": 0.0,
+    "share_parents_child_mean_exceeds_coarse_by_10pct": 0.0,
+    "share_parents_off_by_more_than_2x": 0.0,
+    "spearman_coarse_vs_aggregated": 1.0
+   }
+  ],
+  "meta": {
+   "records_on_complete_cells": 17232,
+   "report_cells": 7004,
+   "class_records": {
+    "Ae_albopictus": 2978,
+    "Ae_aegypti": 989,
+    "Culex": 1387,
+    "Anopheles": 1083,
+    "other": 10795
+   },
+   "class_cells": {
+    "Ae_albopictus": 1845,
+    "Ae_aegypti": 529,
+    "Culex": 547,
+    "Anopheles": 633,
+    "other": 4738
+   },
+   "parents_with_reports": 2675,
+   "child_cells_in_those_parents": 233422,
+   "cv_blocks": 153,
+   "kraemer_cells": {
+    "aegypti": 7253,
+    "albopictus": 6056
+   }
+  },
+  "oadsdm": {
+   "Env41_AE64_tuned": [
+    {
+     "model": "PB-GLM-sklearn",
+     "PB_AP": 0.7840650242792759,
+     "PB_AP_sd": 0.042806988652573603,
+     "AT_AUC": 0.532871196570887,
+     "AT_AUC_sd": 0.16426480394961518,
+     "NEON_fold_AUC": 0.9101703953125573,
+     "NEON_OOF_AUC": 0.8988777459407832,
+     "NEON_OOF_AP": 0.3716358380552039
+    },
+    {
+     "model": "Pooled",
+     "PB_AP": 0.77050690650087,
+     "PB_AP_sd": 0.026124587113623574,
+     "AT_AUC": 0.5214710273654343,
+     "AT_AUC_sd": 0.16210386183826483,
+     "NEON_fold_AUC": 0.8993133165760211,
+     "NEON_OOF_AUC": 0.8960721107927412,
+     "NEON_OOF_AP": 0.39047781214726585
+    },
+    {
+     "model": "ISDM-noBias",
+     "PB_AP": 0.7698085715524515,
+     "PB_AP_sd": 0.02639326454128139,
+     "AT_AUC": 0.517645778009682,
+     "AT_AUC_sd": 0.1556433746646161,
+     "NEON_fold_AUC": 0.8981697289724414,
+     "NEON_OOF_AUC": 0.8946394460362941,
+     "NEON_OOF_AP": 0.3952178156526749
+    },
+    {
+     "model": "OA-DSDM",
+     "PB_AP": 0.7758969583867165,
+     "PB_AP_sd": 0.025469298870578406,
+     "AT_AUC": 0.5223444811080576,
+     "AT_AUC_sd": 0.16662636719224766,
+     "NEON_fold_AUC": 0.8990748463225527,
+     "NEON_OOF_AUC": 0.8901623686723973,
+     "NEON_OOF_AP": 0.37609259898176295
+    },
+    {
+     "model": "PB",
+     "PB_AP": 0.7863587620921101,
+     "PB_AP_sd": 0.03638861830678805,
+     "AT_AUC": 0.5409242625110767,
+     "AT_AUC_sd": 0.20048113245351418,
+     "NEON_fold_AUC": 0.8920588925707394,
+     "NEON_OOF_AUC": 0.8825214899713467,
+     "NEON_OOF_AP": 0.31119954052192034
+    },
+    {
+     "model": "OA-ISDM-linear",
+     "PB_AP": 0.7522789835500582,
+     "PB_AP_sd": 0.0370282277387113,
+     "AT_AUC": 0.541252651107908,
+     "AT_AUC_sd": 0.1978879323494832,
+     "NEON_fold_AUC": 0.8793046389973395,
+     "NEON_OOF_AUC": 0.8782831900668577,
+     "NEON_OOF_AP": 0.2807610895609577
+    },
+    {
+     "model": "SurveyOnly",
+     "PB_AP": 0.5836484237677104,
+     "PB_AP_sd": 0.07548217549426764,
+     "AT_AUC": 0.5510179033727161,
+     "AT_AUC_sd": 0.19461468411010274,
+     "NEON_fold_AUC": 0.8471360825379174,
+     "NEON_OOF_AUC": 0.8586437440305634,
+     "NEON_OOF_AP": 0.2248504780451709
+    },
+    {
+     "model": "PB-linear",
+     "PB_AP": 0.7766311071877928,
+     "PB_AP_sd": 0.03790082989092969,
+     "AT_AUC": 0.5310100056567917,
+     "AT_AUC_sd": 0.18876950702716577,
+     "NEON_fold_AUC": 0.8688973655486619,
+     "NEON_OOF_AUC": 0.8547636103151862,
+     "NEON_OOF_AP": 0.26907366431266927
+    }
+   ],
+   "Env41_AE64_orth_tuned": [
+    {
+     "model": "PB-GLM-sklearn",
+     "PB_AP": 0.7840650242792759,
+     "PB_AP_sd": 0.042806988652573603,
+     "AT_AUC": 0.532871196570887,
+     "AT_AUC_sd": 0.16426480394961518,
+     "NEON_fold_AUC": 0.9101703953125573,
+     "NEON_OOF_AUC": 0.8988777459407832,
+     "NEON_OOF_AP": 0.3716358380552039
+    },
+    {
+     "model": "ISDM-noBias",
+     "PB_AP": 0.7603356513031341,
+     "PB_AP_sd": 0.026347463112233172,
+     "AT_AUC": 0.5120427076088968,
+     "AT_AUC_sd": 0.13102666441666247,
+     "NEON_fold_AUC": 0.8915223714724313,
+     "NEON_OOF_AUC": 0.8919531996179562,
+     "NEON_OOF_AP": 0.31182803722449925
+    },
+    {
+     "model": "Pooled",
+     "PB_AP": 0.759947042357994,
+     "PB_AP_sd": 0.026259559780120154,
+     "AT_AUC": 0.5099720967295068,
+     "AT_AUC_sd": 0.1301477052785123,
+     "NEON_fold_AUC": 0.888571118252251,
+     "NEON_OOF_AUC": 0.8893863419293219,
+     "NEON_OOF_AP": 0.2947133883532373
+    },
+    {
+     "model": "OA-DSDM",
+     "PB_AP": 0.7488806383217774,
+     "PB_AP_sd": 0.026390860286818123,
+     "AT_AUC": 0.5204536561276334,
+     "AT_AUC_sd": 0.14989721551971574,
+     "NEON_fold_AUC": 0.8967330235513722,
+     "NEON_OOF_AUC": 0.8870582617000955,
+     "NEON_OOF_AP": 0.316921108304954
+    },
+    {
+     "model": "PB",
+     "PB_AP": 0.7647854463186073,
+     "PB_AP_sd": 0.05896436898593818,
+     "AT_AUC": 0.5127807371528188,
+     "AT_AUC_sd": 0.18734477895467305,
+     "NEON_fold_AUC": 0.8541879907207391,
+     "NEON_OOF_AUC": 0.8384670487106017,
+     "NEON_OOF_AP": 0.24078376053362072
+    }
+   ],
+   "Env41_AE64x3_tuned": [
+    {
+     "model": "OA-DSDM",
+     "PB_AP": 0.7819141399733788,
+     "PB_AP_sd": 0.02262866628147725,
+     "AT_AUC": 0.5153975243128862,
+     "AT_AUC_sd": 0.2029118918367808,
+     "NEON_fold_AUC": 0.9148771239279417,
+     "NEON_OOF_AUC": 0.9071155682903533,
+     "NEON_OOF_AP": 0.33479382878687236
+    },
+    {
+     "model": "PB-GLM-sklearn",
+     "PB_AP": 0.7915187143577249,
+     "PB_AP_sd": 0.035599902768481864,
+     "AT_AUC": 0.529660959986767,
+     "AT_AUC_sd": 0.18938802005755806,
+     "NEON_fold_AUC": 0.9058690426210171,
+     "NEON_OOF_AUC": 0.899116523400191,
+     "NEON_OOF_AP": 0.3290348996356032
+    },
+    {
+     "model": "ISDM-noBias",
+     "PB_AP": 0.7707825966602503,
+     "PB_AP_sd": 0.017666842766795133,
+     "AT_AUC": 0.5148276689791624,
+     "AT_AUC_sd": 0.19004719528829778,
+     "NEON_fold_AUC": 0.9015617508110528,
+     "NEON_OOF_AUC": 0.8980718720152818,
+     "NEON_OOF_AP": 0.29907180092391106
+    },
+    {
+     "model": "PB",
+     "PB_AP": 0.7979984129581101,
+     "PB_AP_sd": 0.026093188624839947,
+     "AT_AUC": 0.5404972832542555,
+     "AT_AUC_sd": 0.22431123585910548,
+     "NEON_fold_AUC": 0.8980075391788994,
+     "NEON_OOF_AUC": 0.890639923591213,
+     "NEON_OOF_AP": 0.32869416577530486
+    }
+   ]
+  },
+  "step1": [
+   {
+    "representation": "Env41_AE64",
+    "PB_AP": 0.7840650242792759,
+    "PB_AP_sd": 0.042806988652573603,
+    "PB_AUC": 0.872061956371208,
+    "Survey_AUC": 0.532871196570887,
+    "Survey_AUC_sd": 0.16426480394961518,
+    "NEON_AUC": 0.9028175740210125,
+    "NEON_AP": 0.43250644674658206,
+    "corr_with_log_pop_NEON": 0.287496346266758
+   },
+   {
+    "representation": "AlphaEarth64",
+    "PB_AP": 0.7805200906572821,
+    "PB_AP_sd": 0.04409526632860037,
+    "PB_AUC": 0.8638162029856916,
+    "Survey_AUC": 0.5224126276862535,
+    "Survey_AUC_sd": 0.2141001681113499,
+    "NEON_AUC": 0.8882521489971347,
+    "NEON_AP": 0.3448206969469159,
+    "corr_with_log_pop_NEON": 0.25119096026176463
+   },
+   {
+    "representation": "Environment41",
+    "PB_AP": 0.68664726078217,
+    "PB_AP_sd": 0.058449061080861314,
+    "PB_AUC": 0.7893620965620401,
+    "Survey_AUC": 0.574737053047304,
+    "Survey_AUC_sd": 0.2250077302371803,
+    "NEON_AUC": 0.9083094555873925,
+    "NEON_AP": 0.319782274963173,
+    "corr_with_log_pop_NEON": 0.33833146959510646
+   },
+   {
+    "representation": "EnvEco37",
+    "PB_AP": 0.6780238433938562,
+    "PB_AP_sd": 0.04589926968857192,
+    "PB_AUC": 0.7775231443428553,
+    "Survey_AUC": 0.4654814681996456,
+    "Survey_AUC_sd": 0.17167939506914096,
+    "NEON_AUC": 0.8340496657115569,
+    "NEON_AP": 0.20938895792436063,
+    "corr_with_log_pop_NEON": 0.18929066511178738
+   },
+   {
+    "representation": "Effort4",
+    "PB_AP": 0.628022081995037,
+    "PB_AP_sd": 0.07302216609767338,
+    "PB_AUC": 0.7353488741394519,
+    "Survey_AUC": 0.5950685442128686,
+    "Survey_AUC_sd": 0.228546041076544,
+    "NEON_AUC": 0.8055157593123209,
+    "NEON_AP": 0.2393160937379854,
+    "corr_with_log_pop_NEON": 0.8275724231487862
+   },
+   {
+    "representation": "AlphaEarth64_effortResid",
+    "PB_AP": 0.6248376597063124,
+    "PB_AP_sd": 0.03840067487641567,
+    "PB_AUC": 0.7419455709975916,
+    "Survey_AUC": 0.3599029653865846,
+    "Survey_AUC_sd": 0.10246568052805854,
+    "NEON_AUC": 0.8235434574976123,
+    "NEON_AP": 0.23451287051451883,
+    "corr_with_log_pop_NEON": 0.06827862556382369
+   }
+  ],
+  "q1": [
+   {
+    "effort_covariate": "worldpop_2024_density",
+    "predictors": "AlphaEarth64",
+    "spatial_cv_R2": 0.8212349419806698
+   },
+   {
+    "effort_covariate": "worldpop_2024_density",
+    "predictors": "EnvEco37",
+    "spatial_cv_R2": 0.6122324218879014
+   },
+   {
+    "effort_covariate": "built_fraction",
+    "predictors": "AlphaEarth64",
+    "spatial_cv_R2": 0.8762322639385772
+   },
+   {
+    "effort_covariate": "built_fraction",
+    "predictors": "EnvEco37",
+    "spatial_cv_R2": 0.7712846341763477
+   },
+   {
+    "effort_covariate": "night_lights",
+    "predictors": "AlphaEarth64",
+    "spatial_cv_R2": 0.8158933731184107
+   },
+   {
+    "effort_covariate": "night_lights",
+    "predictors": "EnvEco37",
+    "spatial_cv_R2": 0.7238474627495686
+   },
+   {
+    "effort_covariate": "accessibility_2015_minutes",
+    "predictors": "AlphaEarth64",
+    "spatial_cv_R2": 0.4874444298287173
+   },
+   {
+    "effort_covariate": "accessibility_2015_minutes",
+    "predictors": "EnvEco37",
+    "spatial_cv_R2": 0.4220948517994899
+   }
+  ],
+  "semisyn": [
+   {
+    "design": "AT",
+    "model": "ISDM-noBias",
+    "rho_all": 0.4313,
+    "leak": 0.7775,
+    "AUC_z": 0.6088
+   },
+   {
+    "design": "AT",
+    "model": "OA-DSDM",
+    "rho_all": 0.5105,
+    "leak": 0.7453,
+    "AUC_z": 0.624
+   },
+   {
+    "design": "AT",
+    "model": "OA-ISDM-linear",
+    "rho_all": 0.7193,
+    "leak": 0.6088,
+    "AUC_z": 0.7048
+   },
+   {
+    "design": "AT",
+    "model": "PB",
+    "rho_all": 0.3966,
+    "leak": 0.8248,
+    "AUC_z": 0.5897
+   },
+   {
+    "design": "AT",
+    "model": "Pooled",
+    "rho_all": 0.4314,
+    "leak": 0.777,
+    "AUC_z": 0.6086
+   },
+   {
+    "design": "AT+NEON",
+    "model": "ISDM-noBias",
+    "rho_all": 0.5021,
+    "leak": 0.7,
+    "AUC_z": 0.6733
+   },
+   {
+    "design": "AT+NEON",
+    "model": "OA-DSDM",
+    "rho_all": 0.6711,
+    "leak": 0.5844,
+    "AUC_z": 0.7055
+   },
+   {
+    "design": "AT+NEON",
+    "model": "OA-ISDM-linear",
+    "rho_all": 0.7978,
+    "leak": 0.4974,
+    "AUC_z": 0.734
+   },
+   {
+    "design": "AT+NEON",
+    "model": "PB",
+    "rho_all": 0.3995,
+    "leak": 0.8279,
+    "AUC_z": 0.5949
+   },
+   {
+    "design": "AT+NEON",
+    "model": "Pooled",
+    "rho_all": 0.4716,
+    "leak": 0.7219,
+    "AUC_z": 0.6517
+   },
+   {
+    "design": "NEON",
+    "model": "ISDM-noBias",
+    "rho_all": 0.4466,
+    "leak": 0.7634,
+    "AUC_z": 0.637
+   },
+   {
+    "design": "NEON",
+    "model": "OA-DSDM",
+    "rho_all": 0.5022,
+    "leak": 0.7544,
+    "AUC_z": 0.6435
+   },
+   {
+    "design": "NEON",
+    "model": "OA-ISDM-linear",
+    "rho_all": 0.6863,
+    "leak": 0.7048,
+    "AUC_z": 0.7066
+   },
+   {
+    "design": "NEON",
+    "model": "PB",
+    "rho_all": 0.3991,
+    "leak": 0.8285,
+    "AUC_z": 0.5949
+   },
+   {
+    "design": "NEON",
+    "model": "Pooled",
+    "rho_all": 0.4116,
+    "leak": 0.7784,
+    "AUC_z": 0.6076
+   }
+  ],
+  "support_cv": [
+   0.9649750195107393,
+   0.905952972084787
+  ],
+  "zoom_parents": {
+   "florida": 95,
+   "seasia": 168,
+   "italy": 132
+  },
+  "gate_dominant_share": {
+   "albopictus": [
+    0.0338,
+    0.0932,
+    0.3509,
+    0.5221
+   ],
+   "aegypti": [
+    0.0872,
+    0.0552,
+    0.2544,
+    0.6032
+   ]
+  }
+ },
  "ledger": [
   {
    "id": "I1-01",
