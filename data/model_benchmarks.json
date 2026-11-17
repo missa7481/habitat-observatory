@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-17",
  "designs": [
   {
    "id": "random5",
@@ -652,6 +652,286 @@
    }
   }
  },
+ "hf2": {
+  "arms": [
+   {
+    "id": "HiCo",
+    "label": "HiCo, original neural terms",
+    "AUC_block10": 0.7408,
+    "AUC_env": 0.6811,
+    "AUC_loro": 0.6545,
+    "AUC_zone": 0.6475,
+    "nll_block10": 0.9718,
+    "nll_env": 1.0726,
+    "nll_loro": 1.4375,
+    "nll_zone": 1.3175,
+    "auc_test": {
+     "wins": 2,
+     "n": 20,
+     "mean_diff": -0.0339,
+     "p": 0.0004
+    },
+    "nll_test": {
+     "wins": 5,
+     "n": 20,
+     "mean_diff": -0.1038,
+     "p": 0.0414
+    }
+   },
+   {
+    "id": "RF",
+    "label": "Random forest (flat, the bar)",
+    "AUC_block10": 0.7612,
+    "AUC_env": 0.6945,
+    "AUC_loro": 0.6995,
+    "AUC_zone": 0.7073,
+    "nll_block10": 0.9304,
+    "nll_env": 1.04,
+    "nll_loro": 1.2893,
+    "nll_zone": 1.1132
+   },
+   {
+    "id": "HF2",
+    "label": "HiCo-Fuse 2, Aedes pool",
+    "AUC_block10": 0.7663,
+    "AUC_env": 0.7014,
+    "AUC_loro": 0.7021,
+    "AUC_zone": 0.7096,
+    "nll_block10": 0.9116,
+    "nll_env": 1.0221,
+    "nll_loro": 1.391,
+    "nll_zone": 1.0958,
+    "auc_test": {
+     "wins": 13,
+     "n": 20,
+     "mean_diff": 0.0042,
+     "p": 0.2632
+    },
+    "nll_test": {
+     "wins": 11,
+     "n": 20,
+     "mean_diff": -0.0179,
+     "p": 0.8238
+    }
+   },
+   {
+    "id": "HF2-shrink2",
+    "label": "HiCo-Fuse 2 + novelty trust",
+    "AUC_block10": 0.7656,
+    "AUC_env": 0.6965,
+    "AUC_loro": 0.7007,
+    "AUC_zone": 0.7159,
+    "nll_block10": 0.9107,
+    "nll_env": 1.0173,
+    "nll_loro": 1.3491,
+    "nll_zone": 1.0881,
+    "auc_test": {
+     "wins": 13,
+     "n": 20,
+     "mean_diff": 0.0037,
+     "p": 0.2632
+    },
+    "nll_test": {
+     "wins": 11,
+     "n": 20,
+     "mean_diff": -0.0023,
+     "p": 0.8238
+    }
+   },
+   {
+    "id": "HF2+pool4",
+    "label": "HiCo-Fuse 2, all-genus pool",
+    "AUC_block10": 0.7714,
+    "AUC_env": 0.7074,
+    "AUC_loro": 0.7057,
+    "AUC_zone": 0.7094,
+    "nll_block10": 0.903,
+    "nll_env": 1.0063,
+    "nll_loro": 1.3257,
+    "nll_zone": 1.0728,
+    "auc_test": {
+     "wins": 14,
+     "n": 20,
+     "mean_diff": 0.008,
+     "p": 0.1153
+    },
+    "nll_test": {
+     "wins": 14,
+     "n": 20,
+     "mean_diff": 0.0124,
+     "p": 0.1153
+    }
+   },
+   {
+    "id": "HF2-shrink2+pool4",
+    "label": "HiCo-Fuse 2, all-genus pool + trust",
+    "AUC_block10": 0.7699,
+    "AUC_env": 0.7039,
+    "AUC_loro": 0.7035,
+    "AUC_zone": 0.7095,
+    "nll_block10": 0.906,
+    "nll_env": 1.0071,
+    "nll_loro": 1.3236,
+    "nll_zone": 1.073,
+    "auc_test": {
+     "wins": 14,
+     "n": 20,
+     "mean_diff": 0.0062,
+     "p": 0.1153
+    },
+    "nll_test": {
+     "wins": 14,
+     "n": 20,
+     "mean_diff": 0.0121,
+     "p": 0.1153
+    }
+   }
+  ],
+  "loro_nll": [
+   {
+    "region": "Africa",
+    "HiCo": 1.873,
+    "RF": 1.6913,
+    "HF2": 1.9583,
+    "HF2-shrink2": 1.9579,
+    "HF2+pool4": 1.839,
+    "HF2-shrink2+pool4": 1.856
+   },
+   {
+    "region": "Asia",
+    "HiCo": 1.1979,
+    "RF": 1.2926,
+    "HF2": 1.4455,
+    "HF2-shrink2": 1.3603,
+    "HF2+pool4": 1.311,
+    "HF2-shrink2+pool4": 1.3427
+   },
+   {
+    "region": "Europe",
+    "HiCo": 1.2573,
+    "RF": 1.062,
+    "HF2": 1.0821,
+    "HF2-shrink2": 1.0822,
+    "HF2+pool4": 1.056,
+    "HF2-shrink2+pool4": 1.056
+   },
+   {
+    "region": "Latin America",
+    "HiCo": 1.7229,
+    "RF": 1.4004,
+    "HF2": 1.4267,
+    "HF2-shrink2": 1.4205,
+    "HF2+pool4": 1.3841,
+    "HF2-shrink2+pool4": 1.3965
+   },
+   {
+    "region": "N America",
+    "HiCo": 1.2802,
+    "RF": 1.147,
+    "HF2": 1.3159,
+    "HF2-shrink2": 1.156,
+    "HF2+pool4": 1.2461,
+    "HF2-shrink2+pool4": 1.1826
+   },
+   {
+    "region": "Oceania",
+    "HiCo": 1.2936,
+    "RF": 1.1425,
+    "HF2": 1.1176,
+    "HF2-shrink2": 1.1177,
+    "HF2+pool4": 1.1181,
+    "HF2-shrink2+pool4": 1.1081
+   }
+  ],
+  "gamma_mean": [
+   1.2497,
+   1.1493,
+   0.9258,
+   0.9798
+  ],
+  "tau_mean": [
+   1.0855,
+   1.157,
+   0.8737,
+   0.936
+  ],
+  "n_params": 60,
+  "coherence_max_abs_log": 0.0,
+  "external": {
+   "Kraemer Ae. albopictus · all": 0.8928,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.818,
+   "Kraemer Ae. aegypti · all": 0.9048,
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8789,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.9226
+  },
+  "global": {
+   "pool": "all",
+   "trust_share_full": 0.43009798015029965,
+   "trust_share_rf": 0.035830928750356726,
+   "trust_mean": 0.7718784864187157,
+   "parents": 63074,
+   "cells": 5554948
+  }
+ },
+ "lab": {
+  "task": "Ae. albopictus recorded presence vs other-mosquito background · 1,601 locations, 1,292 with held-out assignments · three 150 km spatial-block folds with 20 km buffers, plus longitude-sector and temperature holdouts · fixed RF and MaxNet probes",
+  "fits": "about 600 fixed model fits across five cycles",
+  "findings": [
+   {
+    "component": "Representation",
+    "verdict": "kept",
+    "title": "Physical context helps a simple model, not the forest",
+    "result": "206 physical variables: MaxNet spatial AP +0.042, random forest −0.004",
+    "use": "Give the niche term the full physical context; with a forest the gain is already captured."
+   },
+   {
+    "component": "Representation",
+    "verdict": "kept",
+    "title": "Simple compression of AlphaEarth is enough",
+    "result": "AP: PCA-16 0.831 · raw 64-D 0.821 · learned sparse code 0.809 (learned − raw −0.012, interval −0.028 to +0.010)",
+    "use": "Use raw or PCA-compressed embeddings. Sparse dictionaries cut reconstruction error 70% against a random dictionary but do not rank habitat better."
+   },
+   {
+    "component": "Representation",
+    "verdict": "rejected",
+    "title": "No general gain from newer self-supervised encoders",
+    "result": "Environment + VISReg AP 0.8367 vs environment alone 0.8363 across 27 recipes; expansion VISReg change −0.009",
+    "use": "Do not add encoder pretraining to the method without a transfer gain."
+   },
+   {
+    "component": "Fusion",
+    "verdict": "rejected",
+    "title": "Adaptive expert gates do not generalise",
+    "result": "Equal mixing AP 0.8226 · learned global weights 0.8178 · environment-varying gate 0.8178; the gate failed its pre-declared test in 3 of 3 holdout designs",
+    "use": "Independent replication of our weighting (I2) and HiCo (I6) results: learned gates fit the training geography. HiCo-Fuse 2 replaces them with a fixed niche model and a small penalised head."
+   },
+   {
+    "component": "Transfer",
+    "verdict": "kept",
+    "title": "AlphaEarth carries transfer to a new continent",
+    "result": "Random forest, Americas held out: AP 0.625 → 0.718 with AlphaEarth added",
+    "use": "Keep AlphaEarth in the niche term; its value is largest exactly where transfer is hardest."
+   },
+   {
+    "component": "Observation",
+    "verdict": "proposed",
+    "title": "Ranking transfers, thresholds do not",
+    "result": "All six Europe-held-out models miss every detected site of a 313-site Austrian survey at their training threshold, while keeping ranking signal",
+    "use": "Maps must be read as relative rankings; calibrated occurrence needs an explicit observation/detection branch (next step)."
+   }
+  ],
+  "not_featured": [
+   "Input-recovery scores of six unsupervised fusion methods: no habitat endpoint, and correlated views make recovery easy.",
+   "Reconstruction gates of sparse autoencoders on their own: reconstruction quality is not habitat prediction.",
+   "Masked-JEPA adapter: its training loss rose and its rank collapsed, so it is not a valid test of the method.",
+   "Unverified benchmark candidates from literature monitoring (RICapBench, VHR-Bench, PUMA): not admitted."
+  ],
+  "next": [
+   "Separate ecological state from observation and detection (shared representation, report and survey heads)",
+   "Freeze a genuinely unused 2025 validation cohort before any further promotion",
+   "Add water, thermal and soil sources one at a time against transfer failures"
+  ]
+ },
  "hico_cv": [
   {
    "model": "MLPEarly",
@@ -758,6 +1038,20 @@
    "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.6487,
    "Kraemer Ae. albopictus · all": 0.7988,
    "NEON 2026 Ae. albopictus · 373 sites": 0.9274
+  },
+  "HF2 (composition only)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8151,
+   "Kraemer Ae. aegypti · all": 0.8468,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.663,
+   "Kraemer Ae. albopictus · all": 0.7508,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.8733
+  },
+  "HF2 x support (two-part)": {
+   "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.8789,
+   "Kraemer Ae. aegypti · all": 0.9048,
+   "Kraemer Ae. albopictus · >~110 km from iNat reports": 0.818,
+   "Kraemer Ae. albopictus · all": 0.8928,
+   "NEON 2026 Ae. albopictus · 373 sites": 0.9226
   },
   "HiCo (composition only)": {
    "Kraemer Ae. aegypti · >~110 km from iNat reports": 0.557,
@@ -2197,12 +2491,47 @@
    "title": "Does HiCo's hierarchy cost accuracy? Coherence vs a strong flat model",
    "status": "baseline-candidate",
    "next": "Keep HiCo as the coherence operator; fill its macro term with the species-pool layer (P1), not with a learned net on parent-mean covariates."
+  },
+  {
+   "id": "I7-01",
+   "level": "Spatial-Model",
+   "title": "HiCo-Fuse 2: coherent hierarchy over an RF niche term with a species-pool macro term",
+   "status": "baseline-candidate",
+   "next": "I7-02 tested larger OOF blocks; next: novelty-dependent shrinkage of the head towards identity, and pool layers for the other classes."
+  },
+  {
+   "id": "I7-02",
+   "level": "Spatial-Model",
+   "title": "HiCo-Fuse 2 head fitted on 20-degree OOF blocks",
+   "status": "rejected",
+   "next": "Keep 5-degree OOF. Do not retry block-size changes without new evidence."
+  },
+  {
+   "id": "I7-03",
+   "level": "Spatial-Model",
+   "title": "HiCo-Fuse 2 with novelty-dependent shrinkage towards RF",
+   "status": "inconclusive",
+   "next": "Shrink on pool-space novelty; pool layers for Culex/Anopheles/other (P1)."
+  },
+  {
+   "id": "I7-04",
+   "level": "Spatial-Model",
+   "title": "HiCo-Fuse 2 trust from species-pool novelty",
+   "status": "baseline-candidate",
+   "next": "I7-05: exogenous pool layer for all classes (GBIF non-iNaturalist records), then re-run HF2-shrink2."
+  },
+  {
+   "id": "I7-05",
+   "level": "Data",
+   "title": "All-genus species-pool layer (GBIF 1900-2021) on the HiCo-Fuse 2 region term",
+   "status": "baseline-candidate",
+   "next": "Adopt HF2-shrink2+pool4 as HiCo-Fuse 2; global maps; next: observation/detection branch and locked 2025 validation."
   }
  ],
  "ledger_counts": {
-  "baseline-candidate": 9,
-  "inconclusive": 5,
-  "rejected": 3,
+  "baseline-candidate": 12,
+  "inconclusive": 6,
+  "rejected": 4,
   "proposed": 1,
   "infrastructure": 1
  }

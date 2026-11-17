@@ -21,8 +21,8 @@ async function getJSON(path) {
 /* ------------------------------------------------------------------ routing */
 const PAGES = ['framework', 'maps', 'evidence', 'methods'];
 const ANCHOR_PAGE = {
-  architecture: 'framework', coherence: 'framework', twopart: 'framework', 'fusion-results': 'framework', gates: 'framework', extensions: 'framework', status: 'framework',
-  findings: 'evidence', benchmark: 'evidence', fusion: 'evidence', experiments: 'evidence', families: 'evidence', ledger: 'evidence',
+  architecture: 'framework', hf2: 'framework', coherence: 'framework', twopart: 'framework', 'fusion-results': 'framework', gates: 'framework', extensions: 'framework', status: 'framework',
+  findings: 'evidence', lab: 'evidence', benchmark: 'evidence', fusion: 'evidence', experiments: 'evidence', families: 'evidence', ledger: 'evidence',
   data: 'methods', features: 'methods', pipeline: 'methods', validation: 'methods', limits: 'methods', terms: 'methods',
   research: 'evidence', explore: 'maps', models: 'evidence', review: 'methods', monitor: 'methods',
 };
@@ -60,7 +60,7 @@ const NIGHT = 'linear-gradient(90deg, #0f2238, #15568c, #2b95c8, #86d3dc, #fff4c
 const EMBER = 'linear-gradient(90deg, #1f1626, #62203a, #b8412c, #f0a032, #fff4c2)';
 const LAYERS = [
   { id: 'albopictus', group: 'Vectors', name: '<i>Ae. albopictus</i>', short: 'Ae. albopictus', sub: 'Asian tiger mosquito', ramp: NIGHT, unit: 'Two-part intensity, scaled to the upper tail',
-    cap: '<i>Ae. albopictus</i>: community support × species share (HiCo, 3-seed intensity-space ensemble), shown at 0.2° as the mean of 0.05° cells.' },
+    cap: '<i>Ae. albopictus</i>: community support × species share (HiCo-Fuse 2), shown at 0.2° as the mean of 0.05° cells.' },
   { id: 'aegypti', group: 'Vectors', name: '<i>Ae. aegypti</i>', short: 'Ae. aegypti', sub: 'Yellow fever mosquito', ramp: NIGHT, unit: 'Two-part intensity, scaled to the upper tail',
     cap: '<i>Ae. aegypti</i>: strongest in the Gulf of Mexico, Central America, the Caribbean, coastal Brazil and north-east Australia.' },
   { id: 'culex', group: 'Vectors', name: '<i>Culex</i> spp.', short: 'Culex', sub: 'Genus-level class', ramp: NIGHT, unit: 'Two-part intensity, scaled to the upper tail',
@@ -72,7 +72,7 @@ const LAYERS = [
   { id: 'wnv', group: 'Disease indices', name: 'West Nile', short: 'West Nile', sub: '<i>Culex</i> × thermal envelope', ramp: EMBER, unit: 'Disease index, percentile among land cells',
     cap: '<i>Culex</i> suitability × thermal envelope (16.0–24.5–33.0 °C, approximate, after Shocket et al. 2020; to be verified before use).' },
   { id: 'malaria', group: 'Disease indices', name: 'Malaria', short: 'Malaria', sub: '<i>Anopheles</i> × thermal envelope', ramp: EMBER, unit: 'Disease index, percentile among land cells',
-    cap: '<i>Anopheles</i> suitability × thermal envelope (16–25–34 °C, Mordecai et al. 2013). The vector layer is genus-level and Americas-heavy; treat Africa with caution.' },
+    cap: '<i>Anopheles</i> suitability × thermal envelope (16–25–34 °C, Mordecai et al. 2013). The vector layer is genus-level; reports are Americas-heavy, partly offset by the GBIF genus pool on the region term. Treat Africa with caution.' },
   { id: 'support', group: 'Framework terms', name: 'Community support σ(h)', short: 'Support', sub: 'Where a mosquito community is observed', ramp: NIGHT, unit: 'Percentile among land cells',
     cap: 'Probability that a cell hosts a reported mosquito community, from climate and landscape with observer access held at the global mean.' },
 ];
@@ -111,7 +111,7 @@ function initHeroMap() {
   segGroup('hero-seg', 'layer', id => {
     const l = layer(id);
     swapImage(byId('globe-map'), `assets/hico/global_${id}.webp`);
-    byId('hud-layer').innerHTML = `HiCo-Fuse · ${l.group === 'Vectors' ? `<i>${l.short}</i>` : l.short} · 0.2°`;
+    byId('hud-layer').innerHTML = `HiCo-Fuse 2 · ${l.group === 'Vectors' ? `<i>${l.short}</i>` : l.short} · 0.2°`;
     byId('hero-ramp').style.background = l.ramp;
   });
 }
@@ -128,7 +128,7 @@ function initViewer() {
     const l = layer(id);
     list.querySelectorAll('.layer-btn').forEach(b => b.setAttribute('aria-checked', String(b.dataset.layer === id)));
     swapImage(byId('viewer-map'), `assets/hico/global_${id}.webp`);
-    byId('viewer-layer').innerHTML = `HiCo-Fuse · ${l.name} · 0.2°`;
+    byId('viewer-layer').innerHTML = `HiCo-Fuse 2 · ${l.name} · 0.2°`;
     byId('viewer-legend').innerHTML = `<span>Low</span><i style="background:${l.ramp}"></i><span>High · ${l.unit}</span>`;
     byId('viewer-cap').innerHTML = l.cap;
   };
@@ -147,14 +147,14 @@ const ext = (ds, sub, model) => (B.hico.external.find(r => r.dataset === ds && r
 const cohRow = (model, cls) => B.hico.coherence.find(r => r.model === model && r.class === cls);
 
 function renderHicoTelemetry() {
-  const sep = cohRow('MLPEarly', 'Ae_albopictus'), hico = cohRow('HiCo', 'Ae_albopictus');
-  const kAlb = ext('Kraemer Ae. albopictus', 'all', 'HiCo x support (two-part)'), kAeg = ext('Kraemer Ae. aegypti', 'all', 'HiCo x support (two-part)');
-  const neon = B.external['HiCo x support (two-part)']['NEON 2026 Ae. albopictus · 373 sites'];
+  const sep = cohRow('MLPEarly', 'Ae_albopictus'), H = B.hf2;
+  const best = H.arms.find(a => a.id === 'HF2-shrink2+pool4') || H.arms.find(a => a.id === 'HF2-shrink2'), rf = H.arms.find(a => a.id === 'RF');
+  const neon = H.external['NEON 2026 Ae. albopictus · 373 sites'];
   byId('hico-telemetry').innerHTML = [
-    ['Cross-scale error', f3(hico.median_abs_log_ratio, 4), 'Median log-error between each region and the mean of its 100 child cells, all four vectors'],
+    ['Cross-scale error', f3(H.coherence_max_abs_log, 4), 'Median log-error between each 0.5° region and the mean of its 100 child cells, HiCo-Fuse 2 global maps, all four vectors'],
     ['Without the hierarchy', `${pct(sep.share_parents_off_by_more_than_2x)} → 0`, 'Regions off by more than 2× when the coarse level is fitted separately (Ae. albopictus)'],
-    ['Independent compendium', `${f3(kAlb, 2)} / ${f3(kAeg, 2)}`, 'External AUC on Kraemer et al. cells, Ae. albopictus / Ae. aegypti'],
-    ['Field traps', f3(neon, 2), 'External AUC on NEON 2026 Ae. albopictus trap detections, 373 sites'],
+    ['Transfer splits won', `${best.auc_test.wins}/${best.auc_test.n}`, `Held-out splits where HiCo-Fuse 2 beats the random forest on ranking (AUC); ${best.nll_test.wins}/${best.nll_test.n} on log-loss. Not yet significant (p = ${f3(best.auc_test.p, 2)})`],
+    ['Field traps', f3(neon, 2), 'AUC on NEON 2026 Ae. albopictus trap detections, 373 sites (earlier NEON years enter the GBIF pool at 5° resolution)'],
   ].map(([k, v, d]) => `<div role="listitem"><span class="k">${k}</span><span class="v">${v}</span><span class="d">${esc(d)}</span></div>`).join('');
 }
 
@@ -169,26 +169,31 @@ function archNodes() {
       text: 'iNaturalist research-grade Culicidae reports are aggregated to 0.05° cells. The model learns the class mix of reports, so observer effort, which multiplies every class equally, cancels. Literature compendia and trap surveys are kept for validation and for the observation-aware module.',
       dl: [['Classes', '<i>Ae. albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i>, <i>Anopheles</i>, other Culicidae (reference)'], ['Held out', 'Kraemer compendium, NEON 2026 traps, Austrian surveys, AIMSurv ovitraps']],
       metrics: [[formatNumber(h.meta.records_on_complete_cells), 'reports'], [formatNumber(h.meta.report_cells), 'report cells'], [formatNumber(h.meta.parents_with_reports), '0.5° regions with reports']] },
-    { col: 'Representation', id: 'repr', title: 'Modality encoders', sub: 'climate 26 · landscape 11 · human 4 · AlphaEarth 64',
-      q: 'What does each place look like?', eq: 'z_m = enc_m(x_m),  m ∈ {climate, landscape, human, AlphaEarth}',
-      text: 'Each modality gets its own encoder, so it can be ablated, gated and attributed. AlphaEarth embeddings carry most of the signal alone, but they also encode human footprint, which is why reporting effort is modelled explicitly downstream.',
+    { col: 'Representation', id: 'repr', title: 'Multimodal features', sub: 'climate 26 · landscape 11 · human 4 · AlphaEarth 64',
+      q: 'What does each place look like?', eq: 'x = [climate, landscape, human, AlphaEarth]  (standardised, no learned encoder)',
+      text: 'Four modalities, kept as named blocks so each can be ablated. AlphaEarth satellite embeddings carry most of the signal alone, but they also encode human footprint, which is why reporting effort is modelled explicitly downstream. Learned encoders, sparse codes and newer self-supervised embeddings were tested here and in the representation lab; none beat the plain features under transfer, so the method uses none.',
       dl: [['Strongest alone', `AlphaEarth, mean AUC ${f3(cv('Single:AlphaEarth').AUC_mean)}`], ['Weakest alone', `Human footprint ${f3(cv('Single:Human').AUC_mean)}, climate ${f3(cv('Single:Climate').AUC_mean)}`]],
       metrics: [['105', 'features'], [f3(aeR2, 2), 'AlphaEarth → effort R²']] },
-    { col: 'Fusion', id: 'fusion', title: 'Gated modality experts', sub: 'g_sm(context) per vector', newbit: true,
-      q: 'Which representation to trust, where?', eq: 'η_s(x) = Σ_m g_sm(c(x)) · w_sm · enc_m(x_m)',
-      text: 'Per-vector gates, a softmax over modalities computed from climate and human context, decide cell by cell which expert to trust. Accuracy matches early fusion within noise; the gain is an attribution map of what drives each prediction.',
-      dl: [['Held-out AUC', `Gated ${f3(cv('GatedMoE').AUC_mean)} · early MLP ${f3(cv('MLPEarly').AUC_mean)} · late rank ensemble ${f3(cv('LateRankEnsemble').AUC_mean)}`], ['Output', 'Global map of the dominant modality (section 05)']],
-      metrics: [[f3(cv('GatedMoE').AUC_mean), 'mean AUC'], ['4', 'experts per vector']] },
-    { col: 'Hierarchy', id: 'macro', title: 'Macro term A(P)', sub: 'pooled 0.5° representation + coarse evidence', newbit: true,
-      q: 'How much habitat does the region hold?', eq: 'A_s(P) = f( pool_{x∈P} z(x),  coarse evidence(P) )',
-      text: 'The 0.5° region total is learned from pooled features of all its cells. Coarse evidence, such as a literature compendium or country checklists, enters here only, at its native resolution, instead of being pretended to be fine-scale presences.',
-      dl: [['Pooled vs climate-only macro', `mean AUC ${f3(cv('HiCo').AUC_mean)} vs ${f3(cv('HiCo-climA').AUC_mean)}`], ['Planned', 'Species-pool layer as macro evidence for all five classes']],
-      metrics: [[f3(cv('HiCo').AUC_mean), 'mean AUC'], [formatNumber(h.meta.child_cells_in_those_parents), 'child cells allocated']] },
+    { col: 'Niche', id: 'niche', title: 'Random-forest niche term', sub: 'B(x) on all 105 features', newbit: true,
+      q: 'Where does the environment suit each vector?', eq: 'B_s(x) = log P_RF(s | x) − log P_RF(other | x)',
+      text: 'A random forest over all four modalities is the local term. It replaced the neural local network and the gated modality experts: those matched early fusion in-sample but lost under transfer, and an independent project found the same for adaptive gates. Fusion happens inside the forest, which reads every modality at once.',
+      dl: [['Why not gates', `Original HiCo ${B.hf2.arms.find(a => a.id === 'HiCo').auc_test.wins}/20 AUC wins vs the forest; the lab's environment gate failed 3 of 3 pre-declared tests`], ['Representation', 'Plain AlphaEarth 64-D; a PCA-16 compression ranks as well as learned sparse codes']],
+      metrics: [[f3(B.hf2.arms.find(a => a.id === 'RF').AUC_loro), 'forest AUC, region out'], ['105', 'features']] },
+    { col: 'Hierarchy', id: 'macro', title: 'Region term A(P)', sub: `forest map + species pool, ${B.hf2.n_params} numbers`, newbit: true,
+      q: 'How much of each vector does the region hold?', eq: 'A_s(P) = α_s + γ_s M_s(P) + w_s · z(P)',
+      text: 'M is the forest\'s own regional map, the mean of its children. z is a species-pool layer from sources the forest never sees: the Kraemer literature compendium and 2.55 million GBIF mosquito records up to 2021 (genus shares per 5° tile). It enters only here, at regional scale, because the main transfer error is which species have arrived in a region, not the local habitat relation.',
+      dl: [['Fitted on', 'Spatially out-of-fold forest predictions (5° blocks), never on in-sample output'], ['Penalty', 'Ridge towards α = 0, γ = τ = 1, w = 0, where the model equals the forest exactly']],
+      metrics: [[String(B.hf2.n_params), 'learned numbers'], [`${B.hf2.arms.find(a => a.id === 'HF2').auc_test.wins}/20`, 'AUC wins vs forest']] },
     { col: 'Hierarchy', id: 'micro', title: 'Coherent micro allocation', sub: 'softmax within parent P', newbit: true,
       q: 'Where inside the region?', eq: 'η_s(x) = A_s(P) + B_s(x) − log mean_{x′∈P} e^{B_s(x′)}',
       text: 'The local term only redistributes the region total among its children, so the mean of the children equals the parent exactly. A city layer can never exceed its region. The same rule can be applied after the fact to any trained model.',
       dl: [['Cross-scale error', `${f3(cohRow('HiCo', 'Ae_albopictus').median_abs_log_ratio, 4)} median log-ratio, 0% of regions off by 2×`], ['Under transfer', `Applied to a random forest: ${tc['RF+Recon'].wins}/${tc['RF+Recon'].n} AUC wins vs the forest (p = ${f3(tc['RF+Recon'].p, 2)}), so coherence is free`]],
       metrics: [['0%', 'regions off by 2×'], [`${pct(B.coherence.flip_min)}–${pct(B.coherence.flip_max)}`, 'class flips removed']] },
+    { col: 'Trust', id: 'trust', title: 'Novelty trust', sub: 'fall back to the forest where novel', newbit: true,
+      q: 'Is this region like anything seen in training?', eq: 'ρ(P) = min(ρ_env, ρ_pool),  ρ = clip(2 − d(P)/q₉₀, 0, 1)',
+      text: 'Each 0.5° region gets a trust weight from its distance to the nearest training regions, in environment space and in species-pool space: full trust up to the novelty the head saw while being fitted, falling to the plain forest at twice that. The rule was fixed before testing, and it is constant within a region, so coherence stays exact.',
+      dl: [['Region-out log-loss', `${f3(B.hf2.arms.find(a => a.id === 'HF2').nll_loro)} → ${f3(B.hf2.arms.find(a => a.id === 'HF2-shrink2').nll_loro)} (forest ${f3(B.hf2.arms.find(a => a.id === 'RF').nll_loro)})`], ['Rejected variant', 'Fitting the head on 20° blocks made it worse (logged as rejected)']],
+      metrics: [['0', 'new fitted numbers'], [f3(B.hf2.arms.find(a => a.id === 'HF2-shrink2').AUC_zone), 'AUC, climate zone out']] },
     { col: 'Products', id: 'twopart', title: 'Two-part vector maps', sub: 'support × species share', newbit: true,
       q: 'Is there a mosquito community here at all?', eq: 'S_s(x) = σ(h(x)) · π_s(x)',
       text: 'Composition is undefined where no community is observed. A support term h, fitted with effort covariates and mapped with effort held at its mean, removes deserts and empty land that composition-only maps ranked highest.',
@@ -212,9 +217,9 @@ function renderArchitecture() {
   const nodes = archNodes();
   const cols = [...new Set(nodes.map(n => n.col))];
   byId('arch-flow').innerHTML = cols.map(c => `<div class="arch-col"><span class="arch-k">${c}</span>${
-    nodes.filter(n => n.col === c).map(n => `<button type="button" class="arch-node${n.newbit ? ' new' : ''}" role="tab" data-node="${n.id}" aria-selected="false">${n.newbit ? '<span class="arch-tag">HiCo-Fuse</span>' : ''}<b>${n.title}</b><span>${n.sub}</span></button>`).join('')
+    nodes.filter(n => n.col === c).map(n => `<button type="button" class="arch-node${n.newbit ? ' new' : ''}" role="tab" data-node="${n.id}" aria-selected="false">${n.newbit ? '<span class="arch-tag">HiCo-Fuse 2</span>' : ''}<b>${n.title}</b><span>${n.sub}</span></button>`).join('')
   }</div>`).join('');
-  byId('arch-flow').insertAdjacentHTML('afterend', '<div class="arch-legend"><span><i class="n"></i>New in HiCo-Fuse</span><span><i></i>Standard component</span><span>Select any layer for its rule and evidence</span></div>');
+  byId('arch-flow').insertAdjacentHTML('afterend', '<div class="arch-legend"><span><i class="n"></i>New in HiCo-Fuse 2</span><span><i></i>Standard component</span><span>Select any layer for its rule and evidence</span></div>');
   const show = id => {
     const n = nodes.find(x => x.id === id);
     document.querySelectorAll('.arch-node').forEach(b => b.setAttribute('aria-selected', String(b.dataset.node === id)));
@@ -339,6 +344,59 @@ function renderExtensions() {
   ];
   const lab = { mixed: 'Inconclusive', rejected: 'No gain' };
   byId('ext-grid').innerHTML = cards.map(([t, st, q, v, tb]) => `<article class="card ext"><header><h3>${t}</h3><span class="chip ${st}">${lab[st]}</span></header><p>${q}</p><div class="verdict">${v}</div><details><summary>Show the numbers</summary><div class="table-wrap">${tb}</div></details></article>`).join('');
+}
+
+/* ------------------------------------------------------------------ HiCo-Fuse 2 */
+const HF2_ARMS = [['HiCo', '--s2', 'HiCo, original'], ['RF', '--ink-3', 'Random forest'], ['HF2', '--s4', 'HiCo-Fuse 2'],
+  ['HF2-shrink2', '--s1', 'HiCo-Fuse 2 + trust'], ['HF2-shrink2+pool4', '--s3', '+ all-genus pool']];
+function hf2Arms() { const have = new Set(B.hf2.arms.map(a => a.id)); return HF2_ARMS.filter(([id]) => have.has(id)); }
+function dotRows(el, rows, arms, { lo, hi, ticks, fmt, label }) {
+  const W = 640, L = 150, R = 24, rowH = 40, T = 8, Hh = T + rows.length * rowH + 24;
+  const x = v => L + (v - lo) / (hi - lo) * (W - L - R);
+  let s = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${esc(label)}">`;
+  ticks.forEach(v => { s += `<line class="axis" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${Hh - 22}"/><text x="${x(v)}" y="${Hh - 6}" text-anchor="middle" style="font-size:11px">${fmt(v)}</text>`; });
+  rows.forEach((r, i) => {
+    const yc = T + i * rowH + rowH / 2;
+    s += `<line class="axis" x1="${L}" x2="${W - R}" y1="${yc}" y2="${yc}"/>`;
+    s += `<text x="${L - 10}" y="${yc + 4}" text-anchor="end">${esc(r.label)}</text>`;
+    arms.forEach(([id, col, nm], j) => {
+      const v = r.v[id]; if (v === undefined || v === null) return;
+      const big = id.startsWith('HF2-shrink2');
+      s += `<circle cx="${x(Math.min(hi, Math.max(lo, v)))}" cy="${yc + (j - (arms.length - 1) / 2) * 3}" r="${big ? 7 : 5.5}" fill="${css(col)}" stroke="${css('--surface')}" stroke-width="2" data-tip="${esc(nm)} · ${esc(r.label)}: ${fmt(v)}"/>`;
+    });
+  });
+  el.innerHTML = `${s}</svg>`;
+}
+function renderHF2() {
+  const H = B.hf2, arms = hf2Arms(), by = Object.fromEntries(H.arms.map(a => [a.id, a]));
+  const legend = arms.map(([, c, n]) => `<span><i style="background:var(${c})"></i>${n}</span>`).join('');
+  byId('hf2-legend').innerHTML = legend; byId('hf2-loro-legend').innerHTML = legend;
+  const D = [['block10', '10° blocks'], ['env', 'Climate cluster out'], ['loro', 'World region out'], ['zone', 'Climate zone out']];
+  const draw = m => dotRows(byId('hf2-chart'), D.map(([d, l]) => ({ label: l, v: Object.fromEntries(arms.map(([id]) => [id, by[id][`${m}_${d}`]])) })), arms,
+    m === 'AUC' ? { lo: 0.62, hi: 0.78, ticks: [0.62, 0.66, 0.70, 0.74, 0.78], fmt: v => f3(v), label: 'Mean held-out AUC by design' }
+      : { lo: 0.85, hi: 1.5, ticks: [0.9, 1.1, 1.3, 1.5], fmt: v => f3(v, 2), label: 'Mean held-out log-loss by design' });
+  segGroup('hf2-metric', 'm', draw); draw('AUC');
+  const best = by['HF2-shrink2+pool4'] ? 'HF2-shrink2+pool4' : 'HF2-shrink2', b = by[best], h = by.HiCo;
+  const chip = t => t.p < 0.05 && t.mean_diff < 0 ? 'rejected' : t.wins >= t.n * 0.6 ? 'kept' : 'mixed';
+  const item = (label, t, note) => `<div class="cost-row"><b>${label}</b><span class="chip ${chip(t)}">${t.wins}/${t.n} wins vs forest · p = ${f3(t.p, t.p < 0.01 ? 4 : 2)}</span><small>${note}</small></div>`;
+  byId('hf2-tests').innerHTML =
+    item('Original HiCo · AUC', h.auc_test, `Mean ${sgn(h.auc_test.mean_diff)}: its neural terms lose under transfer.`) +
+    item('HiCo-Fuse 2 · AUC', b.auc_test, `Mean ${sgn(b.auc_test.mean_diff)}; best or tied-best AUC on every design, still exactly coherent.`) +
+    item('HiCo-Fuse 2 · log-loss', b.nll_test, 'Better than the forest on blocks, clusters and zones; worse when a whole world region is held out.') +
+    `<p class="note">Fitted region term: γ for <i>Ae. albopictus</i> / <i>Ae. aegypti</i> / <i>Culex</i> / <i>Anopheles</i> = ${H.gamma_mean.map(v => f3(v, 2)).join(' / ')}. Values above 1 sharpen the regional signal. That helps ranking but makes probabilities overconfident in unseen regions; the trust rule pulls them back where a region's environment or species pool is novel.</p>`;
+  const regs = H.loro_nll.map(r => ({ label: r.region, v: Object.fromEntries(arms.map(([id]) => [id, r[id]])) }));
+  dotRows(byId('hf2-loro'), regs, arms, { lo: 1.0, hi: 2.0, ticks: [1.0, 1.25, 1.5, 1.75, 2.0], fmt: v => f3(v, 2), label: 'Log-loss with each region held out' });
+  const af = H.loro_nll.find(r => r.region === 'Africa'), na = H.loro_nll.find(r => r.region === 'N America');
+  byId('hf2-loro-note').innerHTML = `The trust rule nearly closes the gap for North America (${f3(na.HF2, 2)} → ${f3(na['HF2-shrink2'], 2)}; forest ${f3(na.RF, 2)}). Africa (75 test cells) is not flagged as novel by climate or by the <i>Aedes</i> pool, yet has the largest error: its reports are dominated by <i>Anopheles</i> and <i>Culex</i>, which the first pool layer did not describe.${af['HF2-shrink2+pool4'] !== undefined ? ` With the all-genus pool, Africa: ${f3(af['HF2-shrink2+pool4'], 2)}.` : ''}`;
+}
+
+/* ------------------------------------------------------------------ representation lab */
+function renderLab() {
+  const L = B.lab, lab = { kept: 'Used in the method', rejected: 'Ruled out', proposed: 'Next step', mixed: 'Inconclusive' };
+  byId('lab-task').textContent = `The Habitat Representation Lab is a separate project on the same question: ${L.task}; ${L.fits}. Its results are independent checks on our representation and fusion choices; each is listed with what it changes in HiCo-Fuse 2.`;
+  byId('lab-grid').innerHTML = L.findings.map(f => `<article class="card ext"><header><span class="arch-k">${esc(f.component)}</span><span class="chip ${f.verdict}">${lab[f.verdict]}</span></header><h3>${esc(f.title)}</h3><p class="lab-num">${esc(f.result)}</p><div class="verdict">${esc(f.use)}</div></article>`).join('');
+  byId('lab-skip').innerHTML = L.not_featured.map(t => `<li>${esc(t)}</li>`).join('');
+  byId('lab-next').innerHTML = L.next.map(t => `<li>${esc(t)}</li>`).join('');
 }
 
 /* ------------------------------------------------------------------ methods page */
@@ -713,7 +771,7 @@ async function main() {
   try {
     B = await getJSON('data/model_benchmarks.json');
     byId('generated').textContent = `Benchmark data generated ${B.generated}`;
-    const steps = [renderHicoTelemetry, renderArchitecture, renderCoherenceSection, renderExternal, renderCV, renderGates, renderExtensions,
+    const steps = [renderHicoTelemetry, renderArchitecture, renderCoherenceSection, renderExternal, renderHF2, renderCV, renderExtensions, renderLab,
       renderTelemetry, renderFindings, initBenchmark, renderFusion, renderCoherence, renderWeighting, renderCausal, renderDecay, renderPool, renderOADSDM,
       renderFoundation, renderFamilies, renderLedger, renderMethods];
     steps.forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });

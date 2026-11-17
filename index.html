@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>HiCo-Fuse · Habitat Observatory</title>
+  <title>HiCo-Fuse 2 · Habitat Observatory</title>
   <meta name="description" content="HiCo-Fuse: a coherent global-to-local framework for mosquito vector and disease habitat mapping from Earth-observation fusion.">
   <meta name="theme-color" content="#05080f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,16 +33,16 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-copy">
-          <span class="kicker"><i class="pulse" aria-hidden="true"></i>HiCo-Fuse · hierarchical coherent fusion</span>
+          <span class="kicker"><i class="pulse" aria-hidden="true"></i>HiCo-Fuse 2 · hierarchical coherent fusion</span>
           <h1>One model from the globe down to the <em>city block</em>.</h1>
-          <p class="lede">A multimodal framework for <i>Aedes albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i> and <i>Anopheles</i>. It fuses climate, landscape, human footprint and AlphaEarth satellite embeddings, and it is built so that a local map can never contradict the regional map above it. Dengue, West Nile and malaria layers follow from the vector maps.</p>
+          <p class="lede">A global habitat-mapping method for <i>Aedes albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i> and <i>Anopheles</i>. A strong niche model reads climate, landscape, human footprint and AlphaEarth satellite embeddings; an exact hierarchy makes every local map add up to its region; an independent species-pool layer tells each region which species have arrived; and the model falls back to the plain niche model wherever a place looks unlike anything it was trained on.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#architecture">See the framework</a>
+            <a class="button primary" href="#hf2">See HiCo-Fuse 2</a>
             <a class="button ghost" href="#maps">Open the global maps</a>
           </div>
         </div>
         <figure class="globe">
-          <div class="hud"><span id="hud-layer">HiCo-Fuse · <i>Ae. albopictus</i> · 0.2°</span><span id="hud-pos">LAT —  LON —</span></div>
+          <div class="hud"><span id="hud-layer">HiCo-Fuse 2 · <i>Ae. albopictus</i> · 0.2°</span><span id="hud-pos">LAT —  LON —</span></div>
           <div class="globe-frame" data-hud="hud-pos">
             <img id="globe-map" src="assets/hico/global_albopictus.webp" width="1800" height="725" alt="Global HiCo-Fuse map for the selected layer">
             <svg class="graticule" viewBox="0 0 360 145" preserveAspectRatio="none" aria-hidden="true">
@@ -61,7 +61,7 @@
             </div>
             <div class="ramp-legend"><span>Low</span><i id="hero-ramp"></i><span>High</span></div>
           </div>
-          <figcaption>Two-part map (community support × species share), 3-seed intensity-space ensemble, shown at 0.2°. A model view, not validated occurrence.</figcaption>
+          <figcaption>HiCo-Fuse 2 two-part map (community support × species share) with the all-genus pool and novelty trust, shown at 0.2°. A relative ranking, not validated occurrence.</figcaption>
         </figure>
       </div>
       <div class="telemetry" role="list" aria-label="Headline results" id="hico-telemetry"></div>
@@ -71,8 +71,8 @@
       <section class="section" id="architecture">
         <div class="section-head">
           <span class="kicker">01 · Framework</span>
-          <h2>Five layers, each answering one question</h2>
-          <p>Every layer is a separate, testable module. Select a layer to see its rule, what it assumes and what the tests showed.</p>
+          <h2>Each layer answers one question, and each was kept only if it survived a transfer test</h2>
+          <p>HiCo-Fuse 2 is the version rebuilt from the evidence: the neural parts that lost under transfer were replaced. Select a layer to see its rule, what it assumes and what the tests showed.</p>
         </div>
         <div class="arch">
           <div class="arch-flow" role="tablist" aria-label="Framework layers" id="arch-flow"></div>
@@ -80,9 +80,48 @@
         </div>
       </section>
 
+
+      <section class="section" id="hf2">
+        <div class="section-head">
+          <span class="kicker">02 · The rebuilt model</span>
+          <h2>HiCo-Fuse 2: keep the hierarchy, replace what lost</h2>
+          <p>The original HiCo learned both of its terms with neural networks and lost to a random forest under transfer. The coherence rule was not the cause: applied to the forest it cost nothing. HiCo-Fuse 2 keeps the rule and fills it with parts that each passed a test.</p>
+        </div>
+        <div class="eq-hero">
+          <div class="eq-big">η<sub>s</sub>(x) = <span class="t-a">α<sub>s</sub> + γ<sub>s</sub>M<sub>s</sub>(P) + w<sub>s</sub>·z(P)</span> + <span class="t-b">τ<sub>s</sub>B<sub>s</sub>(x)</span> − <span class="t-n">log mean<sub>x′∈P</sub> e<sup>τ<sub>s</sub>B<sub>s</sub>(x′)</sup></span></div>
+          <div class="eq-legend">
+            <span><i class="t-a"></i><b>Region term</b> · the forest's own regional map M plus an independent species-pool layer z</span>
+            <span><i class="t-b"></i><b>Local term</b> · random-forest niche model on all four data types</span>
+            <span><i class="t-n"></i><b>Normaliser</b> · children still average exactly to their region</span>
+          </div>
+        </div>
+        <div class="two wide-left">
+          <div class="card">
+            <div class="card-top"><span>Held-out accuracy, 20 transfer splits</span>
+              <div class="seg light" role="group" aria-label="Metric" id="hf2-metric">
+                <button type="button" data-m="AUC" aria-pressed="true">AUC ↑</button>
+                <button type="button" data-m="nll" aria-pressed="false">Log-loss ↓</button>
+              </div></div>
+            <div class="legend" id="hf2-legend"></div>
+            <div class="chart" id="hf2-chart"></div>
+            <p class="note">AUC: how well reports of each species are ranked above other mosquitoes. Log-loss: how honest the probabilities are; it punishes overconfidence. Only 60 numbers are learned on top of the forest (4 classes × 3 calibration terms + 12 pool weights), fitted on spatially out-of-fold forest predictions and pulled towards the plain forest by a penalty.</p>
+          </div>
+          <div class="card stack-card">
+            <h3>What the rebuild changed</h3>
+            <div id="hf2-tests"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>Where the remaining error is · log-loss with each world region held out</span><span class="muted">lower is better</span></div>
+          <div class="legend" id="hf2-loro-legend"></div>
+          <div class="chart" id="hf2-loro"></div>
+          <p class="note" id="hf2-loro-note"></p>
+        </div>
+      </section>
+
       <section class="section" id="coherence">
         <div class="section-head">
-          <span class="kicker">02 · The core idea · coherence</span>
+          <span class="kicker">03 · The core idea · coherence</span>
           <h2>A city cannot exceed its region</h2>
           <p>Maps disagree across scales when each level is estimated on its own: a country model and a city model, or a regional compendium and local citizen science. HiCo builds each 0.5° region from its 0.05° children, so the two levels agree exactly.</p>
         </div>
@@ -128,7 +167,7 @@
 
       <section class="section" id="twopart">
         <div class="section-head">
-          <span class="kicker">03 · Two-part maps</span>
+          <span class="kicker">04 · Two-part maps</span>
           <h2>Fixing a silent failure of composition models</h2>
           <p>A composition score answers "if a mosquito is reported here, which species is it?" It is undefined where no mosquito community is observed: the first global maps put the top 20,000 <i>Ae. aegypti</i> cells in the Sahara and Arabia. Multiplying by a community-support term fixes this.</p>
         </div>
@@ -140,15 +179,15 @@
           <div class="card-top"><span>External validation, never used in training</span><span class="muted">AUC · composition only → two-part</span></div>
           <div class="legend"><span><i style="background:var(--s3)"></i>MLP early fusion</span><span><i style="background:var(--s1)"></i>HiCo</span><span><i class="hollow"></i>composition only</span><span><i style="background:var(--ink-3)"></i>two-part</span></div>
           <div class="chart" id="ext-chart"></div>
-          <p class="note">Kraemer et al. (2015) compendium cells against 50,000 random land cells; the "&gt;~110 km" rows keep only cells at least two regions from any iNaturalist report of that species, a direct extrapolation test. NEON 2026 is detection vs non-detection at 373 trap sites; it was inspected earlier, so it is a diagnostic rather than a blind test.</p>
+          <p class="note">Kraemer et al. (2015) compendium cells against 50,000 random land cells; the "&gt;~110 km" rows keep only cells at least two regions from any iNaturalist report of that species, a direct extrapolation test. NEON 2026 is detection vs non-detection at 373 trap sites; it was inspected earlier, so it is a diagnostic rather than a blind test. These checks score the original HiCo maps: HiCo-Fuse 2 feeds the Kraemer compendium into its pool layer, so Kraemer is no longer an independent test for it (its NEON AUC is 0.92).</p>
         </div>
       </section>
 
       <section class="section" id="fusion-results">
         <div class="section-head">
-          <span class="kicker">04 · Representation and fusion</span>
+          <span class="kicker">05 · Representation and fusion</span>
           <h2>Which representation carries the signal</h2>
-          <p>Same multinomial likelihood, features, optimiser and early stopping for every model; held-out 10° blocks (5 folds × 2 seeds, 153 blocks). Within-fold SD is about 0.02–0.05 AUC, so differences under 0.02 are within noise.</p>
+          <p>Same multinomial likelihood, features, optimiser and early stopping for every model; held-out 10° blocks (5 folds × 2 seeds, 153 blocks). The reported fold SD is about 0.02–0.05 AUC; it describes variation across folds and does not establish a paired confidence interval or a universal 0.02 significance threshold.</p>
         </div>
         <div class="two wide-left">
           <div class="card">
@@ -162,29 +201,10 @@
               <li>AlphaEarth carries most of the signal alone; early MLP fusion adds little on top.</li>
               <li>A late rank ensemble trails early fusion: rank blending discards calibration and cross-modality interactions.</li>
               <li>The coherence constraint costs about <b id="hico-cost"></b> AUC when the macro term sees pooled all-modality features, and more with climate alone, because a mostly urban 0.5° region shares its climate with rural neighbours.</li>
-              <li>Gated experts match early fusion within noise and add a per-cell attribution to modalities (next section).</li>
+              <li>Gated modality experts matched early fusion within noise but did not hold up under transfer, and an independent test in the representation lab found the same (<a href="#lab">Evidence 02</a>). HiCo-Fuse 2 does not use learned gates.</li>
+              <li>The lab also found that a 16-number PCA compression of AlphaEarth ranks habitat as well as learned sparse codes, so the method uses the plain embedding.</li>
             </ul>
           </div>
-        </div>
-      </section>
-
-      <section class="section" id="gates">
-        <div class="section-head">
-          <span class="kicker">05 · Interpretability</span>
-          <h2>Which representation drives the local map</h2>
-          <p>Per-vector gates are computed from climate and human context, so the model reports, cell by cell, which modality it trusts.</p>
-        </div>
-        <div class="card">
-          <div class="card-top">
-            <div class="seg light" role="group" aria-label="Vector" id="gate-seg">
-              <button type="button" data-gate="albopictus" aria-pressed="true"><i>Ae. albopictus</i></button>
-              <button type="button" data-gate="aegypti" aria-pressed="false"><i>Ae. aegypti</i></button>
-            </div>
-            <span class="muted">Dominant local gate, HiCo + gated experts</span>
-          </div>
-          <div class="dark-map"><img id="gate-img" src="assets/hico/gates_albopictus.webp" width="1800" height="725" alt="Dominant modality gate map"></div>
-          <div class="gate-legend" id="gate-legend"></div>
-          <p class="note">AlphaEarth governs allocation across inhabited land. In the empty boreal zone the human-footprint expert dominates, mostly by encoding the absence of people.</p>
         </div>
       </section>
 
@@ -202,9 +222,9 @@
           <h2>What is established, and what is not</h2>
         </div>
         <div class="status-grid">
-          <article class="card status"><span class="chip kept">Established</span><ul class="clean"><li>Exact cross-level coherence; with a random-forest local term it costs no accuracy under transfer.</li><li>Two-part maps transfer to an independent compendium (AUC 0.82–0.87) and to NEON traps (0.92).</li><li>Intensity-space ensembling is required for coherence.</li></ul></article>
-          <article class="card status"><span class="chip mixed">Not established</span><ul class="clean"><li>A predictive gain from gated over early fusion.</li><li>A gain from coarse evidence on the fine endpoint.</li><li>A gain from vision-language concepts over AlphaEarth at 0.05°.</li></ul></article>
-          <article class="card status"><span class="chip proposed">Next</span><ul class="clean"><li>A species-pool layer on the macro term: the main transfer error is the regional species mix (see <a href="#findings">Evidence</a>).</li><li>Urban-gradient survey test with AIMSurv ovitraps.</li><li>Multi-scale AlphaEarth and attention pooling for the macro term.</li></ul></article>
+          <article class="card status"><span class="chip kept">Established</span><ul class="clean"><li>Exact cross-level coherence at no accuracy cost.</li><li>HiCo-Fuse 2 ranks as well as or better than the random forest on all four transfer designs (13/20 splits; not yet significant).</li><li>Two-part maps transfer to NEON traps (AUC 0.92).</li><li>Learned gates and weights do not generalise: found here and replicated in the representation lab.</li></ul></article>
+          <article class="card status"><span class="chip mixed">Not established</span><ul class="clean"><li>Calibrated probabilities in a held-out world region: log-loss is still above the forest's there.</li><li>A gain from newer encoders or sparse codes over plain AlphaEarth.</li><li>Occurrence probability: maps are relative rankings.</li></ul></article>
+          <article class="card status"><span class="chip proposed">Next</span><ul class="clean"><li>Species-pool data for <i>Culex</i>, <i>Anopheles</i> and other genera (in progress).</li><li>Separate habitat from observation and detection with survey data.</li><li>A locked 2025 validation cohort before any further claim.</li></ul></article>
         </div>
       </section>
     </div>
@@ -215,7 +235,7 @@
     <section class="viewer">
       <aside class="viewer-side">
         <span class="kicker">Global layers · 0.2° view</span>
-        <h1>HiCo-Fuse global maps</h1>
+        <h1>HiCo-Fuse 2 global maps</h1>
         <div id="layer-list" role="radiogroup" aria-label="Map layer"></div>
       </aside>
       <div class="viewer-main">
@@ -246,7 +266,7 @@
         <span class="kicker">Evidence · research loop</span>
         <h1>Tested where the models have never seen data</h1>
         <p>Nine models under nine ways of holding out the world, ten fusion methods and five redesign iterations, each chosen by the last one's failure.</p>
-        <p class="jump"><a href="#findings">Findings</a><a href="#benchmark">Benchmark</a><a href="#fusion">Fusion methods</a><a href="#experiments">Experiments</a><a href="#families">Model families</a><a href="#ledger">Ledger</a></p>
+        <p class="jump"><a href="#findings">Findings</a><a href="#lab">Representation lab</a><a href="#benchmark">Benchmark</a><a href="#fusion">Fusion methods</a><a href="#experiments">Experiments</a><a href="#families">Model families</a><a href="#ledger">Ledger</a></p>
       </div>
       <div class="telemetry light" id="telemetry" role="list" aria-label="Headline results"></div>
 
@@ -255,9 +275,23 @@
         <div class="finding-grid" id="finding-grid"></div>
       </section>
 
+
+      <section class="section" id="lab">
+        <div class="section-head">
+          <span class="kicker">02 · Independent evidence</span>
+          <h2>A second project tested the representation layer</h2>
+          <p id="lab-task"></p>
+        </div>
+        <div class="lab-grid" id="lab-grid"></div>
+        <div class="two">
+          <div class="card stack-card"><h3>Not used to shape the method</h3><ul class="clean" id="lab-skip"></ul></div>
+          <div class="card stack-card"><h3>The lab's ranked next steps</h3><ol class="clean" id="lab-next"></ol></div>
+        </div>
+      </section>
+
       <section class="section" id="benchmark">
         <div class="section-head">
-          <span class="kicker">02 · Holdout benchmark</span>
+          <span class="kicker">03 · Holdout benchmark</span>
           <h2>Nine models under nine ways of holding out the world</h2>
           <p>Multinomial composition of Culicidae reports in 7,004 cells at 0.05°, with 105 features. Select a holdout design and a metric.</p>
         </div>
@@ -283,7 +317,7 @@
 
       <section class="section" id="fusion">
         <div class="section-head">
-          <span class="kicker">03 · Fusion methods</span>
+          <span class="kicker">04 · Fusion methods</span>
           <h2>Ten ways to combine Earth-observation evidence</h2>
           <p>Each card states the rule, what it assumes and what the holdout benchmark showed.</p>
         </div>
@@ -297,7 +331,7 @@
       </section>
 
       <section class="section" id="experiments">
-        <div class="section-head"><span class="kicker">04 · Experiments</span><h2>What each redesign tested</h2></div>
+        <div class="section-head"><span class="kicker">05 · Experiments</span><h2>What each redesign tested</h2></div>
         <div class="tabs" role="tablist" aria-label="Experiments" id="exp-tabs">
           <button role="tab" id="tab-coherence" aria-controls="panel-coherence" aria-selected="true">Coherence</button>
           <button role="tab" id="tab-weighting" aria-controls="panel-weighting" aria-selected="false">Weighting</button>
@@ -318,7 +352,7 @@
 
       <section class="section" id="families">
         <div class="section-head">
-          <span class="kicker">05 · Model families</span>
+          <span class="kicker">06 · Model families</span>
           <h2>Four model families, built in sequence</h2>
           <p>Each family started from what the previous one could not do. Scores are comparable only within a family, because tasks and labels differ.</p>
         </div>
@@ -327,7 +361,7 @@
 
       <section class="section" id="ledger">
         <div class="section-head">
-          <span class="kicker">06 · Research ledger</span>
+          <span class="kicker">07 · Research ledger</span>
           <h2>One entry per experiment</h2>
           <p>What improved, what failed and the next step it set, so rejected ideas are not retried without new evidence.</p>
         </div>
@@ -350,7 +384,7 @@
         <div class="section-head">
           <span class="kicker">01 · Data</span>
           <h2>Citizen-science reports, with independent checks</h2>
-          <p>The model learns from the class mix of mosquito reports. Reporting effort multiplies every class equally, so it cancels in the composition; "other Culicidae" is the reference class.</p>
+          <p>The model learns from the class mix of mosquito reports. Cancellation of reporting effort assumes that effort scales every species class equally within a location and observation window. Species-specific reporting or identification bias can violate this assumption; "other Culicidae" is the reference class.</p>
         </div>
         <div class="stat-grid" id="data-stats"></div>
         <div class="two">

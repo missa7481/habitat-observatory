@@ -317,7 +317,7 @@ ul.clean { margin: 0; padding-left: 18px; display: flex; flex-direction: column;
 /* architecture explorer */
 .arch { background: var(--space); color: #fff; border-radius: 16px; padding: 22px; position: relative; overflow: hidden;
   background-image: radial-gradient(700px 300px at 90% -10%, rgba(11,61,145,.55), transparent 70%), radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.4) 50%, transparent 51%), radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,.3) 50%, transparent 51%); }
-.arch-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; position: relative; }
+.arch-flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 22px; position: relative; }
 .arch-col { display: flex; flex-direction: column; gap: 8px; position: relative; min-width: 0; }
 .arch-col + .arch-col::before { content: ""; position: absolute; left: -24px; top: 50%; width: 20px; height: 2px;
   background: repeating-linear-gradient(90deg, var(--hud) 0 6px, transparent 6px 10px); animation: flow 1.2s linear infinite; }
@@ -453,3 +453,10 @@ ul.clean { margin: 0; padding-left: 18px; display: flex; flex-direction: column;
   .gate-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .modality-grid { grid-template-columns: 1fr; }
 }
+
+/* HiCo-Fuse 2 + lab */
+.lab-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 18px; }
+.lab-grid h3 { margin: 8px 0 6px; font-size: 16px; }
+.lab-num { font: 500 12.5px/1.5 var(--mono); color: var(--ink-2, var(--ink)); }
+@media (max-width: 1000px) { .lab-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .lab-grid { grid-template-columns: 1fr; } }
