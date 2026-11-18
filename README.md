@@ -5,18 +5,24 @@ Public website for **HiCo-Fuse 2**, a hierarchical, coherent method for global m
 Website: https://missa7481.github.io/habitat-observatory/
 Code and benchmark tables: https://github.com/missa7481/NASA_Global_Habitat_Mapping
 
-## Sections
+## Layout
 
-- **Framework** (home): the HiCo-Fuse 2 architecture as an interactive diagram (data → features → random-forest niche term → coherent region/local hierarchy with species pool → novelty trust → two-part vector maps and disease layers), the rebuilt-model results on 20 transfer splits, the coherence result with global → regional → city zooms, external validation, representation evidence, extensions under test and current status.
-- **Maps**: global 0.2° views of *Ae. albopictus*, *Ae. aegypti*, *Culex*, *Anopheles*, dengue/chikungunya/Zika, West Nile and malaria indices, and community support.
-- **Evidence**: the research loop: headline findings, independent results from the Habitat Representation Lab (each stated with what it changes in the method), an interactive benchmark of nine models under nine spatial and temporal holdout designs, ten fusion methods, experiments (coherence, weighting, invariance, support decay, species pool, observation-aware SDM, foundation benchmark), model families and the research ledger.
-- **Methods**: data sources and roles, the 105 features, research pipeline, validation designs, limitations and terms.
+The design follows the editorial atlas layout of the Ashburn Heat Twin: a full-screen map under a floating masthead, a chapter rail, a legend card, a click-to-read probe and a slide-in About sheet.
+
+- **Story** (home): seven chapters over the global map (observations, niche model, coherence with Florida / Malay Peninsula / Northern Italy zooms, two-part maps, transfer tests, disease layers, what is planned). Arrow keys move between chapters.
+- **Explore**: every global 0.2° layer with pan and zoom, swipe comparison of two layers, a probe that reads a cell's position on the colour ramp, go-to views, graticule and place toggles. `#explore/<layer>` links to a layer.
+- **Framework**, **Evidence**, **Methods**: the HiCo-Fuse 2 architecture, benchmarks, experiments, ledger, data, features and validation designs. Methods also has the 42-entry dataset inventory and the 25-entry methods review from the 17 November 2026 research handoff.
+- **Plan**: evidence status (completed runs, report-derived, handoff checks, planned), the representation × learner experiment matrix, report-derived results with their denominators, handoff checks, priorities P0–P5 and access gaps.
+
+Every section carries an evidence badge. Report-derived scores (the 1,601-site representation benchmark) are not presented as completed runs, and planned experiments show no results.
 
 ## Files
 
-- `index.html`, `assets/site.css`, `assets/site.js`: the whole site (no build step, no external scripts).
+- `index.html`, `assets/site.css`: page shell and styles (no build step).
+- `assets/site.js`: routing, document pages and charts; `assets/atlas.js`: map, story and explore; `assets/plan.js`: plan, inventory and methods review.
 - `assets/hico/*.webp`: rendered map previews (`rsi/render_framework_maps.py` in the code repository).
 - `data/model_benchmarks.json`: aggregate metrics only (`rsi/build_observatory_data.py`).
+- `data/research_handoff.json`: catalogue metadata and aggregate counts from the research handoff (`python tools/build_handoff_data.py /path/to/handoff`). Internal project documents are named but not linked.
 
 ## Data policy
 

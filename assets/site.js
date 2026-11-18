@@ -18,28 +18,6 @@ async function getJSON(path) {
   return response.json();
 }
 
-/* ------------------------------------------------------------------ routing */
-const PAGES = ['framework', 'maps', 'evidence', 'methods'];
-const ANCHOR_PAGE = {
-  architecture: 'framework', hf2: 'framework', coherence: 'framework', twopart: 'framework', 'fusion-results': 'framework', gates: 'framework', extensions: 'framework', status: 'framework',
-  findings: 'evidence', lab: 'evidence', benchmark: 'evidence', fusion: 'evidence', experiments: 'evidence', families: 'evidence', ledger: 'evidence',
-  data: 'methods', features: 'methods', pipeline: 'methods', validation: 'methods', limits: 'methods', terms: 'methods',
-  research: 'evidence', explore: 'maps', models: 'evidence', review: 'methods', monitor: 'methods',
-};
-function route() {
-  const name = location.hash.slice(1) || 'framework';
-  const page = PAGES.includes(name) ? name : (ANCHOR_PAGE[name] || 'framework');
-  document.querySelectorAll('.page').forEach(p => { p.hidden = p.id !== `page-${page}`; });
-  document.querySelectorAll('.site-header nav a').forEach(a => {
-    if (a.dataset.page === page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-  });
-  const target = !PAGES.includes(name) && document.getElementById(name);
-  if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
-  else window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-}
-window.addEventListener('hashchange', route);
-route();
-
 /* ------------------------------------------------------------------ tooltip */
 const tip = byId('tip');
 document.addEventListener('pointerover', e => {
@@ -54,6 +32,7 @@ document.addEventListener('pointermove', e => {
   tip.style.top = `${e.clientY + 16}px`;
 });
 document.addEventListener('pointerout', e => { if (e.target.closest('[data-tip]')) tip.hidden = true; });
+addEventListener('scroll', () => { tip.hidden = true; }, { passive: true });
 
 /* ------------------------------------------------------------------ map layers */
 const NIGHT = 'linear-gradient(90deg, #0f2238, #15568c, #2b95c8, #86d3dc, #fff4c2)';
@@ -85,18 +64,13 @@ function swapImage(img, src) {
   next.onload = () => { img.src = src; img.style.opacity = '1'; };
   next.src = src;
 }
-function wireHud(frame) {
-  const img = frame.querySelector('img'), out = byId(frame.dataset.hud);
-  frame.addEventListener('pointermove', e => {
-    const r = img.getBoundingClientRect();
-    const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-    if (fx < 0 || fx > 1 || fy < 0 || fy > 1) return;
-    const lat = 85 - fy * 145, lon = -180 + fx * 360;
-    out.textContent = `LAT ${Math.abs(lat).toFixed(1)}°${lat >= 0 ? 'N' : 'S'}  LON ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? 'E' : 'W'}`;
-  });
-  frame.addEventListener('pointerleave', () => { out.textContent = 'LAT —  LON —'; });
+function swapImage(img, src) {
+  if (img.getAttribute('src') === src) return;
+  img.style.opacity = '0';
+  const next = new Image();
+  next.onload = () => { img.src = src; img.style.opacity = '1'; };
+  next.src = src;
 }
-document.querySelectorAll('.globe-frame[data-hud]').forEach(wireHud);
 function segGroup(id, attr, onPick) {
   const g = byId(id);
   g.addEventListener('click', e => {
@@ -104,41 +78,6 @@ function segGroup(id, attr, onPick) {
     g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     onPick(b.dataset[attr]);
   });
-}
-
-function initHeroMap() {
-  byId('hero-ramp').style.background = NIGHT;
-  segGroup('hero-seg', 'layer', id => {
-    const l = layer(id);
-    swapImage(byId('globe-map'), `assets/hico/global_${id}.webp`);
-    byId('hud-layer').innerHTML = `HiCo-Fuse 2 · ${l.group === 'Vectors' ? `<i>${l.short}</i>` : l.short} · 0.2°`;
-    byId('hero-ramp').style.background = l.ramp;
-  });
-}
-
-function initViewer() {
-  let html = '', group = '';
-  LAYERS.forEach((l, i) => {
-    if (l.group !== group) { group = l.group; html += `<div class="layer-group">${group}</div>`; }
-    html += `<button type="button" class="layer-btn" role="radio" aria-checked="${i === 0}" data-layer="${l.id}"><b>${l.name}</b><span>${l.sub}</span></button>`;
-  });
-  const list = byId('layer-list');
-  list.innerHTML = html;
-  const pick = id => {
-    const l = layer(id);
-    list.querySelectorAll('.layer-btn').forEach(b => b.setAttribute('aria-checked', String(b.dataset.layer === id)));
-    swapImage(byId('viewer-map'), `assets/hico/global_${id}.webp`);
-    byId('viewer-layer').innerHTML = `HiCo-Fuse 2 · ${l.name} · 0.2°`;
-    byId('viewer-legend').innerHTML = `<span>Low</span><i style="background:${l.ramp}"></i><span>High · ${l.unit}</span>`;
-    byId('viewer-cap').innerHTML = l.cap;
-  };
-  list.addEventListener('click', e => { const b = e.target.closest('.layer-btn'); if (b) pick(b.dataset.layer); });
-  list.addEventListener('keydown', e => {
-    const k = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key]; if (!k) return;
-    const btns = [...list.querySelectorAll('.layer-btn')], i = btns.findIndex(b => b.getAttribute('aria-checked') === 'true');
-    const n = btns[(i + k + btns.length) % btns.length]; e.preventDefault(); n.focus(); pick(n.dataset.layer);
-  });
-  pick('albopictus');
 }
 
 /* ------------------------------------------------------------------ HiCo-Fuse framework */
@@ -432,9 +371,9 @@ function renderFoundation() {
   const rows = [...B.foundation].sort((a, b) => b.AP - a.AP).map(r => [esc(`${r.representation.replace(/_/g, ' + ')} · ${r.learner}`), f3(r.AP), f3(r.AP_sd), f3(r.AUC)]);
   byId('panel-foundation').innerHTML = `
     <h3>Representation and fusion benchmark · <i>Ae. albopictus</i> presence vs target-group background</h3>
-    <p class="lead">Stage 1 of the project: which representation and learner rank 1,601 presence and background sites best across six spatial folds. It motivated AlphaEarth as the main representation and early fusion as the default.</p>
+    <p class="lead"><span class="ev ev-report">Report-derived · not reproduced</span>&nbsp; Stage 1 of the project: which representation and learner rank 1,601 presence and background sites best across six spatial folds. It motivated AlphaEarth as the main representation and early fusion as the default. These scores come from the 6 November project report; its frozen feature tables and split IDs were not recovered in the latest handoff, so a re-run is planned (<a href="#matrix">experiment matrix</a>).</p>
     ${table(['Representation · learner', 'AP mean', 'Fold SD', 'ROC-AUC'], rows, { best: bestCells(rows, [1, 3]) })}
-    <p class="note">Fold SD describes variation across six spatial contexts; it is not a confidence interval. Background records are not confirmed absences.</p>`;
+    <p class="note">Fold SD describes variation across six spatial contexts; it is not a confidence interval. Background records are not confirmed absences. AP ranks presences above background under this sampling design (0.81 is not 81% accuracy), and the top configurations are near-ties.</p>`;
 }
 /* ------------------------------------------------------------------ headline numbers */
 function H() {
@@ -481,7 +420,7 @@ function renderFamilies() {
       <span class="stage">${stage}</span><h3>${title}</h3>
       <dl><div><dt>Task</dt><dd>${task}</dd></div><div><dt>Models</dt><dd>${models}</dd></div><div><dt>Validation</dt><dd>${val}</dd></div></dl>
       <div class="headline"><b>${big}</b>${small}</div>
-      <code>${code}</code>
+      <code>${code}</code>${i === 0 ? '<br><span class="ev ev-report">Report-derived · not reproduced</span>' : ''}
     </article>`).join('');
 }
 
@@ -494,10 +433,10 @@ function renderFusion() {
   const methods = [
     ['Early concatenation', 'kept', 'η = f([x_climate, x_landscape, x_human, x_AlphaEarth])',
       'All modalities enter one learner. Simple, and the strongest neural fusion in every family.',
-      `Foundation MLP AP <b>${f3(found('Environment_AlphaEarth105', 'MLP').AP)}</b> vs AlphaEarth alone ${f3(found('AlphaEarth64', 'MLP').AP)}; composition MLP region-out AUC <b>${f3(auc.MLP.loro)}</b>.`],
+      `Foundation MLP AP <b>${f3(found('Environment_AlphaEarth105', 'MLP').AP)}</b> vs AlphaEarth alone ${f3(found('AlphaEarth64', 'MLP').AP)} (report-derived); composition MLP region-out AUC <b>${f3(auc.MLP.loro)}</b>.`],
     ['Nonlinear late fusion', 'rejected', 'η = g( f_env(x_env), f_AE(x_AE) ),  g fit on spatial OOF scores',
       'Separate experts per modality combined by a meta-network.',
-      `AP <b>${f3(found('Nonlinear_late_fusion', 'MLP').AP)}</b>, below early fusion, with the largest fold spread.`],
+      `AP <b>${f3(found('Nonlinear_late_fusion', 'MLP').AP)}</b> (report-derived), below early fusion, with the largest fold spread.`],
     ['Gated mixture of experts', 'rejected', 'η_s = Σ_m g_sm(context) · u_sm(enc_m(x_m))',
       'Per-class gates choose which modality to trust where.',
       `Region-out AUC <b>${f3(auc.GatedMoE.loro)}</b> vs random forest ${f3(auc.RF.loro)}; Europe hold-out near chance.`],
@@ -763,22 +702,80 @@ function renderLedger(filter = 'all') {
 }
 
 
+/* ------------------------------------------------------------------ shared with atlas.js and plan.js */
+window.HO = { byId, esc, f3, sgn, pct, formatNumber, css, LAYERS, layer, table, bestCells,
+  cv: m => cv(m), ext: (...a) => ext(...a), cohRow: (...a) => cohRow(...a) };
+
+/* ------------------------------------------------------------------ routing */
+const STAGE = ['story', 'explore'], DOCS = ['framework', 'evidence', 'methods', 'plan'];
+const LEGACY = { maps: 'explore', research: 'evidence', models: 'evidence', monitor: 'methods', gates: 'framework' };
+let current = null;
+function pageOf(id) {
+  if (LEGACY[id]) return LEGACY[id];
+  const el = id && document.getElementById(id);
+  const page = el && el.closest('.page');
+  return page ? page.id.replace('page-', '') : null;
+}
+function route() {
+  const raw = decodeURIComponent(location.hash.slice(1));
+  if (raw === 'about') { openSheet(); history.replaceState(null, '', `#${current || 'story'}`); if (!current) route(); return; }
+  const [name, arg] = raw.split('/');
+  const mode = STAGE.includes(name) || DOCS.includes(name) ? name : (pageOf(name) || 'story');
+  const isStage = STAGE.includes(mode);
+  document.body.classList.toggle('mode-story', mode === 'story');
+  document.body.classList.toggle('mode-explore', mode === 'explore');
+  document.body.classList.toggle('mode-doc', !isStage);
+  byId('stage').hidden = !isStage; byId('rail').hidden = !isStage; byId('docs').hidden = isStage;
+  document.querySelectorAll('.page').forEach(p => { p.hidden = p.id !== `page-${mode}`; });
+  document.querySelectorAll('.modes a[data-mode]').forEach(a => { if (a.dataset.mode === mode) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  const titles = { story: 'Habitat Observatory', explore: 'Explore the maps', framework: 'Framework', evidence: 'Evidence', methods: 'Methods', plan: 'Research plan' };
+  document.title = mode === 'story' ? 'Habitat Observatory · HiCo-Fuse 2' : `${titles[mode]} · Habitat Observatory`;
+  if (isStage) { if (B && window.Atlas) window.Atlas.enter(mode, arg); }
+  else {
+    if (window.Atlas) window.Atlas.leave();
+    const target = !DOCS.includes(name) && document.getElementById(name);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+    else if (current !== mode || !name) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }
+  current = mode;
+}
+addEventListener('hashchange', route);
+
+/* about sheet */
+let lastFocus = null;
+function openSheet() {
+  lastFocus = document.activeElement;
+  byId('about').hidden = false; byId('scrim').hidden = false; byId('about').focus();
+}
+function closeSheet() { byId('about').hidden = true; byId('scrim').hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-open="about"]')) { e.preventDefault(); openSheet(); }
+  else if (e.target.closest('[data-close="about"]') || e.target === byId('scrim')) closeSheet();
+});
+addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !byId('about').hidden) { closeSheet(); return; }
+  if (window.Atlas) window.Atlas.key(e);
+});
+
 /* ------------------------------------------------------------------ main */
 async function main() {
-  initHeroMap();
-  initViewer();
   initTabs();
+  route();
   try {
-    B = await getJSON('data/model_benchmarks.json');
+    const [b, r] = await Promise.all([getJSON('data/model_benchmarks.json'), getJSON('data/research_handoff.json').catch(err => { console.error(err); return null; })]);
+    B = b; HO.B = B; HO.R = r;
     byId('generated').textContent = `Benchmark data generated ${B.generated}`;
     const steps = [renderHicoTelemetry, renderArchitecture, renderCoherenceSection, renderExternal, renderHF2, renderCV, renderExtensions, renderLab,
       renderTelemetry, renderFindings, initBenchmark, renderFusion, renderCoherence, renderWeighting, renderCausal, renderDecay, renderPool, renderOADSDM,
       renderFoundation, renderFamilies, renderLedger, renderMethods];
     steps.forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });
+    if (r && window.Plan) { try { window.Plan.render(B, r); } catch (err) { console.error('plan', err); } }
+    route();
   } catch (error) {
     console.error('Unable to load model benchmarks:', error);
+    byId('rail').innerHTML = '<p>Benchmark data could not be loaded. Please reload.</p>';
     byId('arch-detail').textContent = 'Benchmark data could not be loaded. Please reload.';
   }
 }
-main();
+addEventListener('DOMContentLoaded', main);
 })();

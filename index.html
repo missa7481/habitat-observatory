@@ -3,74 +3,83 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>HiCo-Fuse 2 · Habitat Observatory</title>
-  <meta name="description" content="HiCo-Fuse: a coherent global-to-local framework for mosquito vector and disease habitat mapping from Earth-observation fusion.">
-  <meta name="theme-color" content="#05080f">
+  <title>Habitat Observatory · HiCo-Fuse 2</title>
+  <meta name="description" content="Habitat Observatory: an atlas of global mosquito vector and disease habitat maps from Earth-observation fusion, with the evidence behind them and the experiments still planned.">
+  <meta name="theme-color" content="#ECE9E1">
+  <meta property="og:title" content="Habitat Observatory">
+  <meta property="og:description" content="Global mosquito habitat maps from Earth-observation fusion, with completed results kept apart from planned experiments.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=Source+Sans+3:ital,wght@0,300..700;1,400&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/site.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='12' fill='%230B3D91'/%3E%3Cellipse cx='20' cy='20' rx='18' ry='6' transform='rotate(-24 20 20)' fill='none' stroke='%23FC3D21' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23012169' stroke-width='2'/%3E%3Cpath d='M5 16h22M16 5c-4 4-4 18 0 22M16 5c4 4 4 18 0 22' fill='none' stroke='%23012169' stroke-width='1.4'/%3E%3Ccircle cx='21' cy='11' r='3' fill='%23F2A900'/%3E%3C/svg%3E">
 </head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="site-header">
-    <a class="brand" href="#framework">
-      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="12" fill="#0B3D91"/><path d="M10 17c4 2 10 1 14-2m-13 9c5-1 11 0 15 3" stroke="#9cc3ff" stroke-width="1.2" fill="none"/><ellipse cx="20" cy="20" rx="18" ry="6" transform="rotate(-24 20 20)" fill="none" stroke="#FC3D21" stroke-width="2"/></svg>
-      <span>Habitat <b>Observatory</b><small>HiCo-Fuse vector habitat framework</small></span>
+<body class="mode-story">
+  <a class="skip" href="#rail">Skip to content</a>
+
+  <header class="masthead">
+    <a class="brand" href="#story" aria-label="Habitat Observatory, start of the story">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 16h22M16 5c-4.2 4-4.2 18 0 22M16 5c4.2 4 4.2 18 0 22" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="21.5" cy="10.5" r="2.6" fill="#F2A900"/></svg>
+      <span><b>Habitat Observatory</b><i>Where disease-carrying mosquitoes could live</i></span>
     </a>
-    <nav aria-label="Site">
-      <a href="#framework" data-page="framework">Framework</a>
-      <a href="#maps" data-page="maps">Maps</a>
-      <a href="#evidence" data-page="evidence">Evidence</a>
-      <a href="#methods" data-page="methods">Methods</a>
+    <nav class="modes" aria-label="Site">
+      <a href="#story" data-mode="story">Story</a>
+      <a href="#explore" data-mode="explore">Explore</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="#framework" data-mode="framework">Framework</a>
+      <a href="#evidence" data-mode="evidence">Evidence</a>
+      <a href="#methods" data-mode="methods">Methods</a>
+      <a href="#plan" data-mode="plan">Plan</a>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" class="about-btn" data-open="about">About</button>
     </nav>
   </header>
 
-  <main id="main">
-  <!-- ================================================================ FRAMEWORK -->
-  <div class="page" id="page-framework">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <span class="kicker"><i class="pulse" aria-hidden="true"></i>HiCo-Fuse 2 · hierarchical coherent fusion</span>
-          <h1>One model from the globe down to the <em>city block</em>.</h1>
-          <p class="lede">A global habitat-mapping method for <i>Aedes albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i> and <i>Anopheles</i>. A strong niche model reads climate, landscape, human footprint and AlphaEarth satellite embeddings; an exact hierarchy makes every local map add up to its region; an independent species-pool layer tells each region which species have arrived; and the model falls back to the plain niche model wherever a place looks unlike anything it was trained on.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#hf2">See HiCo-Fuse 2</a>
-            <a class="button ghost" href="#maps">Open the global maps</a>
-          </div>
-        </div>
-        <figure class="globe">
-          <div class="hud"><span id="hud-layer">HiCo-Fuse 2 · <i>Ae. albopictus</i> · 0.2°</span><span id="hud-pos">LAT —  LON —</span></div>
-          <div class="globe-frame" data-hud="hud-pos">
-            <img id="globe-map" src="assets/hico/global_albopictus.webp" width="1800" height="725" alt="Global HiCo-Fuse map for the selected layer">
-            <svg class="graticule" viewBox="0 0 360 145" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="60" x2="60" y1="0" y2="145"/><line x1="120" x2="120" y1="0" y2="145"/><line x1="180" x2="180" y1="0" y2="145"/>
-              <line x1="240" x2="240" y1="0" y2="145"/><line x1="300" x2="300" y1="0" y2="145"/>
-              <line x1="0" x2="360" y1="25" y2="25"/><line x1="0" x2="360" y1="55" y2="55"/><line class="eq" x1="0" x2="360" y1="85" y2="85"/><line x1="0" x2="360" y1="115" y2="115"/>
-            </svg>
-            <span class="scan" aria-hidden="true"></span>
-          </div>
-          <div class="globe-controls">
-            <div class="seg" role="group" aria-label="Map layer" id="hero-seg">
-              <button type="button" data-layer="albopictus" aria-pressed="true"><i>Ae. albopictus</i></button>
-              <button type="button" data-layer="aegypti" aria-pressed="false"><i>Ae. aegypti</i></button>
-              <button type="button" data-layer="dengue" aria-pressed="false">Dengue</button>
-              <button type="button" data-layer="malaria" aria-pressed="false">Malaria</button>
-            </div>
-            <div class="ramp-legend"><span>Low</span><i id="hero-ramp"></i><span>High</span></div>
-          </div>
-          <figcaption>HiCo-Fuse 2 two-part map (community support × species share) with the all-genus pool and novelty trust, shown at 0.2°. A relative ranking, not validated occurrence.</figcaption>
-        </figure>
+  <!-- ================================================================ MAP STAGE (story + explore) -->
+  <div id="stage" class="stage">
+    <div class="map-viewport" id="map-viewport" tabindex="0" role="application" aria-roledescription="map" aria-label="Global habitat map. Drag to pan, scroll or use plus and minus to zoom, click to read a cell.">
+      <div class="map-world" id="map-world">
+        <img id="map-a" class="map-img" src="assets/hico/global_albopictus.webp" width="1800" height="725" alt="Global map of the selected layer" crossorigin="anonymous">
+        <img id="map-b" class="map-img map-b" src="assets/hico/global_aegypti.webp" width="1800" height="725" alt="Comparison layer" crossorigin="anonymous" hidden>
+        <svg class="graticule" id="graticule" viewBox="0 0 360 145" preserveAspectRatio="none" aria-hidden="true">
+          <g class="mer"><line x1="30" x2="30" y1="0" y2="145"/><line x1="60" x2="60" y1="0" y2="145"/><line x1="90" x2="90" y1="0" y2="145"/><line x1="120" x2="120" y1="0" y2="145"/><line x1="150" x2="150" y1="0" y2="145"/><line x1="180" x2="180" y1="0" y2="145"/><line x1="210" x2="210" y1="0" y2="145"/><line x1="240" x2="240" y1="0" y2="145"/><line x1="270" x2="270" y1="0" y2="145"/><line x1="300" x2="300" y1="0" y2="145"/><line x1="330" x2="330" y1="0" y2="145"/></g>
+          <g class="par"><line x1="0" x2="360" y1="25" y2="25"/><line x1="0" x2="360" y1="55" y2="55"/><line x1="0" x2="360" y1="115" y2="115"/></g>
+          <line class="eq" x1="0" x2="360" y1="85" y2="85"/>
+          <g class="trop"><line x1="0" x2="360" y1="61.56" y2="61.56"/><line x1="0" x2="360" y1="108.44" y2="108.44"/></g>
+          <rect class="frame" x="0" y="0" width="360" height="145"/>
+        </svg>
+      </div>
+    </div>
+    <div class="axis-labels" id="axis-labels" aria-hidden="true"></div>
+    <div class="labels" id="labels"></div>
+    <div class="swipe" id="swipe" hidden><span id="swipe-l"></span><i role="slider" tabindex="0" aria-label="Comparison divider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></i><span id="swipe-r"></span></div>
+    <div class="map-tools" role="group" aria-label="Map zoom">
+      <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+      <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+      <button type="button" data-zoom="home" aria-label="Show the whole world"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2.4 8h11.2M8 2.4c-2 2-2 9.2 0 11.2M8 2.4c2 2 2 9.2 0 11.2" fill="none" stroke="currentColor" stroke-width="1"/></svg></button>
+    </div>
+    <div class="mapkey" id="mapkey" aria-hidden="true"><div class="bar"><i id="scale-bar"></i><span id="scale-txt"></span></div><span class="coord" id="coord">Move over the map</span></div>
+    <div class="maplegend" id="legend"></div>
+    <div class="probe" id="probe" hidden></div>
+  </div>
+  <aside id="rail" class="rail" aria-live="polite" tabindex="-1"><p class="small">Loading the atlas…</p></aside>
+
+  <!-- ================================================================ DOCUMENT PAGES -->
+  <main id="docs" class="docs" hidden>
+  <div class="page" id="page-framework" hidden>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="kicker"><span class="n">Framework</span><span class="chap">HiCo-Fuse 2 · hierarchical coherent fusion</span></span>
+        <h1>One model from the globe down to the <em>city block</em></h1>
+        <p class="lede">A global habitat-mapping method for <i>Aedes albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i> and <i>Anopheles</i>. A strong niche model reads climate, landscape, human footprint and AlphaEarth satellite embeddings; an exact hierarchy makes every local map add up to its region; an independent species-pool layer tells each region which species have arrived; and the model falls back to the plain niche model wherever a place looks unlike anything it was trained on.</p>
+        <div class="row head-actions"><a class="btn primary" href="#hf2">See HiCo-Fuse 2</a><a class="btn" href="#explore">Open the global maps</a><span class="ev ev-done">Completed runs</span></div>
       </div>
       <div class="telemetry" role="list" aria-label="Headline results" id="hico-telemetry"></div>
-    </section>
-
+    </div>
     <div class="wrap">
       <section class="section" id="architecture">
         <div class="section-head">
-          <span class="kicker">01 · Framework</span>
+          <span class="kicker"><span class="n">01</span><span class="chap">Framework</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Each layer answers one question, and each was kept only if it survived a transfer test</h2>
           <p>HiCo-Fuse 2 is the version rebuilt from the evidence: the neural parts that lost under transfer were replaced. Select a layer to see its rule, what it assumes and what the tests showed.</p>
         </div>
@@ -83,7 +92,7 @@
 
       <section class="section" id="hf2">
         <div class="section-head">
-          <span class="kicker">02 · The rebuilt model</span>
+          <span class="kicker"><span class="n">02</span><span class="chap">The rebuilt model</span><span class="ev ev-done">Completed runs</span></span>
           <h2>HiCo-Fuse 2: keep the hierarchy, replace what lost</h2>
           <p>The original HiCo learned both of its terms with neural networks and lost to a random forest under transfer. The coherence rule was not the cause: applied to the forest it cost nothing. HiCo-Fuse 2 keeps the rule and fills it with parts that each passed a test.</p>
         </div>
@@ -121,7 +130,7 @@
 
       <section class="section" id="coherence">
         <div class="section-head">
-          <span class="kicker">03 · The core idea · coherence</span>
+          <span class="kicker"><span class="n">03</span><span class="chap">The core idea · coherence</span><span class="ev ev-done">Completed runs</span></span>
           <h2>A city cannot exceed its region</h2>
           <p>Maps disagree across scales when each level is estimated on its own: a country model and a city model, or a regional compendium and local citizen science. HiCo builds each 0.5° region from its 0.05° children, so the two levels agree exactly.</p>
         </div>
@@ -167,7 +176,7 @@
 
       <section class="section" id="twopart">
         <div class="section-head">
-          <span class="kicker">04 · Two-part maps</span>
+          <span class="kicker"><span class="n">04</span><span class="chap">Two-part maps</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Fixing a silent failure of composition models</h2>
           <p>A composition score answers "if a mosquito is reported here, which species is it?" It is undefined where no mosquito community is observed: the first global maps put the top 20,000 <i>Ae. aegypti</i> cells in the Sahara and Arabia. Multiplying by a community-support term fixes this.</p>
         </div>
@@ -185,7 +194,7 @@
 
       <section class="section" id="fusion-results">
         <div class="section-head">
-          <span class="kicker">05 · Representation and fusion</span>
+          <span class="kicker"><span class="n">05</span><span class="chap">Representation and fusion</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Which representation carries the signal</h2>
           <p>Same multinomial likelihood, features, optimiser and early stopping for every model; held-out 10° blocks (5 folds × 2 seeds, 153 blocks). The reported fold SD is about 0.02–0.05 AUC; it describes variation across folds and does not establish a paired confidence interval or a universal 0.02 significance threshold.</p>
         </div>
@@ -210,7 +219,7 @@
 
       <section class="section" id="extensions">
         <div class="section-head">
-          <span class="kicker">06 · Extensions under test</span>
+          <span class="kicker"><span class="n">06</span><span class="chap">Extensions under test</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Three modules, three honest verdicts</h2>
         </div>
         <div class="ext-grid" id="ext-grid"></div>
@@ -218,7 +227,7 @@
 
       <section class="section" id="status">
         <div class="section-head">
-          <span class="kicker">07 · Status</span>
+          <span class="kicker"><span class="n">07</span><span class="chap">Status</span></span>
           <h2>What is established, and what is not</h2>
         </div>
         <div class="status-grid">
@@ -226,44 +235,15 @@
           <article class="card status"><span class="chip mixed">Not established</span><ul class="clean"><li>Calibrated probabilities in a held-out world region: log-loss is still above the forest's there.</li><li>A gain from newer encoders or sparse codes over plain AlphaEarth.</li><li>Occurrence probability: maps are relative rankings.</li></ul></article>
           <article class="card status"><span class="chip proposed">Next</span><ul class="clean"><li>Species-pool data for <i>Culex</i>, <i>Anopheles</i> and other genera (in progress).</li><li>Separate habitat from observation and detection with survey data.</li><li>A locked 2025 validation cohort before any further claim.</li></ul></article>
         </div>
+        <p class="note plan-link">Every planned experiment, report-derived score and access gap is listed in the <a href="#plan">research plan</a>.</p>
       </section>
     </div>
   </div>
 
-  <!-- ================================================================ MAPS -->
-  <div class="page" id="page-maps" hidden>
-    <section class="viewer">
-      <aside class="viewer-side">
-        <span class="kicker">Global layers · 0.2° view</span>
-        <h1>HiCo-Fuse 2 global maps</h1>
-        <div id="layer-list" role="radiogroup" aria-label="Map layer"></div>
-      </aside>
-      <div class="viewer-main">
-        <div class="hud"><span id="viewer-layer"></span><span id="viewer-pos">LAT —  LON —</span></div>
-        <div class="globe-frame" data-hud="viewer-pos">
-          <img id="viewer-map" src="assets/hico/global_albopictus.webp" width="1800" height="725" alt="Selected global map layer">
-          <svg class="graticule" viewBox="0 0 360 145" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="60" x2="60" y1="0" y2="145"/><line x1="120" x2="120" y1="0" y2="145"/><line x1="180" x2="180" y1="0" y2="145"/>
-            <line x1="240" x2="240" y1="0" y2="145"/><line x1="300" x2="300" y1="0" y2="145"/>
-            <line x1="0" x2="360" y1="25" y2="25"/><line x1="0" x2="360" y1="55" y2="55"/><line class="eq" x1="0" x2="360" y1="85" y2="85"/><line x1="0" x2="360" y1="115" y2="115"/>
-          </svg>
-        </div>
-        <div class="viewer-foot">
-          <div class="ramp-legend" id="viewer-legend"></div>
-          <p id="viewer-cap"></p>
-        </div>
-      </div>
-    </section>
-    <div class="wrap">
-      <div class="callout">Read low values in tropical Asia and Africa as weak evidence, not absence: iNaturalist reports are concentrated in the Americas and Europe, so values there lean on the support term and on what the model learned elsewhere. Maps rank relative suitability; they are not presence probabilities, abundance or disease risk.</div>
-    </div>
-  </div>
-
-  <!-- ================================================================ EVIDENCE -->
   <div class="page" id="page-evidence" hidden>
     <div class="wrap">
       <div class="page-head">
-        <span class="kicker">Evidence · research loop</span>
+        <span class="kicker"><span class="n">Evidence</span><span class="chap">research loop</span></span>
         <h1>Tested where the models have never seen data</h1>
         <p>Nine models under nine ways of holding out the world, ten fusion methods and five redesign iterations, each chosen by the last one's failure.</p>
         <p class="jump"><a href="#findings">Findings</a><a href="#lab">Representation lab</a><a href="#benchmark">Benchmark</a><a href="#fusion">Fusion methods</a><a href="#experiments">Experiments</a><a href="#families">Model families</a><a href="#ledger">Ledger</a></p>
@@ -271,14 +251,14 @@
       <div class="telemetry light" id="telemetry" role="list" aria-label="Headline results"></div>
 
       <section class="section" id="findings">
-        <div class="section-head"><span class="kicker">01 · Findings</span><h2>The binding constraint is not the fusion layer</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">01</span><span class="chap">Findings</span><span class="ev ev-done">Completed runs</span></span><h2>The binding constraint is not the fusion layer</h2></div>
         <div class="finding-grid" id="finding-grid"></div>
       </section>
 
 
       <section class="section" id="lab">
         <div class="section-head">
-          <span class="kicker">02 · Independent evidence</span>
+          <span class="kicker"><span class="n">02</span><span class="chap">Independent evidence</span><span class="ev ev-ext">Independent project</span></span>
           <h2>A second project tested the representation layer</h2>
           <p id="lab-task"></p>
         </div>
@@ -291,7 +271,7 @@
 
       <section class="section" id="benchmark">
         <div class="section-head">
-          <span class="kicker">03 · Holdout benchmark</span>
+          <span class="kicker"><span class="n">03</span><span class="chap">Holdout benchmark</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Nine models under nine ways of holding out the world</h2>
           <p>Multinomial composition of Culicidae reports in 7,004 cells at 0.05°, with 105 features. Select a holdout design and a metric.</p>
         </div>
@@ -317,7 +297,7 @@
 
       <section class="section" id="fusion">
         <div class="section-head">
-          <span class="kicker">04 · Fusion methods</span>
+          <span class="kicker"><span class="n">04</span><span class="chap">Fusion methods</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Ten ways to combine Earth-observation evidence</h2>
           <p>Each card states the rule, what it assumes and what the holdout benchmark showed.</p>
         </div>
@@ -331,7 +311,7 @@
       </section>
 
       <section class="section" id="experiments">
-        <div class="section-head"><span class="kicker">05 · Experiments</span><h2>What each redesign tested</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">05</span><span class="chap">Experiments</span><span class="ev ev-done">Completed runs</span></span><h2>What each redesign tested</h2></div>
         <div class="tabs" role="tablist" aria-label="Experiments" id="exp-tabs">
           <button role="tab" id="tab-coherence" aria-controls="panel-coherence" aria-selected="true">Coherence</button>
           <button role="tab" id="tab-weighting" aria-controls="panel-weighting" aria-selected="false">Weighting</button>
@@ -352,7 +332,7 @@
 
       <section class="section" id="families">
         <div class="section-head">
-          <span class="kicker">06 · Model families</span>
+          <span class="kicker"><span class="n">06</span><span class="chap">Model families</span><span class="ev ev-mixed">Completed runs · Stage 1 report-derived</span></span>
           <h2>Four model families, built in sequence</h2>
           <p>Each family started from what the previous one could not do. Scores are comparable only within a family, because tasks and labels differ.</p>
         </div>
@@ -361,7 +341,7 @@
 
       <section class="section" id="ledger">
         <div class="section-head">
-          <span class="kicker">07 · Research ledger</span>
+          <span class="kicker"><span class="n">07</span><span class="chap">Research ledger</span><span class="ev ev-done">Completed runs</span></span>
           <h2>One entry per experiment</h2>
           <p>What improved, what failed and the next step it set, so rejected ideas are not retried without new evidence.</p>
         </div>
@@ -371,18 +351,17 @@
     </div>
   </div>
 
-  <!-- ================================================================ METHODS -->
   <div class="page" id="page-methods" hidden>
     <div class="wrap">
       <div class="page-head">
-        <span class="kicker">Methods · data and validation</span>
+        <span class="kicker"><span class="n">Methods</span><span class="chap">data and validation</span></span>
         <h1>What goes in, how it is tested, what it cannot say</h1>
-        <p class="jump"><a href="#data">Data</a><a href="#features">Features</a><a href="#pipeline">Pipeline</a><a href="#validation">Validation</a><a href="#limits">Limits</a><a href="#terms">Terms</a></p>
+        <p class="jump"><a href="#data">Data</a><a href="#inventory">Inventory</a><a href="#features">Features</a><a href="#pipeline">Pipeline</a><a href="#validation">Validation</a><a href="#review">Methods review</a><a href="#limits">Limits</a><a href="#terms">Terms</a></p>
       </div>
 
       <section class="section" id="data">
         <div class="section-head">
-          <span class="kicker">01 · Data</span>
+          <span class="kicker"><span class="n">01</span><span class="chap">Data</span></span>
           <h2>Citizen-science reports, with independent checks</h2>
           <p>The model learns from the class mix of mosquito reports. Cancellation of reporting effort assumes that effort scales every species class equally within a location and observation window. Species-specific reporting or identification bias can violate this assumption; "other Culicidae" is the reference class.</p>
         </div>
@@ -409,8 +388,23 @@
         </div>
       </section>
 
+      <section class="section" id="inventory">
+        <div class="section-head">
+          <span class="kicker"><span class="n">02</span><span class="chap">Dataset inventory</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
+          <h2>Forty-two sources checked for the next experiments</h2>
+          <p>Observations, environmental predictors, imagery, embeddings, encoder weights, disease outcomes and earlier model predictions. Each entry records its role, access and licence, limitations, and whether data were actually obtained. Most are documented but not downloaded yet; select a row for details.</p>
+        </div>
+        <div class="inv-summary" id="inv-summary" role="group" aria-label="Filter by acquisition state"></div>
+        <div class="inv-controls">
+          <div class="seg" role="group" aria-label="Filter by data type" id="inv-type"></div>
+          <label class="search"><span class="sr">Search datasets</span><input type="search" id="inv-q" placeholder="Search datasets, variables, licences"></label>
+        </div>
+        <div class="card flush"><div class="table-wrap"><table class="inv" id="inv-table"></table></div></div>
+        <p class="note" id="inv-count"></p>
+      </section>
+
       <section class="section" id="features">
-        <div class="section-head"><span class="kicker">02 · Representations</span><h2>105 features in four modalities</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">03</span><span class="chap">Representations</span></span><h2>105 features in four modalities</h2></div>
         <div class="modality-grid">
           <article class="card modality"><span class="mod-n" style="--c:var(--s1)">26</span><h3>Climate</h3><p>WorldClim BIO1–19 and ERA5-Land seasonal summaries.</p></article>
           <article class="card modality"><span class="mod-n" style="--c:var(--s2)">11</span><h3>Landscape</h3><p>Terrain, NDVI/EVI, land cover, land-surface temperature, surface water.</p></article>
@@ -421,7 +415,7 @@
 
       <section class="section" id="pipeline">
         <div class="section-head">
-          <span class="kicker">03 · Research pipeline</span>
+          <span class="kicker"><span class="n">04</span><span class="chap">Research pipeline</span></span>
           <h2>Every experiment is chosen by the last one's failure</h2>
           <p>Each iteration records its question, hypothesis, holdout design, result, failure and next step in a structured ledger.</p>
         </div>
@@ -438,14 +432,27 @@
 
       <section class="section" id="validation">
         <div class="section-head">
-          <span class="kicker">04 · Validation designs</span>
+          <span class="kicker"><span class="n">05</span><span class="chap">Validation designs</span></span>
           <h2>Random splits are a reference; transfer is the headline</h2>
         </div>
         <div class="design-grid" id="design-grid"></div>
       </section>
 
+      <section class="section" id="review">
+        <div class="section-head">
+          <span class="kicker"><span class="n">06</span><span class="chap">Methods review</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
+          <h2>Twenty-five methods the plan builds on</h2>
+          <p>Vector distribution models, presence-only bias, occupancy, validation, hierarchical and count models, neural species maps and Earth-observation encoders. Evidence depth is stated for each; no numbers were invented where a paper's supplementary metrics were not extracted.</p>
+        </div>
+        <div class="inv-controls">
+          <div class="seg" role="group" aria-label="Filter by theme" id="rev-theme"></div>
+          <label class="search"><span class="sr">Search methods</span><input type="search" id="rev-q" placeholder="Search methods"></label>
+        </div>
+        <div class="rev-grid" id="rev-grid"></div>
+      </section>
+
       <section class="section" id="limits">
-        <div class="section-head"><span class="kicker">05 · Limitations</span><h2>What the maps cannot yet answer</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">07</span><span class="chap">Limitations</span></span><h2>What the maps cannot yet answer</h2></div>
         <div class="limit-grid">
           <article class="card"><h3>Regional species pool</h3><p>Which species have arrived in a region cannot be learned from environment. A species-pool layer for all five classes is the next data milestone.</p></article>
           <article class="card"><h3>Data deserts</h3><p>Africa has 75 report cells and Latin America is weakest for every model. Global maps there are extrapolations.</p></article>
@@ -455,21 +462,133 @@
       </section>
 
       <section class="section" id="terms">
-        <div class="section-head"><span class="kicker">06 · Terms</span><h2>Plain-language definitions</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">08</span><span class="chap">Terms</span></span><h2>Plain-language definitions</h2></div>
         <dl class="terms" id="terms-list"></dl>
       </section>
     </div>
   </div>
-  </main>
+
+  <div class="page" id="page-plan" hidden>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="kicker"><span class="n">Plan</span><span class="chap">Research handoff · 17 November 2026</span></span>
+        <h1>What is finished, what is reported, and what is still to run</h1>
+        <p class="lede">Every number on this site has one of four statuses. Completed runs come from the project code repository. Report-derived scores come from the 6 November project report and have not been reproduced, because the frozen feature tables and split IDs were not recovered. Handoff checks are small verifications completed on 17 November. Planned experiments have no results yet.</p>
+        <p class="jump"><a href="#status-board">Status</a><a href="#matrix">Experiment matrix</a><a href="#report">Report-derived</a><a href="#checks">Handoff checks</a><a href="#priorities">Planned</a><a href="#gaps">Blocked</a></p>
+      </div>
+
+      <section class="section" id="status-board">
+        <div class="section-head"><span class="kicker"><span class="n">01</span><span class="chap">Evidence status</span></span><h2>Four kinds of claim, kept apart</h2></div>
+        <div class="status-board" id="status-board-grid"></div>
+      </section>
+
+      <section class="section" id="matrix">
+        <div class="section-head">
+          <span class="kicker"><span class="n">02</span><span class="chap">Experiment matrix</span><span class="ev ev-mixed">Report-derived + planned</span></span>
+          <h2>Representations × learners: reported cells and planned cells</h2>
+          <p>Presence vs other-mosquito background for <i>Ae. albopictus</i>, 1,601 sites. Filled cells show the report's development AP (mean over spatial folds). Outlined cells are planned re-runs (P1) or new representation tests (P2). Empty cells are not in the plan.</p>
+        </div>
+        <div class="card">
+          <div class="matrix-legend"><span><i class="m-rep"></i>Report-derived AP · not reproduced</span><span><i class="m-plan"></i>Planned · no result yet</span><span><i class="m-both"></i>Reported, re-run planned</span></div>
+          <div class="table-wrap"><table class="matrix" id="matrix-table"></table></div>
+          <p class="note">AP ranks presences above background under this sampling design; 0.81 is not 81% accuracy. Top models are near-ties. P1 re-runs on new EPSG:6933 blocks will be a new analysis unless the original split IDs are recovered.</p>
+        </div>
+      </section>
+
+      <section class="section" id="report">
+        <div class="section-head">
+          <span class="kicker"><span class="n">03</span><span class="chap">Report-derived</span><span class="ev ev-report">Report-derived · not reproduced</span></span>
+          <h2>What the 6 November report says, with its denominators</h2>
+          <p id="report-caveat"></p>
+        </div>
+        <div class="figs-row" id="report-cohort"></div>
+        <div class="two">
+          <div class="card">
+            <div class="card-top"><span>NEON 2025 reused diagnostic</span><span class="ev ev-report">Report-derived</span></div>
+            <div class="table-wrap"><table id="report-neon"></table></div>
+          </div>
+          <div class="card">
+            <div class="card-top"><span>Global map input coverage, share of the declared domain</span><span class="ev ev-report">Report-derived</span></div>
+            <div class="chart" id="report-coverage"></div>
+            <ul class="clean small-list" id="report-notes"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="checks">
+        <div class="section-head">
+          <span class="kicker"><span class="n">04</span><span class="chap">Handoff checks</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
+          <h2>Small checks completed on 17 November</h2>
+          <p>Source downloads, adapters and synthetic tests. None of them is a new benchmark result.</p>
+        </div>
+        <div class="check-grid" id="check-grid"></div>
+      </section>
+
+      <section class="section" id="priorities">
+        <div class="section-head">
+          <span class="kicker"><span class="n">05</span><span class="chap">Planned</span><span class="ev ev-plan">Planned · no results</span></span>
+          <h2>Six priorities, in order</h2>
+          <p>Each one changes a single axis and has to pass the recovery gate (P0) before it can claim a reproduction.</p>
+        </div>
+        <div class="prio-grid" id="prio-grid"></div>
+      </section>
+
+      <section class="section" id="gaps">
+        <div class="section-head">
+          <span class="kicker"><span class="n">06</span><span class="chap">Blocked</span><span class="ev ev-blocked">Blocked</span></span>
+          <h2>Access gaps and what they block</h2>
+        </div>
+        <div class="gap-grid" id="gap-grid"></div>
+        <div class="callout">The handoff package (tables, scripts, configurations, provenance and small public downloads) is kept in the project Drive, not in this repository: <a id="drive-link" href="#" target="_blank" rel="noopener">project Drive folder ↗</a> (access by request). Raw records with licence or privacy limits are not published here.</div>
+      </section>
+    </div>
+  </div>
 
   <footer class="site-footer">
-    <div>
+    <div class="wrap">
       <span class="footer-notice">Independent research prototype · not an official NASA product</span>
       <p>Data: iNaturalist research-grade observations via GBIF; WorldClim, ERA5-Land, MODIS, JRC, WorldPop, GHSL, VIIRS; Google AlphaEarth Foundations 2024; Sentinel-2; Kraemer et al. (2015); NEON; Austrian AGES; AIMSurv. Original datasets keep their licenses. Only aggregate results and rendered map previews are shown; no observation coordinates.</p>
       <p>Code and benchmark tables: <a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">github.com/missa7481/NASA_Global_Habitat_Mapping ↗</a> · <span id="generated"></span></p>
     </div>
   </footer>
+  </main>
+
+  <!-- ================================================================ ABOUT SHEET -->
+  <div class="scrim" id="scrim" hidden></div>
+  <section id="about" class="sheet" hidden aria-label="About the observatory" tabindex="-1">
+    <button type="button" class="btn quiet close" data-close="about">Close ×</button>
+    <span class="kicker"><span class="chap">About the observatory</span></span>
+    <h2>A research atlas of mosquito habitat</h2>
+    <p>Habitat Observatory publishes the maps and evidence of an ongoing global habitat-mapping project for <i>Aedes albopictus</i>, <i>Ae. aegypti</i>, <i>Culex</i> and <i>Anopheles</i>. Its method, HiCo-Fuse 2, combines a random-forest niche model over climate, landscape, human footprint and AlphaEarth satellite embeddings with an exact global-to-local hierarchy, an independent species-pool layer and a novelty fallback.</p>
+    <h3>How to read the maps</h3>
+    <ul>
+      <li>Maps rank <b>relative suitability</b>. They are not presence probabilities, abundance or disease risk.</li>
+      <li>Previews are shown at 0.2° as the mean of 0.05° cells. Reading a cell gives its position on the colour ramp of the rendered preview, not a model output.</li>
+      <li>Low values in tropical Asia and Africa are weak evidence, not absence: reports are concentrated in the Americas and Europe.</li>
+      <li>Missing cells are not low risk.</li>
+    </ul>
+    <h3>Four kinds of evidence</h3>
+    <table>
+      <tr><td><span class="ev ev-done">Completed runs</span></td><td>Benchmarks run in the project code repository; aggregate tables only.</td></tr>
+      <tr><td><span class="ev ev-report">Report-derived</span></td><td>Scores from the 6 November project report, not reproduced since.</td></tr>
+      <tr><td><span class="ev ev-check">Handoff check</span></td><td>Downloads, adapters and tests completed on 17 November 2026.</td></tr>
+      <tr><td><span class="ev ev-plan">Planned</span></td><td>Designed experiments with no results yet; some are blocked on access.</td></tr>
+    </table>
+    <h3>Data policy</h3>
+    <p>No raw occurrence or surveillance records, site coordinates, per-site or per-cell predictions, or credentials are published. Original datasets keep their licences. Larger research files are kept in the project Drive.</p>
+    <h3>Code and data</h3>
+    <ul>
+      <li><a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">Code and benchmark tables ↗</a></li>
+      <li><a href="https://github.com/missa7481/habitat-observatory" target="_blank" rel="noopener">This website's repository ↗</a></li>
+      <li><a href="#plan" data-close="about">Research plan and handoff status</a></li>
+    </ul>
+    <p class="note">Independent research prototype; not an official NASA product. The design follows the editorial atlas layout of the Ashburn Heat Twin.</p>
+  </section>
+
   <div class="tip" id="tip" hidden></div>
+  <noscript><p class="noscript">This site needs JavaScript for its maps and charts.</p></noscript>
   <script src="assets/site.js"></script>
+  <script src="assets/atlas.js"></script>
+  <script src="assets/plan.js"></script>
 </body>
 </html>

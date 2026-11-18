@@ -1,0 +1,1413 @@
+{
+ "generated": "2026-11-17",
+ "source": "Habitat Mapping research handoff, prepared 2026-11-17",
+ "drive_folder": "https://drive.google.com/drive/folders/1BGxZ4w-XJ6B2Yb82ERhMquEp0ZB7QsZ6",
+ "inventory": [
+  {
+   "dataset_id": "D01",
+   "dataset_name": "GBIF occurrence downloads (provider provenance retained)",
+   "source_download_link": "https://techdocs.gbif.org/en/data-use/api-downloads",
+   "data_type": "observation",
+   "species_or_disease": "Aedes albopictus; Aedes aegypti; Culicidae background",
+   "variables": "taxon; coordinates; uncertainty; date; occurrenceID; datasetKey; license",
+   "spatial_coverage_resolution": "global; record-specific point uncertainty",
+   "temporal_coverage_resolution": "historical to current; event-specific",
+   "access_license": "Search API public; DOI download requires free GBIF account; record licenses CC0/CC BY/CC BY-NC",
+   "limitations": "iNaturalist/AGES/compendium mirrors overlap; search pagination is not a frozen download",
+   "intended_use": "formal frozen occurrence DOI; target-group background; source holdouts",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D02",
+   "dataset_name": "iNaturalist observations through GBIF",
+   "source_download_link": "https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+   "data_type": "observation",
+   "species_or_disease": "Aedes albopictus and other Culicidae",
+   "variables": "expert/community identification; event date; location; observer/source IDs",
+   "spatial_coverage_resolution": "global; urban and observer clustering",
+   "temporal_coverage_resolution": "ongoing; choose frozen 2024 cohort",
+   "access_license": "public GBIF records; per-record license; obscured locations remain obscured",
+   "limitations": "GBIF is a mirror; missing uncertainty cannot be assumed precise; observer bias",
+   "intended_use": "continue existing annual presence/background endpoint",
+   "download_status": "report says acquired; not recovered in this worktree",
+   "access_verification": "report + GBIF workflow; individual records require revalidation",
+   "priority": "P0",
+   "acquisition": "report"
+  },
+  {
+   "dataset_id": "D03",
+   "dataset_name": "AGES Austrian ovitrap monitoring 2024",
+   "source_download_link": "https://www.gbif.org/dataset/6c70361d-eefb-4f91-984e-28cb39bc1969",
+   "data_type": "observation",
+   "species_or_disease": "Aedes albopictus",
+   "variables": "visit; trap status; eggs/detection; effort; position",
+   "spatial_coverage_resolution": "Austria; report documents 25 m location precision",
+   "temporal_coverage_resolution": "2024 repeated visits; 2025 reuse diagnosis separate",
+   "access_license": "CC BY-NC4.0 verified in GBIF metadata;public source DWCA archive",
+   "limitations": "occurrence export alone may omit non-detections; 457 detections overlap cached GBIF records",
+   "intended_use": "occupancy/detection development; positive training; source-specific evaluation",
+   "download_status": "downloaded original archive and metadata;adapter executed",
+   "access_verification": "HTTP200 metadata and original AGES archive;27131 total rows;6801 target events;6682 eligible adapter events",
+   "priority": "P0",
+   "acquisition": "downloaded"
+  },
+  {
+   "dataset_id": "D04",
+   "dataset_name": "NEON mosquitoes sampled from CO2 traps DP1.10043.001",
+   "source_download_link": "https://data.neonscience.org/data-products/DP1.10043.001",
+   "data_type": "observation",
+   "species_or_disease": "Culicidae including Aedes albopictus",
+   "variables": "trapping; sorting; subsampling; expert identification; trap hours; counts",
+   "spatial_coverage_resolution": "US terrestrial sites; plot/trap locations",
+   "temporal_coverage_resolution": "roughly 2014 onward; repeated trap events; release/provisional distinction",
+   "access_license": "free API; NEON CC0 data policy; cite product release DOI",
+   "limitations": "subsampling weights required; no-catch versus missing taxonomy differ; 2026 release changes pool linkage",
+   "intended_use": "abundance pilot and detection process; existing 2025 labels are reused diagnostics",
+   "download_status": "product metadata downloaded;HARV2024-07 data manifest403;actual tables not recovered",
+   "access_verification": "HTTP200 product metadata;RELEASE-2026 DOI10.48443/rmw1-me46;sample month403",
+   "priority": "P0",
+   "acquisition": "blocked"
+  },
+  {
+   "dataset_id": "D05",
+   "dataset_name": "Kraemer global Aedes compendium, corrected 2017 archive",
+   "source_download_link": "https://datadryad.org/dataset/doi:10.5061/dryad.47v3c",
+   "data_type": "observation",
+   "species_or_disease": "Aedes aegypti; Aedes albopictus",
+   "variables": "occurrence ID; location type; polygon admin; X/Y; year; established/transient",
+   "spatial_coverage_resolution": "global; points represent 5 km support and polygons have centroids",
+   "temporal_coverage_resolution": "1960–2014; annual",
+   "access_license": "Dryad public; CC0 repository policy; preserve dataset citation",
+   "limitations": "19,930/22,137 original counts; not precise 500 m ground truth; no absences; historical",
+   "intended_use": "coarse historical sensitivity and range coverage; exclude from fine-scale validation",
+   "download_status": "metadata/file manifest downloaded;CSV web route403 and API route401;not downloaded",
+   "access_verification": "metadata licenseCC0-1.0/version4;web download403;API download401;no bypass attempted",
+   "priority": "P1",
+   "acquisition": "blocked"
+  },
+  {
+   "dataset_id": "D06",
+   "dataset_name": "Mosquito Alert expert-validated reports",
+   "source_download_link": "https://www.mosquitoalert.com/mosquito-alert-data-portal/",
+   "data_type": "observation",
+   "species_or_disease": "Aedes albopictus and other invasive mosquitoes",
+   "variables": "photos; validation class; report time; species; position",
+   "spatial_coverage_resolution": "Europe-led citizen science; report-specific coordinates",
+   "temporal_coverage_resolution": "2014 onward; event level",
+   "access_license": "public portal/GBIF releases; verify release-specific license and privacy metadata",
+   "limitations": "no-report is not absence; precision may be missing; observer and reporting effort",
+   "intended_use": "source sensitivity; independent campaigns only after duplicate audit",
+   "download_status": "report says 2024 snapshot acquired; current archive not downloaded",
+   "access_verification": "report; portal route identified; current archive terms unresolved",
+   "priority": "P1",
+   "acquisition": "report"
+  },
+  {
+   "dataset_id": "D07",
+   "dataset_name": "GLOBE Mosquito Habitat Mapper",
+   "source_download_link": "https://www.globe.gov/en/web/globe-observer/get-data/mosquito-habitat-data",
+   "data_type": "observation",
+   "species_or_disease": "mosquito larvae; taxonomic certainty varies",
+   "variables": "habitat type; water; larvae; identification; photos; dates",
+   "spatial_coverage_resolution": "global participation; curated 2017–2020 Africa/Asia-Pacific/Latin America-Caribbean",
+   "temporal_coverage_resolution": "2017 onward; observation events",
+   "access_license": "free research/commercial use with requested GLOBE acknowledgement",
+   "limitations": "genus/species confidence heterogeneous; habitat removal changes observation; precision screening required",
+   "intended_use": "auxiliary habitat evidence; cannot make species-negative labels",
+   "download_status": "report says 10,941 records 2023–2025 acquired; not recovered",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "report"
+  },
+  {
+   "dataset_id": "D08",
+   "dataset_name": "VectorByte VecDyn",
+   "source_download_link": "https://vectorbyte.crc.nd.edu/explore-vecdyn",
+   "data_type": "observation",
+   "species_or_disease": "multiple arthropod vectors",
+   "variables": "population time series; species; collection method; location; dates",
+   "spatial_coverage_resolution": "multi-region; contributing-study support",
+   "temporal_coverage_resolution": "study-specific repeated abundance series",
+   "access_license": "public explorer; free account may be required; per-dataset reuse terms unresolved",
+   "limitations": "legacy VectorBite database retired 2021; do not use stale endpoints; effort varies",
+   "intended_use": "find comparable count/effort datasets",
+   "download_status": "portal documented; export not tested",
+   "access_verification": "official VectorByte databases page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D09",
+   "dataset_name": "Malaria Atlas Project vector occurrence",
+   "source_download_link": "https://github.com/malaria-atlas-project/malariaAtlas",
+   "data_type": "observation",
+   "species_or_disease": "41 dominant malaria vector species",
+   "variables": "species; survey dates; position; survey metadata",
+   "spatial_coverage_resolution": "global malaria regions; point and survey support",
+   "temporal_coverage_resolution": "historical surveys; query available versions",
+   "access_license": "open-access R API; record/version terms to retain",
+   "limitations": "not an Aedes source; point support/identification complexes vary",
+   "intended_use": "later Anopheles extension; never mix with Aedes labels",
+   "download_status": "reference code available; no survey download",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D10",
+   "dataset_name": "ECDC/EFSA VectorNet distribution and occurrence",
+   "source_download_link": "https://www.ecdc.europa.eu/en/disease-vectors/surveillance-and-disease-data/invasive-mosquito-maps",
+   "data_type": "observation",
+   "species_or_disease": "invasive Aedes spp.",
+   "variables": "expert-validated regional status; surveillance status",
+   "spatial_coverage_resolution": "Europe/neighbours; NUTS2/NUTS3 or equivalent",
+   "temporal_coverage_resolution": "periodic snapshots; April 2026 documented",
+   "access_license": "public maps and GBIF portal; underlying record licenses vary",
+   "limitations": "regional status is not point absence; surveillance intensity changes; regional centroids unsuitable",
+   "intended_use": "coarse external plausibility check; trace primary occurrences",
+   "download_status": "map page reviewed; raw download not acquired",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D11",
+   "dataset_name": "OpenDengue V1.3.1",
+   "source_download_link": "https://opendengue.org/data.html",
+   "data_type": "disease_outcome",
+   "species_or_disease": "dengue",
+   "variables": "dengue_total; case definitions; admin IDs; start/end date; source",
+   "spatial_coverage_resolution": "global national/subnational; inconsistent admin levels",
+   "temporal_coverage_resolution": "downloaded nationalV1.3.1:1924-01-20 through2025-04-30;week/month/year",
+   "access_license": "CC BY 4.0; CSV/ZIP; versioned Figshare 10.6084/m9.figshare.24259573",
+   "limitations": "mixed suspected/confirmed/severity; overlapping spatial/temporal extracts; infections underreported",
+   "intended_use": "separate disease branch with population offset; select one support per place/time",
+   "download_status": "national extract downloaded and profiled;29540 records;128 country codes",
+   "access_verification": "HTTP200 ZIP;schema/content read;SHA256 in retrieval log",
+   "priority": "P1",
+   "acquisition": "downloaded"
+  },
+  {
+   "dataset_id": "D12",
+   "dataset_name": "WHO Global Dengue Surveillance",
+   "source_download_link": "https://worldhealthorg.shinyapps.io/dengue_global/",
+   "data_type": "disease_outcome",
+   "species_or_disease": "dengue",
+   "variables": "reported cases; severe cases; deaths; time; country",
+   "spatial_coverage_resolution": "global country/territory aggregates",
+   "temporal_coverage_resolution": "monthly reporting system since 2024; historical inputs vary",
+   "access_license": "free dashboard exports; WHO copyright/IGO reuse conditions; exact export license unresolved",
+   "limitations": "provisional/revised reporting; no observation of mosquito habitat; custom dashboard API not assumed stable",
+   "intended_use": "disease surveillance comparison and data provenance",
+   "download_status": "official WHO description reviewed; no export",
+   "access_verification": "WHO 2026 global update reviewed; dashboard file retrieval not tested",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D13",
+   "dataset_name": "PAHO PLISA dengue indicators",
+   "source_download_link": "https://opendata.paho.org/en/dengue-indicators",
+   "data_type": "disease_outcome",
+   "species_or_disease": "dengue",
+   "variables": "cases; incidence; severe dengue; deaths; CFR",
+   "spatial_coverage_resolution": "Americas; national with variable subnational detail",
+   "temporal_coverage_resolution": "1980 onward; weekly/annual depending indicator",
+   "access_license": "free portal; PAHO reuse terms must accompany export",
+   "limitations": "case definitions/reporting changes; mirrors WHO/OpenDengue",
+   "intended_use": "regional disease evaluation; use original series once",
+   "download_status": "documented; not downloaded",
+   "access_verification": "official source search result;page fetch403;export not tested",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D14",
+   "dataset_name": "CDC ArboNET public summaries",
+   "source_download_link": "https://www.cdc.gov/vector-borne-diseases/php/arbonet/index.html",
+   "data_type": "disease_outcome",
+   "species_or_disease": "dengue; West Nile; other arboviruses",
+   "variables": "human cases; residence; onset/year; disease; travel status where available",
+   "spatial_coverage_resolution": "US states/counties/territories; public aggregation",
+   "temporal_coverage_resolution": "disease-specific historical series; current provisional data",
+   "access_license": "public summaries free; detailed limited-use files require formal request",
+   "limitations": "residence is not exposure; detailed mosquito/patient microdata not fully open",
+   "intended_use": "separate disease outcome or county-scale validation",
+   "download_status": "official public access limits reviewed; no detailed data",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D15",
+   "dataset_name": "Existing project dengue AFR+PA v2 collection",
+   "source_download_link": "",
+   "data_type": "disease_outcome",
+   "species_or_disease": "dengue",
+   "variables": "country/admin series; coverage workbook; source provenance",
+   "spatial_coverage_resolution": "101 countries reported by README;19 with finer geography",
+   "temporal_coverage_resolution": "2019 onward; week/month/year varying",
+   "access_license": "user Drive access; upstream source licenses still apply",
+   "limitations": "mixed national gap fills and subnational records must not be summed; figures are README claims",
+   "intended_use": "reuse existing source inventory before new acquisition",
+   "download_status": "README read; raw/processed folders identified; contents not audited",
+   "access_verification": "README_v2.txt read 2026-11-17",
+   "priority": "P1",
+   "acquisition": "documented",
+   "internal": true
+  },
+  {
+   "dataset_id": "D16",
+   "dataset_name": "Kraemer 2015 global Aedes suitability maps",
+   "source_download_link": "https://elifesciences.org/articles/08347",
+   "data_type": "model_prediction",
+   "species_or_disease": "Aedes aegypti; Aedes albopictus",
+   "variables": "BRT suitability; uncertainty products",
+   "spatial_coverage_resolution": "global; approximately 5 km historical mapping",
+   "temporal_coverage_resolution": "2015 publication; source period historical",
+   "access_license": "open article; linked map archive license/version must be verified",
+   "limitations": "trained on compendium; not independent labels; cannot validate against own training data",
+   "intended_use": "external model comparison only",
+   "download_status": "paper/archive route identified; rasters not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D17",
+   "dataset_name": "Anopheles stephensi climate suitability and source data",
+   "source_download_link": "https://www.nature.com/articles/s41598-025-07653-8",
+   "data_type": "model_prediction",
+   "species_or_disease": "Anopheles stephensi",
+   "variables": "eight-algorithm ensembles; baseline/future climate suitability",
+   "spatial_coverage_resolution": "global; WorldClim grids",
+   "temporal_coverage_resolution": "1970–2000 baseline; 2021–2100 SSP5-8.5 projections",
+   "access_license": "open paper; archive https://doi.org/10.5281/zenodo.15265213; archive license verify",
+   "limitations": "climatic suitability/population exposure not malaria incidence; scenario limited",
+   "intended_use": "traditional algorithm/projection reference",
+   "download_status": "article read; archive not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D18",
+   "dataset_name": "WorldClim v2.1 bioclimatic variables",
+   "source_download_link": "https://www.worldclim.org/data/worldclim21.html",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "BIO1–BIO19; monthly temperature/precipitation",
+   "spatial_coverage_resolution": "global land;30 arcsec/2.5/5/10 arcmin",
+   "temporal_coverage_resolution": "1970–2000 climatology",
+   "access_license": "free research download; verify WorldClim terms before redistribution",
+   "limitations": "not annual weather; coarse support retained; BIO8/9/18/19 artifacts possible",
+   "intended_use": "replicate climate19 baseline; 2.5 arcmin in report",
+   "download_status": "official download links reviewed; no global archive",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D19",
+   "dataset_name": "ERA5-Land monthly aggregates",
+   "source_download_link": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-monthly-means",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "air/dewpoint temperature; soil water; precipitation",
+   "spatial_coverage_resolution": "global land; ~9 km native /0.1 degree CDS grid",
+   "temporal_coverage_resolution": "1950 onward; monthly means or EE monthly aggregates",
+   "access_license": "Copernicus open data terms; CDS account/accepted terms for API; EE project for cloud",
+   "limitations": "accumulated-variable conventions differ CDS vs EE; no invented 500 m weather",
+   "intended_use": "2024 annual features; lags in abundance branch",
+   "download_status": "documentation reviewed; no authenticated extraction",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D20",
+   "dataset_name": "CHIRPS precipitation v2 and v3",
+   "source_download_link": "https://www.chc.ucsb.edu/data/chirps",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "precipitation totals/anomalies",
+   "spatial_coverage_resolution": "v2:50S–50N;v3:60S–60N;0.05degree",
+   "temporal_coverage_resolution": "1981 onward; daily/pentad/monthly",
+   "access_license": "public downloads; CHC attribution/reuse terms",
+   "limitations": "v2 production ends after Dec 2026; version change requires paired sensitivity; incomplete polar coverage",
+   "intended_use": "tropical precipitation alternative; retain ERA5 global baseline",
+   "download_status": "documented; not downloaded",
+   "access_verification": "CHC v2 and v3 official pages reviewed;v2 production ends afterDec2026",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D21",
+   "dataset_name": "MERIT DEM v1.0.3",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "elevation; derived slope",
+   "spatial_coverage_resolution": "~90 m;90N–60S",
+   "temporal_coverage_resolution": "static multi-source terrain",
+   "access_license": "CC BY-NC 4.0 or ODbL dual-license; choose/document compatible route",
+   "limitations": "not unrestricted under both licenses; derivative slope depends CRS/scale",
+   "intended_use": "elevation/slope report baseline",
+   "download_status": "catalog reviewed; cloud access required",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D22",
+   "dataset_name": "MODIS MOD13Q1.061",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MOD13Q1",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "NDVI; EVI; QA",
+   "spatial_coverage_resolution": "global;250 m",
+   "temporal_coverage_resolution": "2000 onward;16 day",
+   "access_license": "NASA LP DAAC open; Earthdata login for direct files or EE project",
+   "limitations": "QA and scale 0.0001; cloud gaps; composite support",
+   "intended_use": "annual/seasonal vegetation; report baseline",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D23",
+   "dataset_name": "MODIS MOD11A2.061",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MOD11A2",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "day/night LST; QC flags",
+   "spatial_coverage_resolution": "global;1 km",
+   "temporal_coverage_resolution": "2000 onward;8 day",
+   "access_license": "NASA open data; Earthdata or EE",
+   "limitations": "LST is not air temperature; scale0.02 K; cloud-driven missingness",
+   "intended_use": "thermal exposure summaries; report baseline",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D24",
+   "dataset_name": "MODIS MCD12Q1.061",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD12Q1",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "IGBP land cover; QA",
+   "spatial_coverage_resolution": "global;500 m",
+   "temporal_coverage_resolution": "2001 onward;annual",
+   "access_license": "NASA open data; Earthdata or EE",
+   "limitations": "categorical classes cannot be bilinearly resampled; container habitats unresolved",
+   "intended_use": "forest/crop/urban/wetland fractions",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D25",
+   "dataset_name": "JRC Global Surface Water v1.4 MonthlyHistory",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/JRC_GSW1_4_MonthlyHistory",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "water detection; valid observations",
+   "spatial_coverage_resolution": "global;30 m",
+   "temporal_coverage_resolution": "1984–2021;monthly",
+   "access_license": "Copernicus free/open with acknowledgement",
+   "limitations": "2021 is static proxy in2024; no-data differs from dry; small containers invisible",
+   "intended_use": "water persistence/seasonality; explicit vintage",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D26",
+   "dataset_name": "WorldPop Global2 R2025A v1",
+   "source_download_link": "https://api.worldpop.org/v3/documentation",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "human activity/exposure",
+   "variables": "people per pixel; density derived using full buffer area",
+   "spatial_coverage_resolution": "global country rasters;100 m/1 km",
+   "temporal_coverage_resolution": "2015–2030 annual estimates/projections;2024 reference",
+   "access_license": "CC BY4.0; public file/API catalog",
+   "limitations": "modeled population; post-2025 projections not observations; counts must be summed before density",
+   "intended_use": "2024 human activity layer; disease denominator",
+   "download_status": "current API catalog downloaded;population rasters not downloaded",
+   "access_verification": "HTTP200 catalog withCC BY4.0;country-file/API instructions",
+   "priority": "P0",
+   "acquisition": "metadata"
+  },
+  {
+   "dataset_id": "D27",
+   "dataset_name": "GHSL GHS-BUILT-S P2023A",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_S",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "built-up square metres; nonresidential",
+   "spatial_coverage_resolution": "global;100 m EE product",
+   "temporal_coverage_resolution": "1975–2030;5-year epochs",
+   "access_license": "EC JRC open reuse/attribution terms",
+   "limitations": "divide built area by native pixel area; future epochs interpolated/projected",
+   "intended_use": "built fraction; retain2020 report proxy",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D28",
+   "dataset_name": "VIIRS DNB annual V2.2",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V22",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "human activity",
+   "variables": "night radiance; coverage",
+   "spatial_coverage_resolution": "near-global;15 arcsec (~500 m)",
+   "temporal_coverage_resolution": "2012 onward;annual;verify2024 asset",
+   "access_license": "EOG attribution/terms; public catalog; direct service may require registration",
+   "limitations": "ephemeral lights/filtering; latitude coverage; nonhuman lights",
+   "intended_use": "human activity proxy and missingness control",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D29",
+   "dataset_name": "Accessibility to cities2015",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/Oxford_MAP_accessibility_to_cities_2015_v1_0",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "travel time minutes",
+   "spatial_coverage_resolution": "global;~1 km",
+   "temporal_coverage_resolution": "2015 static",
+   "access_license": "CC BY4.0; catalog marked deprecated",
+   "limitations": "old surface; EE asset availability must be tested; mobility proxy also sampling-bias proxy",
+   "intended_use": "report reproduction; omit/replace in explicit new branch",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D30",
+   "dataset_name": "Sentinel-2 L2A harmonized",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED",
+   "data_type": "imagery",
+   "species_or_disease": "all systems",
+   "variables": "multispectral SR; scene classes; QA",
+   "spatial_coverage_resolution": "global land;10/20/60 m bands",
+   "temporal_coverage_resolution": "2017 onward;days revisit",
+   "access_license": "Copernicus free/open; public cloud or EE; compute terms separate",
+   "limitations": "clouds; band ordering/normalization checkpoint-specific; QA60 history",
+   "intended_use": "quarterly raw spectral baseline; SatMAE/CROMA/Clay input",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D31",
+   "dataset_name": "Sentinel-1 GRD",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD",
+   "data_type": "imagery",
+   "species_or_disease": "all systems",
+   "variables": "VV/VH backscatter; orbit; incidence angle",
+   "spatial_coverage_resolution": "land coverage varies;10 m common IW",
+   "temporal_coverage_resolution": "2014 onward;orbit-dependent revisit",
+   "access_license": "Copernicus free/open; EE or data-space",
+   "limitations": "mixing orbits/angles creates artifacts; dB cannot be averaged as power without choice",
+   "intended_use": "radar ablation; CROMA multimodal extension; wetness features",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D32",
+   "dataset_name": "NASA HLS v2 S30/L30",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/NASA_HLS_HLSS30_v002",
+   "data_type": "imagery",
+   "species_or_disease": "all systems",
+   "variables": "harmonized surface reflectance;Fmask",
+   "spatial_coverage_resolution": "global land;30 m",
+   "temporal_coverage_resolution": "S30 since2015;L30 since2013;daily collection not daily clear coverage",
+   "access_license": "NASA open; Earthdata direct/cloud or EE",
+   "limitations": "Landsat/Sentinel band mapping differs; Fmask and reflectance scale essential",
+   "intended_use": "Prithvi300M and raw HLS spectral baseline",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D33",
+   "dataset_name": "Dynamic World V1",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "nine land-cover probabilities/label",
+   "spatial_coverage_resolution": "global;10 m",
+   "temporal_coverage_resolution": "2015 onward;per Sentinel-2 acquisition",
+   "access_license": "CC BY4.0; EE/cloud",
+   "limitations": "model-derived environmental predictor; not mosquito observations; cloud missingness",
+   "intended_use": "probability fractions; seasonal land-use heterogeneity",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D34",
+   "dataset_name": "ESA WorldCover2021 v200",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v200",
+   "data_type": "environmental_predictor",
+   "species_or_disease": "all systems",
+   "variables": "11 land-cover classes",
+   "spatial_coverage_resolution": "global;10 m",
+   "temporal_coverage_resolution": "2021 annual",
+   "access_license": "CC BY4.0",
+   "limitations": "static mismatch; classifier errors; changes between2020/2021 include algorithm changes",
+   "intended_use": "fine land-cover baseline and class entropy",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D35",
+   "dataset_name": "AlphaEarth Foundations annual Satellite Embedding V1",
+   "source_download_link": "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_SATELLITE_EMBEDDING_V1_ANNUAL",
+   "data_type": "embedding",
+   "species_or_disease": "all systems",
+   "variables": "A00–A63;unit-length embeddings",
+   "spatial_coverage_resolution": "global land/shallow waters;10 m",
+   "temporal_coverage_resolution": "EE catalog2017–2024;GCS docs2017–2025;verify chosen backend",
+   "access_license": "CC BY4.0 required Google/DeepMind attribution; public provider-pays GCS as of July2026; EE account for EE",
+   "limitations": "annual summary not forecasting input before year-end; pretraining may include biological supervision; cloud int8 decoding differs EE floats",
+   "intended_use": "primary frozen representation; native-vs250m pooling sensitivity",
+   "download_status": "report says2024 samples acquired; new extraction not run",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "report"
+  },
+  {
+   "dataset_id": "D36",
+   "dataset_name": "TESSERA v1.1 annual embeddings",
+   "source_download_link": "https://geotessera.org/",
+   "data_type": "embedding",
+   "species_or_disease": "all systems",
+   "variables": "128D Sentinel1/2 time-series embedding",
+   "spatial_coverage_resolution": "global terrestrial;10 m;check registry coverage",
+   "temporal_coverage_resolution": "2017–2025 annual;v1.1 current stable",
+   "access_license": "embeddings CC0;encoder MIT;public cloud; GeoTessera now Python>=3.12",
+   "limitations": "quantized arrays require scales/masks; variants not interchangeable; missing chunks may read fill values",
+   "intended_use": "priority new representation versus AlphaEarth with same head",
+   "download_status": "official docs reviewed; no huge embedding tiles",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D37",
+   "dataset_name": "Prithvi EO2.0 300M weights/config",
+   "source_download_link": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-300M",
+   "data_type": "encoder_weights",
+   "species_or_disease": "all systems",
+   "variables": "1024D features from6-band4-frame HLS;MAE",
+   "spatial_coverage_resolution": "chip-scale;global pretraining",
+   "temporal_coverage_resolution": "checkpoint-specific;choose historical image quarters",
+   "access_license": "Apache2.0 model card;public weights;GPU useful",
+   "limitations": "weights are not ready-made global embeddings; TL vs non-TL checkpoint differs",
+   "intended_use": "reuse project frozen features; selective encoder experiments",
+   "download_status": "config downloaded and checked;encoder weights not downloaded",
+   "access_verification": "HTTP200 official model config;Apache2.0 model card",
+   "priority": "P1",
+   "acquisition": "metadata"
+  },
+  {
+   "dataset_id": "D38",
+   "dataset_name": "SatMAE official code/checkpoints",
+   "source_download_link": "https://github.com/sustainlab-group/SatMAE",
+   "data_type": "encoder_weights",
+   "species_or_disease": "all systems",
+   "variables": "multispectral/temporal ViT MAE;768D Base project representation",
+   "spatial_coverage_resolution": "chip-scale Sentinel2;FMoW pretraining",
+   "temporal_coverage_resolution": "checkpoint and image-date specific",
+   "access_license": "public code/checkpoints;code CC BY-NC4.0 in repository;verify weight terms",
+   "limitations": "input groups/normalization important;code research restriction;not global embedding archive",
+   "intended_use": "reuse existing features; raw-spectrum and random-init controls",
+   "download_status": "documented; not downloaded",
+   "access_verification": "official repository and LICENSE read;CC BY-NC4.0 code",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D39",
+   "dataset_name": "CROMA official code/checkpoints",
+   "source_download_link": "https://github.com/antofuller/CROMA",
+   "data_type": "encoder_weights",
+   "species_or_disease": "all systems",
+   "variables": "radar/optical contrastive MAE;768D Base project optical branch",
+   "spatial_coverage_resolution": "Sentinel1/2 chips",
+   "temporal_coverage_resolution": "checkpoint and image-date specific",
+   "access_license": "MIT code;separate checkpoint license not independently established",
+   "limitations": "existing project used optical only;cannot claim radar-optical inference",
+   "intended_use": "radar fusion candidate after license/input audit",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D40",
+   "dataset_name": "Clay v1.5 weights and code",
+   "source_download_link": "https://clay-foundation.github.io/model/release-notes/specification.html",
+   "data_type": "encoder_weights",
+   "species_or_disease": "all systems",
+   "variables": "1024D; wavelengths;GSD;location/time metadata",
+   "spatial_coverage_resolution": "multisensor global chips",
+   "temporal_coverage_resolution": "v1.5 trained Sep2024;image time-specific",
+   "access_license": "public weights; Apache2.0 model ecosystem;confirm chosen weight card",
+   "limitations": "location/time metadata can explain gains;geometry remains in pixels after metadata ablation",
+   "intended_use": "frozen features; metadata ablation and matched imagery",
+   "download_status": "documented; not downloaded",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D41",
+   "dataset_name": "SatCLIP location encoder",
+   "source_download_link": "https://github.com/microsoft/satclip",
+   "data_type": "encoder_weights",
+   "species_or_disease": "all systems",
+   "variables": "location embedding from spherical harmonics contrasted with imagery",
+   "spatial_coverage_resolution": "global coordinate input",
+   "temporal_coverage_resolution": "static location representation",
+   "access_license": "MIT code;check checkpoint card;public weights",
+   "limitations": "encodes geography;not annual habitat observation;pretraining location overlap",
+   "intended_use": "coordinate representation control versus raw/spherical coordinates",
+   "download_status": "documented; not downloaded",
+   "access_verification": "official repository and model instructions reviewed",
+   "priority": "P1",
+   "acquisition": "documented"
+  },
+  {
+   "dataset_id": "D42",
+   "dataset_name": "Project2024 global maps and frozen feature cohorts",
+   "source_download_link": "",
+   "data_type": "model_prediction",
+   "species_or_disease": "Aedes albopictus",
+   "variables": "12 models;climate19;environment41;AE64;fusion105;6 QA layers",
+   "spatial_coverage_resolution": "global0.05degree output;feature buffers500m",
+   "temporal_coverage_resolution": "2024 reference;Nov6 report",
+   "access_license": "user project artifacts;licensing follows upstream components",
+   "limitations": "report is evidence of prior work;model files/protocol hashes not recovered here",
+   "intended_use": "recover frozen inputs before rerun;maps are comparison products not labels",
+   "download_status": "report read;underlying frozen artifacts not located",
+   "access_verification": "primary landing page reviewed",
+   "priority": "P0",
+   "acquisition": "report",
+   "internal": true
+  }
+ ],
+ "review": [
+  {
+   "method_id": "M01",
+   "citation": "Kraemer et al.2015. The global distribution of the arbovirus vectors Aedes aegypti and Ae. albopictus. eLife4:e08347",
+   "citation_link": "https://elifesciences.org/articles/08347",
+   "research_target": "global vector suitability",
+   "datasets_variables": "historical Aedes occurrences;temperature/precipitation;vegetation;urban factors",
+   "feature_embedding_construction": "ecologically summarized climate/remote-sensing covariates",
+   "fusion_strategy": "tabular early fusion",
+   "learner": "boosted regression tree ensemble",
+   "validation_design_metrics": "spatially structured held-out evaluation;AUC; uncertainty maps; use paper protocol rather than assume our folds",
+   "key_findings_limitations": "global environmental constraints mapped;presence/background and historical support limit absolute-probability interpretation",
+   "code_availability": "article supplementary materials/data; repository not independently verified",
+   "relevance": "strong historical benchmark; predictions cannot be new labels",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M02",
+   "citation": "Kraemer et al.2019. Past and future spread of the arbovirus vectors Aedes aegypti and Aedes albopictus. Nature Microbiology4:854–863",
+   "citation_link": "https://www.nature.com/articles/s41564-019-0376-y",
+   "research_target": "range expansion and environmental suitability",
+   "datasets_variables": "Aedes occurrences;climate;urbanization;mobility/spread context",
+   "feature_embedding_construction": "environmental suitability plus temporal spread drivers",
+   "fusion_strategy": "environmental and spread components",
+   "learner": "BRT suitability and spread modeling",
+   "validation_design_metrics": "historical/temporal assessment;exact fold and metric settings require supplementary extraction",
+   "key_findings_limitations": "range expansion is constrained by dispersal as well as climate;future suitability is scenario-dependent",
+   "code_availability": "supplementary material;exact code artifact not verified",
+   "relevance": "separate current habitat from invasion/spread;future embeddings unavailable",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M03",
+   "citation": "Future global distribution and climatic suitability of Anopheles stephensi. Scientific Reports15:22268(2025)",
+   "citation_link": "https://www.nature.com/articles/s41598-025-07653-8",
+   "research_target": "global climate suitability and future exposure",
+   "datasets_variables": "An.stephensi occurrences;19 WorldClim BIO;3 CMIP6 GCMs SSP5-8.5;population",
+   "feature_embedding_construction": "climate baseline1970–2000 and scenario covariates",
+   "fusion_strategy": "algorithm ensembles;intersection/union GCM agreement",
+   "learner": "GLM;GAM;RF;MaxEnt;MaxNet;XGBoost;MARS;FDA via biomod2",
+   "validation_design_metrics": "reported evaluation in supplement;do not assume spatial isolation;extract split/AUC/TSS settings before reproduction",
+   "key_findings_limitations": "illustrates strong multi-algorithm baseline;single emissions scenario;exposure is not malaria cases",
+   "code_availability": "https://doi.org/10.5281/zenodo.15265213 (archive content not downloaded)",
+   "relevance": "reference traditional learner set;do not replace existing Aedes target",
+   "evidence_depth": "primary methods/results read;full supplementary protocol not extracted"
+  },
+  {
+   "method_id": "M04",
+   "citation": "Phillips et al.2009. Sample selection bias and presence-only distribution models: implications for background and pseudo-absence data. Ecological Applications19:181–197",
+   "citation_link": "https://doi.org/10.1890/07-2153.1",
+   "research_target": "presence-only sampling bias",
+   "datasets_variables": "species occurrence collections;sample-selection/background schemes",
+   "feature_embedding_construction": "target-group/background sampling approximates shared sampling effort",
+   "fusion_strategy": "observation-process adjustment through background",
+   "learner": "presence-background SDMs including MaxEnt",
+   "validation_design_metrics": "predictive comparisons across background choices;exact numeric results not extracted",
+   "key_findings_limitations": "shared bias assumptions are essential;other taxa are not verified absence",
+   "code_availability": "method reference;no project code verified",
+   "relevance": "retain same-provider Culicidae background;source/effort sensitivity",
+   "evidence_depth": "publisher article/abstract reviewed;no exact numerical benchmark extraction"
+  },
+  {
+   "method_id": "M05",
+   "citation": "Fithian & Hastie2013. Finite-Sample Equivalence in Statistical Models for Presence-Only Data. Annals of Applied Statistics7:1917–1939",
+   "citation_link": "https://arxiv.org/abs/1207.6950",
+   "research_target": "identifiability of presence-only models",
+   "datasets_variables": "presence locations and background/quadrature",
+   "feature_embedding_construction": "loglinear features and background weighting",
+   "fusion_strategy": "none;statistical equivalence analysis",
+   "learner": "IPP;MaxEnt;weighted logistic regression",
+   "validation_design_metrics": "theoretical finite-sample comparison;not a predictive leaderboard",
+   "key_findings_limitations": "IPP/MaxEnt estimate relative density;ordinary finite-sample logistic fits need not coincide;absolute abundance unidentified",
+   "code_availability": "paper;reference code not verified",
+   "relevance": "name our logistic scorer accurately;never label it official MaxEnt",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M06",
+   "citation": "Fithian et al.2015. Bias correction in species distribution models: pooling survey and collection data for multiple species. MEE6:424–438",
+   "citation_link": "https://doi.org/10.1111/2041-210X.12242",
+   "research_target": "integrating biased occurrences and surveys",
+   "datasets_variables": "multi-species presence-only collections plus survey counts/presence–absence",
+   "feature_embedding_construction": "environmental intensity covariates plus sampling-bias covariates",
+   "fusion_strategy": "joint likelihood with shared sampling-bias component",
+   "learner": "Poisson thinning/integrated multi-species SDM",
+   "validation_design_metrics": "simulation/empirical model comparisons;hold out independent surveys for our adaptation",
+   "key_findings_limitations": "surveys anchor scale;proportional-bias assumption can fail between taxa/providers",
+   "code_availability": "paper supplementary methods;exact repository not verified",
+   "relevance": "preferred conceptual foundation for source-aware fusion,not naive row concatenation",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M07",
+   "citation": "MacKenzie et al.2002. Estimating site occupancy rates when detection probabilities are less than one. Ecology83:2248–2255",
+   "citation_link": "https://doi.org/10.1890/0012-9658(2002)083[2248:ESORWD]2.0.CO;2",
+   "research_target": "occupancy separately from detection",
+   "datasets_variables": "site-by-visit detection histories;site and visit covariates",
+   "feature_embedding_construction": "site habitat X for occupancy;effort/weather/trap X for detection",
+   "fusion_strategy": "hierarchical ecological and observation processes",
+   "learner": "latent Bernoulli occupancy with repeated Bernoulli detection",
+   "validation_design_metrics": "simulation parameter bias/precision;for project hold out sites and assess detection histories",
+   "key_findings_limitations": "non-detection does not establish absence;closure and conditional independence required",
+   "code_availability": "local scripts/occupancy.py implements single-season likelihood;not original authors software",
+   "relevance": "AGES/NEON repeat visits;short seasonal closure windows",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M08",
+   "citation": "MacKenzie et al.2003. Estimating site occupancy, colonization, and local extinction when a species is detected imperfectly. Ecology84:2200–2207",
+   "citation_link": "https://doi.org/10.1890/02-3090",
+   "research_target": "dynamic occupancy",
+   "datasets_variables": "repeated visits nested in primary seasons",
+   "feature_embedding_construction": "seasonal site/visit predictors;colonization/extinction covariates",
+   "fusion_strategy": "hierarchical temporal state transitions",
+   "learner": "dynamic occupancy model",
+   "validation_design_metrics": "simulation and likelihood-based inference;forecast whole seasons in project",
+   "key_findings_limitations": "separates ecological turnover from detection;requires robust repeated-survey design",
+   "code_availability": "use unmarked/colext reference;not implemented in this handoff",
+   "relevance": "later temporal extension after event table recovery",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M09",
+   "citation": "Roberts et al.2017. Cross-validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography40:913–929",
+   "citation_link": "https://doi.org/10.1111/ecog.02881",
+   "research_target": "validation under dependence",
+   "datasets_variables": "structured ecological observations and predictors",
+   "feature_embedding_construction": "not an encoder;partitions reflect deployment distance/structure",
+   "fusion_strategy": "not applicable",
+   "learner": "validation design across learners",
+   "validation_design_metrics": "spatial/temporal/group blocking;compare estimated prediction error",
+   "key_findings_limitations": "random splits can overstate transfer;blocking must match inference target and can cause extrapolation",
+   "code_availability": "local nested buffered CV;blockCV reference",
+   "relevance": "outer geographic holdout;inner geographic tuning;whole-site repeat grouping",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M10",
+   "citation": "Valavi et al.2019. blockCV. MEE10:225–232",
+   "citation_link": "https://doi.org/10.1111/2041-210X.13107",
+   "research_target": "spatial/environmental fold construction",
+   "datasets_variables": "locations;response;environmental rasters",
+   "feature_embedding_construction": "spatial blocks;buffers;environmental clusters;autocorrelation diagnostics",
+   "fusion_strategy": "not applicable",
+   "learner": "R validation tooling",
+   "validation_design_metrics": "spatial isolation and fold composition checks;no universal fixed best block width",
+   "key_findings_limitations": "software creates folds;does not make biased labels representative",
+   "code_availability": "https://github.com/rvalavi/blockCV",
+   "relevance": "audit150km/20km baseline and40/600km sensitivities",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M11",
+   "citation": "Anderson et al.2024. sdmTMB: an R package for fast, flexible, and user-friendly GLMMs with spatial and spatiotemporal random fields",
+   "citation_link": "https://doi.org/10.1101/2022.03.24.485545",
+   "research_target": "spatial/spatiotemporal abundance and distribution",
+   "datasets_variables": "coordinates;time;covariates;survey effort/counts",
+   "feature_embedding_construction": "fixed-effect features plus Matérn SPDE fields;temporal dependence",
+   "fusion_strategy": "feature covariates plus latent spatial/time process",
+   "learner": "GLMM via TMB;NB/hurdle families as appropriate",
+   "validation_design_metrics": "spatial/time holdouts;predictive likelihood and residual diagnostics;exact paper metrics not extracted",
+   "key_findings_limitations": "efficient structured residuals;field interpolation can mask weak environmental transfer",
+   "code_availability": "https://sdmtmb.github.io/sdmTMB/ (official current docs); https://github.com/sdmTMB/sdmTMB",
+   "relevance": "count/effort branch;compare interpolation and new-region extrapolation",
+   "evidence_depth": "package docs and citation reviewed;paper numerical extraction pending"
+  },
+  {
+   "method_id": "M12",
+   "citation": "Tikhonov et al.2020. Joint species distribution modelling with the R-package Hmsc. MEE11:442–447",
+   "citation_link": "https://doi.org/10.1111/2041-210X.13345",
+   "research_target": "hierarchical multi-species communities",
+   "datasets_variables": "site-by-species responses;environment;traits;phylogeny;random levels",
+   "feature_embedding_construction": "environmental features and latent factors;trait-mediated responses",
+   "fusion_strategy": "hierarchical sharing across species and sites",
+   "learner": "Bayesian joint SDM;Gibbs MCMC",
+   "validation_design_metrics": "posterior predictive checks;blocked out-of-sample evaluation;convergence/Rhat/ESS",
+   "key_findings_limitations": "borrows strength across taxa;residual association is not evidence of interaction",
+   "code_availability": "https://cran.r-project.org/package=Hmsc",
+   "relevance": "multi-species extension only after species-specific observation design",
+   "evidence_depth": "official package manual reviewed;paper numerical extraction pending"
+  },
+  {
+   "method_id": "M13",
+   "citation": "Gasparrini2011. Distributed Lag Linear and Non-Linear Models in R: The Package dlnm. JSS43(8)",
+   "citation_link": "https://doi.org/10.18637/jss.v043.i08",
+   "research_target": "delayed exposure response",
+   "datasets_variables": "daily/time-series outcomes and weather exposures",
+   "feature_embedding_construction": "cross-basis of exposure and lag;seasonality controls",
+   "fusion_strategy": "weather-lag basis with outcome regression",
+   "learner": "Poisson/quasi-Poisson/count regression",
+   "validation_design_metrics": "time-series examples;project rolling-origin validation and NB deviance/MAE",
+   "key_findings_limitations": "captures nonlinear delays;causal interpretation needs confounding control;lag windows prespecified",
+   "code_availability": "https://rpkgs.github.io/dlnm/",
+   "relevance": "abundance/disease branches;annual embeddings alone cannot represent weekly lags",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M14",
+   "citation": "Cole et al.2023. Spatial Implicit Neural Representations for Global-Scale Species Mapping. ICML",
+   "citation_link": "https://arxiv.org/abs/2306.02564",
+   "research_target": "large-scale multi-species ranges",
+   "datasets_variables": "crowdsourced species occurrences;47k species;expert range benchmarks",
+   "feature_embedding_construction": "coordinate-to-shared neural embedding",
+   "fusion_strategy": "shared location representation across species",
+   "learner": "implicit neural field with multi-species readouts",
+   "validation_design_metrics": "eBird S&T535 species and IUCN2418 species:mAP;geo-prior image accuracy;environment-feature regression;expert/model ranges are proxy labels,not independent mosquito surveys",
+   "key_findings_limitations": "scales with species/data;biased community observations remain;not calibrated occupancy",
+   "code_availability": "https://github.com/elijahcole/sinr (official repository verified)",
+   "relevance": "coordinate-only neural baseline and later taxonomic sharing",
+   "evidence_depth": "primary full HTML evaluation section and official repository reviewed;not architecture replication"
+  },
+  {
+   "method_id": "M15",
+   "citation": "Yuan & Zhao2024. Hybrid Spatial Representations for Species Distribution Modeling",
+   "citation_link": "https://arxiv.org/abs/2410.10937",
+   "research_target": "fine spatial multi-species prediction",
+   "datasets_variables": "community presence-only records;no environmental inputs",
+   "feature_embedding_construction": "implicit representation plus multiresolution hashgrid",
+   "fusion_strategy": "implicit+explicit spatial feature fusion",
+   "learner": "hybrid neural SDM",
+   "validation_design_metrics": "S&T/IUCN mAP;implicitness sweep with5 repetitions;capacity/speed ablations;not a600km mosquito validation",
+   "key_findings_limitations": "improves local detail;hash features may memorize sampling geography and need large-block tests",
+   "code_availability": "https://github.com/Shiran-Yuan/HSR-SDM (linked by primary paper)",
+   "relevance": "capacity/location control before attributing embedding gains to ecology",
+   "evidence_depth": "primary full HTML methods/evaluation reviewed"
+  },
+  {
+   "method_id": "M16",
+   "citation": "van Merrienboer et al.2026. OCELOT: Planetary-Scale Species Distribution Modeling with Satellite Foundation Embeddings. arXiv2611.00284v1",
+   "citation_link": "https://arxiv.org/html/2611.00284v1",
+   "research_target": "planetary relative occurrence and taxonomic sharing",
+   "datasets_variables": "GBIF multi-species records;AlphaEarth;coordinate features",
+   "feature_embedding_construction": "spherical harmonics;AE embeddings;species/genus/family additive readouts;spatiotemporal thinning",
+   "fusion_strategy": "coordinate and satellite representations;hierarchical taxonomic head",
+   "learner": "residual neural field;relative-occurrence objective",
+   "validation_design_metrics": "deterministic S2 block80/10/10 splits at9/38/150/600km;NDCG@500 skill;geo-prior accuracy;eBird/IUCN benchmarks",
+   "key_findings_limitations": "relative occurrence conditional on documentation;not absolute occupancy;preprint and pretraining overlap concerns",
+   "code_availability": "no model implementation release established from reviewed paper;local fusion is an adaptation only",
+   "relevance": "direct research motivation;test coordinate/AE/fusion and coarse blocks",
+   "evidence_depth": "primary full HTML methods/validation reviewed"
+  },
+  {
+   "method_id": "M17",
+   "citation": "Brown et al.2025. AlphaEarth Foundations. arXiv2507.22291v2",
+   "citation_link": "https://arxiv.org/abs/2507.22291",
+   "research_target": "general geospatial mapping from sparse labels",
+   "datasets_variables": "multisensor EO and auxiliary contexts;global evaluation tasks",
+   "feature_embedding_construction": "annual64D embedding field;spatial/temporal/measurement context",
+   "fusion_strategy": "multimodal fusion during pretraining;frozen features downstream",
+   "learner": "embedding field encoder + lightweight task heads",
+   "validation_design_metrics": "diverse mapping benchmarks;not mosquito-specific evidence",
+   "key_findings_limitations": "strong sparse-label mapping results;biological supervision/overlap and annual temporal support require audit",
+   "code_availability": "annual embedding data public;encoder retraining code/weights not established",
+   "relevance": "primary existing representation;small-label learning curves;raw spectral controls",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M18",
+   "citation": "Feng et al.2025/2026. TESSERA. arXiv2506.20380v7;CVPR2026",
+   "citation_link": "https://arxiv.org/abs/2506.20380",
+   "research_target": "pixelwise temporal EO representations",
+   "datasets_variables": "TreeSatAI-TS;Austrian Crop;PASTIS-R;Biomassters;Borneo canopy height;Sentinel1/2 time series",
+   "feature_embedding_construction": "parallel encoders;Barlow Twins;temporal sparse sampling;128D annual features",
+   "fusion_strategy": "optical/radar encoders then MLP fusion",
+   "learner": "self-supervised transformer encoders + task heads",
+   "validation_design_metrics": "classification F1;segmentation mIoU;regression RMSE;1/30/100% label regimes;Biomassters2773 held-out patches with80/20 training-validation and5 repeats;geographic protocol varies by task",
+   "key_findings_limitations": "open annual features enable low-cost comparison;quantization/coverage/backend versions matter",
+   "code_availability": "https://github.com/ucam-eo/tessera ; https://github.com/ucam-eo/geotessera",
+   "relevance": "highest-priority additional frozen representation;do not assume mosquito gains",
+   "evidence_depth": "primary full HTML experiment and supplementary evaluation sections plus official data/code docs reviewed"
+  },
+  {
+   "method_id": "M19",
+   "citation": "Szwarcman et al.2024–2026. Prithvi-EO-2.0. arXiv2412.02732v3",
+   "citation_link": "https://arxiv.org/abs/2412.02732",
+   "research_target": "multitemporal EO transfer",
+   "datasets_variables": "4.2M global HLS time-series pretraining samples",
+   "feature_embedding_construction": "3D space-time patches;MAE;300M Base non-TL model1024D;TL variant separate",
+   "fusion_strategy": "temporal image tokens;optional location/time encoding",
+   "learner": "ViT MAE;frozen or adapted downstream head",
+   "validation_design_metrics": "GEO-Bench and diverse remote-sensing tasks;not ecological independent testing",
+   "key_findings_limitations": "global/time context helps transfer;checkpoint and band/normalization mismatches can confound comparisons",
+   "code_availability": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-300M",
+   "relevance": "reuse project2024 features;HLS raw baseline;avoid costly global encoding initially",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M20",
+   "citation": "Cong et al.2022. SatMAE: Pre-training Transformers for Temporal and Multi-Spectral Satellite Imagery. NeurIPS",
+   "citation_link": "https://github.com/sustainlab-group/SatMAE",
+   "research_target": "temporal/multispectral pretraining",
+   "datasets_variables": "FMoW satellite imagery;multispectral/time variants",
+   "feature_embedding_construction": "grouped spectral patch embedding and time encoding;masked reconstruction",
+   "fusion_strategy": "spectral/time tokens within encoder",
+   "learner": "ViT masked autoencoder;frozen or fine-tuned heads",
+   "validation_design_metrics": "downstream classification/segmentation benchmarks;settings depend variant",
+   "key_findings_limitations": "useful learned spectrum context;different windows/bands defeat a clean pretraining-only attribution",
+   "code_availability": "official code/checkpoints linked;code reuse terms verify",
+   "relevance": "existing768D Base feature comparison against matched raw S2 statistics",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M21",
+   "citation": "Fuller et al.2023. CROMA: Remote Sensing Representations with Contrastive Radar-Optical Masked Autoencoders. NeurIPS",
+   "citation_link": "https://github.com/antofuller/CROMA",
+   "research_target": "radar-optical representations",
+   "datasets_variables": "paired Sentinel1 radar/Sentinel2 optical",
+   "feature_embedding_construction": "contrastive alignment plus masked reconstruction;modality encoders",
+   "fusion_strategy": "cross-modal contrastive and joint representations",
+   "learner": "transformer encoders;frozen embeddings/task heads",
+   "validation_design_metrics": "downstream remote-sensing classification/segmentation;modality ablations",
+   "key_findings_limitations": "can exploit radar;project used optical branch only;checkpoint terms remain separate from MIT code",
+   "code_availability": "official pretrain/use code and pretrained links",
+   "relevance": "explicit optical-only vs radar+optical experiment after input audit",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M22",
+   "citation": "Clay Foundation2024. Clay v1.5 model specification",
+   "citation_link": "https://clay-foundation.github.io/model/release-notes/specification.html",
+   "research_target": "sensor-flexible Earth representation",
+   "datasets_variables": "70M multisensor chips;bands/wavelength/GSD/location/time",
+   "feature_embedding_construction": "dynamic spectral patch embedding;MAE95% and DINOv2 teacher5% loss",
+   "fusion_strategy": "multisensor metadata-conditioned encoding",
+   "learner": "ViT MAE encoder;1024D project features",
+   "validation_design_metrics": "model specification;does not provide mosquito validation",
+   "key_findings_limitations": "metadata adds useful context but location leakage;model card is not peer-reviewed mosquito result",
+   "code_availability": "https://github.com/Clay-foundation/model",
+   "relevance": "reuse frozen features;metadata-zero and matched spectral baselines",
+   "evidence_depth": "official technical model specification"
+  },
+  {
+   "method_id": "M23",
+   "citation": "Klemmer et al.2025. SatCLIP. AAAI39:4347–4355",
+   "citation_link": "https://arxiv.org/abs/2311.17179",
+   "research_target": "general location embeddings",
+   "datasets_variables": "global paired coordinates/Sentinel2;9 location-dependent downstream tasks",
+   "feature_embedding_construction": "spherical-harmonic location encoding aligned contrastively with imagery",
+   "fusion_strategy": "image-location alignment at pretraining;coordinate-only inference",
+   "learner": "location encoder + lightweight downstream learner",
+   "validation_design_metrics": "nine tasks and geographic generalization;exact split settings require paper protocol",
+   "key_findings_limitations": "captures visually similar distant environments;static location embedding not seasonal EO",
+   "code_availability": "https://github.com/microsoft/satclip",
+   "relevance": "location-memory control;compare low/high harmonic complexity",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M24",
+   "citation": "Rising dengue risk with increasing ENSO amplitude and teleconnections. Nature Communications16:8629(2025)",
+   "citation_link": "https://www.nature.com/articles/s41467-025-63655-0",
+   "research_target": "dengue climate associations/projections",
+   "datasets_variables": "57 tropical countries;OpenDengue;ERA5;ENSO;population;CMIP6",
+   "feature_embedding_construction": "climate/ENSO temporal predictors and country context",
+   "fusion_strategy": "epidemiological climate and outcome covariates",
+   "learner": "study-specific statistical climate/disease model;full specification in paper",
+   "validation_design_metrics": "sensitivity/projection analyses;read exact temporal validation before adopting",
+   "key_findings_limitations": "some2023–2024 sensitivity data require provider permission;association/projection not vector habitat",
+   "code_availability": "https://github.com/huaiyutian/Dengue_ENSO",
+   "relevance": "separate disease branch and climate lag design;explicit access exception",
+   "evidence_depth": "primary paper/repository reviewed"
+  },
+  {
+   "method_id": "M25",
+   "citation": "Broadscale spatial synchrony in a West Nile virus mosquito vector across multiple timescales(2024)",
+   "citation_link": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11139987/",
+   "research_target": "mosquito abundance synchrony",
+   "datasets_variables": "NEON2016–2019 standardized trapping;vector counts;spatial/temporal drivers",
+   "feature_embedding_construction": "abundance time-series at several timescales",
+   "fusion_strategy": "spatiotemporal analysis;not EO encoder fusion",
+   "learner": "synchrony/time-series models;exact specification consult paper",
+   "validation_design_metrics": "timescale-dependent associations and spatial comparisons;no numeric score extracted",
+   "key_findings_limitations": "shows repeated abundance differs from occurrence;US/site limits transfer",
+   "code_availability": "article data/code availability to verify before reproduction",
+   "relevance": "regional abundance pilot;effort and temporal resolution must be preserved",
+   "evidence_depth": "primary paper/repository reviewed"
+  }
+ ],
+ "report": {
+  "title": "Global habitat project report, 6 November 2026",
+  "caveat": "Report-derived. These scores come from the project report; the frozen feature tables, split IDs and code behind them were not recovered in the handoff, so they have not been reproduced. They are not new runs.",
+  "cohort": [
+   [
+    "1,601",
+    "sites in the presence/background cohort",
+    "625 iNaturalist positives, 114 Austrian survey-positive locations, 862 other-Culicidae background locations. Background is not confirmed absence."
+   ],
+   [
+    "313",
+    "Austrian survey sites",
+    "Separate survey endpoint, 114 detected."
+   ],
+   [
+    "504",
+    "development fits",
+    "3 outer spatial folds × seeds 42/202 (≈150 km blocks, ≥20 km separation), 3 inner folds, 12 configurations."
+   ],
+   [
+    "12",
+    "global 2024 maps",
+    "24 score rasters and 6 quality layers over 2,913 processed tiles. Only AlphaEarth was deployed globally among five encoders."
+   ]
+  ],
+  "neon": [
+   [
+    "AlphaEarth + logistic, NEON 2025 AP",
+    "0.3445",
+    "389 locations, 43 detected, 45 site clusters; 2024 features vs 2025 detections; >10 km from development candidates. A reused diagnostic, not a blind test."
+   ],
+   [
+    "Fusion − environment, fixed logistic ΔAP",
+    "+0.196",
+    "95% conditional cluster-bootstrap interval 0.024 to 0.395."
+   ],
+   [
+    "Fusion − environment, fixed RF ΔAP",
+    "−0.030",
+    "Interval −0.242 to 0.200: no demonstrated difference."
+   ],
+   [
+    "Climate19 + MaxNet, NEON AP",
+    "0.4810",
+    "Numerically highest on this diagnostic, but choosing it after inspecting NEON would invalidate a blind-selection claim."
+   ]
+  ],
+  "coverage": [
+   [
+    "Environment / fusion",
+    76.97
+   ],
+   [
+    "AlphaEarth",
+    99.32
+   ],
+   [
+    "Climate",
+    100.0
+   ]
+  ],
+  "notes": [
+   "AP measures ranking under the sampling design: 0.8111 is not 81% global accuracy, occupancy or abundance.",
+   "Near-ties among the top models do not establish superiority.",
+   "Development prevalence (46.16%) and NEON prevalence (11.05%) differ, so APs cannot be subtracted to measure a loss of accuracy.",
+   "Bootstrap intervals condition on trained models and omit training, selection and multiple-comparison uncertainty.",
+   "An earlier 1,296-site cohort with a different recipe (environment + AE + RF, AP 0.8276) must not be combined with these rankings.",
+   "Map disagreement is not a confidence interval; missing cells are not low risk."
+  ]
+ },
+ "checks": [
+  {
+   "value": "6,682",
+   "label": "eligible AGES target events",
+   "detail": "From 27,131 rows (6,801 Ae. albopictus) in the downloaded AGES 2024 archive, using a conservative adapter."
+  },
+  {
+   "value": "336 ≠ 313",
+   "label": "AGES site candidates vs report",
+   "detail": "336 provider-location candidates (120 detected, 314 unique coordinate pairs) do not reproduce the report's 313 coordinate-aggregated sites. The site and co-location rules must be reconciled before modelling."
+  },
+  {
+   "value": "29,540",
+   "label": "OpenDengue V1.3.1 national rows",
+   "detail": "128 country codes, 1924-01-20 to 2025-04-30. A profile of the national extract; disease counts are never used as mosquito labels."
+  },
+  {
+   "value": "7 / 7",
+   "label": "smoke and correctness tests passed",
+   "detail": "Synthetic checks of buffered spatial folds across the dateline, monthly feature support, raster masking, occupancy and count likelihoods, paired cluster evaluation and the endpoint guard. They are not a benchmark."
+  },
+  {
+   "value": "10",
+   "label": "reference configurations implemented",
+   "detail": "baseline.json: Climate 19 and Environment 41 with logistic, RF and BRT; AlphaEarth 64 and the 105-feature fusion with logistic and RF. The report's two MaxNet configurations need the official R implementation."
+  },
+  {
+   "value": "42 · 25 · 254",
+   "label": "datasets · methods · dictionary fields",
+   "detail": "Structured source search and methods review, with evidence depth and access gaps recorded for each entry."
+  }
+ ],
+ "matrix": {
+  "rows": [
+   {
+    "id": "BioClim19",
+    "label": "Climate 19",
+    "group": "Explicit features"
+   },
+   {
+    "id": "Environment41",
+    "label": "Environment 41",
+    "group": "Explicit features"
+   },
+   {
+    "id": "AlphaEarth64",
+    "label": "AlphaEarth 64",
+    "group": "Embeddings"
+   },
+   {
+    "id": "TESSERA128",
+    "label": "TESSERA 128",
+    "group": "Embeddings"
+   },
+   {
+    "id": "TESSERA_PCA32",
+    "label": "TESSERA PCA-32 (train-fold)",
+    "group": "Embeddings"
+   },
+   {
+    "id": "Environment_AlphaEarth105",
+    "label": "Environment + AlphaEarth (early)",
+    "group": "Fusion"
+   },
+   {
+    "id": "Environment_TESSERA",
+    "label": "Environment + TESSERA (early)",
+    "group": "Fusion"
+   },
+   {
+    "id": "Late_equal",
+    "label": "Environment / AlphaEarth late, equal score",
+    "group": "Fusion"
+   },
+   {
+    "id": "Nonlinear_late_fusion",
+    "label": "Nonlinear late fusion",
+    "group": "Fusion"
+   }
+  ],
+  "cols": [
+   [
+    "GLM",
+    "Logistic"
+   ],
+   [
+    "MaxNet",
+    "MaxNet"
+   ],
+   [
+    "RF",
+    "RF"
+   ],
+   [
+    "BRT",
+    "BRT"
+   ],
+   [
+    "MLP",
+    "MLP"
+   ]
+  ],
+  "planned": {
+   "BioClim19": {
+    "GLM": "P1",
+    "RF": "P1",
+    "BRT": "P1",
+    "MaxNet": "P1"
+   },
+   "Environment41": {
+    "GLM": "P1 · P2",
+    "RF": "P1",
+    "BRT": "P1",
+    "MaxNet": "P1"
+   },
+   "AlphaEarth64": {
+    "GLM": "P1 · P2",
+    "RF": "P1"
+   },
+   "Environment_AlphaEarth105": {
+    "GLM": "P1 · P2",
+    "RF": "P1"
+   },
+   "TESSERA128": {
+    "GLM": "P2"
+   },
+   "TESSERA_PCA32": {
+    "GLM": "P2"
+   },
+   "Environment_TESSERA": {
+    "GLM": "P2"
+   },
+   "Late_equal": {
+    "GLM": "P2"
+   }
+  }
+ },
+ "priorities": [
+  {
+   "id": "P0",
+   "title": "Recovery and provenance gate",
+   "state": "blocked",
+   "question": "Can the reported cohort be reproduced exactly?",
+   "items": [
+    "Recover the 1,601-site feature cohort, the 313-site Austrian cohort, NEON diagnostics, frozen split IDs and protocol hashes.",
+    "Reconcile AGES co-located traps (336 candidates vs 313 sites) against the frozen code.",
+    "Recover the formal GBIF download DOI; freeze new confirmatory external data before expanding algorithms."
+   ],
+   "blocker": "Frozen artifacts are on the original project drive and were not in the handoff."
+  },
+  {
+   "id": "P1",
+   "title": "Replicate the feature comparison",
+   "state": "planned",
+   "question": "Do the reported rankings hold under one locked protocol?",
+   "items": [
+    "Climate 19 and Environment 41 → regularised logistic, RF, BRT; AlphaEarth 64 → logistic, RF; Environment + AE → the same heads.",
+    "Add the two MaxNet configurations through the official R implementation (logistic regression is not MaxEnt).",
+    "Use original split IDs for direct reproduction; scores on new EPSG:6933 blocks are labelled a new analysis."
+   ],
+   "blocker": "Needs P0 feature tables."
+  },
+  {
+   "id": "P2",
+   "title": "Representation study",
+   "state": "planned",
+   "question": "Does representation learning, or a complementary modality, improve transfer?",
+   "items": [
+    "Environment 41, AlphaEarth 64, TESSERA v1.1 128-D, early fusion with each, equal-score late fusion, train-fold PCA-32 TESSERA control.",
+    "Fixed logistic head (C 0.1 / 1) on one shared complete cohort; equal-dimension and matched-capacity controls."
+   ],
+   "blocker": "TESSERA extraction needs Python 3.12 and an authorised environment."
+  },
+  {
+   "id": "P3",
+   "title": "Feature engineering and support ablations",
+   "state": "planned",
+   "question": "What do embeddings add beyond spectra, climate, human activity and coordinates?",
+   "items": [
+    "Radius point / 250 / 500 / 1,000 m; native vs 250 m working grid.",
+    "Raw Sentinel-2 / HLS quarterly statistics, seasonal dynamics, lagged weather; human-activity features removed or kept as bias covariates.",
+    "Coordinates only, coordinates + environment, SatCLIP; frozen Prithvi / SatMAE / CROMA / Clay with raw-input, metadata and random-init controls.",
+    "Training fractions 10 / 25 / 50 / 100%; single-source vs equal-N fusion."
+   ],
+   "blocker": "Earth Engine, CDS and Earthdata accounts; encoder environments."
+  },
+  {
+   "id": "P4",
+   "title": "Observation-aware regional study",
+   "state": "planned",
+   "question": "Can repeat surveys separate occupancy from detection?",
+   "items": [
+    "Single-season occupancy with effort, trap and weather for detection (scripts/occupancy.py).",
+    "Negative-binomial counts with a log-effort offset (scripts/count_model.py); sdmTMB for residual structure.",
+    "Eggs, adult captures and larval indices stay separate targets."
+   ],
+   "blocker": "NEON trap tables (HTTP 403 in the handoff session) and new survey data."
+  },
+  {
+   "id": "P5",
+   "title": "Disease branch",
+   "state": "planned",
+   "question": "Do habitat summaries help explain dengue counts once the vector question is locked?",
+   "items": [
+    "OpenDengue / WHO / PAHO by admin region and period; count model with a population offset and lagged weather.",
+    "Hold out regions and forecast future periods; never assign country cases to centroids."
+   ],
+   "blocker": "Waits for P1–P2; WHO and PAHO exports untested."
+  }
+ ],
+ "gaps": [
+  {
+   "title": "Project artifacts not recovered",
+   "items": [
+    "Frozen 1,601-site feature package, protocol.json, fold IDs, checkpoints and original execution code.",
+    "Formal GBIF frozen-download DOI (a free account is needed to request a new one).",
+    "Past performance on this site is report-derived until these are recovered."
+   ]
+  },
+  {
+   "title": "Downloads that failed or were not tested",
+   "items": [
+    "Dryad historical Aedes data: metadata 200, CSV route 403, API 401.",
+    "NEON mosquito trap tables: product metadata 200, sample month manifest 403.",
+    "WHO dashboard export (not tested), PAHO portal (fetch 403), VectorByte bulk export, current Mosquito Alert and GLOBE archives."
+   ]
+  },
+  {
+   "title": "Accounts and compute",
+   "items": [
+    "Earth Engine project, Copernicus CDS, Earthdata; encoder-specific environments.",
+    "No authentication, terms acceptance, large download or paid computation was run in the handoff."
+   ]
+  },
+  {
+   "title": "Independent evidence",
+   "items": [
+    "New tropical surveys with explicit trap effort and repeat detection are the main validation priority.",
+    "NEON and Austrian labels have been inspected and cannot be rebranded as blind tests.",
+    "The methods review is a structured search, not a PRISMA systematic review."
+   ]
+  }
+ ]
+}
