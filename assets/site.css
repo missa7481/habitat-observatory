@@ -530,6 +530,15 @@ table.matrix th:not(:first-child) { text-align: center; }
 .mc b { font-family: var(--num); font-weight: 500; font-size: 16px; color: #2C4A6E; font-variant-numeric: tabular-nums; }
 .mc.m-plan span, .mc.m-both span { color: var(--mid); font-weight: 600; }
 .mc.empty { color: rgba(27, 31, 39, .25); }
+.m-done { background: var(--ok-bg); border: 1px solid rgba(46, 107, 58, .4); }
+.mc.m-done b { color: var(--ok); }
+.mc.m-done span { color: var(--ok); font-family: var(--num); font-size: 11.5px; }
+.mc.m-done small { color: #3F5F86; font-size: 11px; }
+.mc.m-done.top { box-shadow: inset 0 0 0 2px var(--ok); }
+.bm-findings li { margin: 8px 0; }
+.bm-findings b { color: var(--ink); }
+table.bm-region td small { font-size: 11.5px; }
+.card-top .seg { font-weight: 400; }
 .check-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .check { background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--navy); border-radius: 6px; padding: 14px 16px; }
 .check b { display: block; font-family: var(--num); font-weight: 300; font-size: 28px; line-height: 1.1; color: var(--navy); }
@@ -541,6 +550,9 @@ table.matrix th:not(:first-child) { text-align: center; }
 .prio header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .prio .pid { font-family: var(--num); font-weight: 500; font-size: 22px; color: var(--gold-t); }
 .prio.blocked .pid { color: var(--bad); }
+.prio.done { border: 1px solid rgba(46, 107, 58, .4); border-left: 3px solid var(--ok); background: var(--card); }
+.prio.done .pid { color: var(--ok); }
+.prio.partial { border-style: solid; border-color: var(--rule); border-left: 3px solid var(--gold); background: var(--card); }
 .prio h3 { font-family: var(--serif); font-weight: 500; font-size: 18px; }
 .prio .q { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-2); line-height: 1.4; }
 .prio ul { margin: 0; padding-left: 16px; }

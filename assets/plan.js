@@ -4,15 +4,104 @@
 (() => {
 const HO = window.HO;
 const { byId, esc, f3 } = HO;
+const formatInt = v => Number(v || 0).toLocaleString('en-US');
+
+/* ------------------------------------------------------------------ new benchmark (18 Nov 2026) */
+const FS_LABEL = { climate19: 'Climate 19', environment41: 'Environment 41', alphaearth64: 'AlphaEarth 64', fusion105: 'Environment + AlphaEarth (early)', 'late_env41|ae64': 'Environment / AlphaEarth late, equal score', ae64_trainfold_pca16: 'AlphaEarth PCA-16 (train-fold)', 'env41+ae_pca16': 'Environment + AlphaEarth PCA-16' };
+const LR_LABEL = { logistic: 'Logistic', rf: 'RF', brt: 'BRT', maxent: 'MaxEnt', late_logistic: 'Logistic' };
+const GROUP_LABEL = { CLIM19: 'Climate 19 (WorldClim)', ERA5: 'ERA5-Land weather (7)', TERRAIN: 'Terrain (2)', LAND: 'Vegetation, land cover, LST, water (9)', HUMAN: 'Human footprint (4)', AE64: 'AlphaEarth 64' };
+
+function forest(el, rows, { lim, label, fmt = v => HO.sgn(v, 3) }) {
+  const W = 640, L = 250, R = 70, rowH = 30, T = 6, Hh = T + rows.length * rowH + 24;
+  const x = v => L + (Math.max(-lim, Math.min(lim, v)) + lim) / (2 * lim) * (W - L - R);
+  let s = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${esc(label)}">`;
+  [-lim, -lim / 2, 0, lim / 2, lim].forEach(v => { s += `<line class="axis" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${Hh - 20}"${v === 0 ? ' style="stroke:var(--ink-3)"' : ''}/><text x="${x(v)}" y="${Hh - 4}" text-anchor="middle" style="font-size:11px">${v === 0 ? '0' : HO.sgn(v, 2)}</text>`; });
+  rows.forEach((r, i) => {
+    const yc = T + i * rowH + rowH / 2, sig = r.lo > 0 || r.hi < 0;
+    const col = sig ? (r.d > 0 ? HO.css('--ok') : HO.css('--bad')) : HO.css('--ink-3');
+    s += `<text x="${L - 10}" y="${yc + 4}" text-anchor="end"${r.bold ? ' style="font-weight:700;fill:var(--ink)"' : ''}>${esc(r.label)}</text>`;
+    s += `<line x1="${x(r.lo)}" x2="${x(r.hi)}" y1="${yc}" y2="${yc}" stroke="${col}" stroke-width="2"/>`;
+    s += `<circle cx="${x(r.d)}" cy="${yc}" r="5" fill="${sig ? col : HO.css('--surface')}" stroke="${col}" stroke-width="2"/>`;
+    s += `<text class="val" x="${W - R + 8}" y="${yc + 4}">${fmt(r.d)}</text>`;
+    s += `<rect x="0" y="${yc - rowH / 2}" width="${W}" height="${rowH}" fill="transparent" data-tip="${esc(r.tip)}"/>`;
+  });
+  el.innerHTML = `${s}</svg>`;
+}
+
+function renderBenchmark(R) {
+  const N = R.benchmark; if (!N) return;
+  const D = N.designs, S = D.spatial, get = (d, id) => (D[d] && D[d].summary.find(r => r.experiment === id)) || null;
+  byId('bm-figs').innerHTML = N.figures.map(([v, l, d]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span><small>${esc(d)}</small></div>`).join('');
+  byId('bm-findings').innerHTML = N.findings.map(f => `<li><b>${esc(f.head)}</b> ${esc(f.body)}</li>`).join('');
+  byId('bm-caveats').innerHTML = N.caveats.map(t => `<li>${esc(t)}</li>`).join('');
+
+  // paired comparisons, spatial design
+  const drawPaired = learner => {
+    const rows = N.paired_spatial.filter(p => p.learner === learner).map(p => {
+      const r = S.paired.find(q => q.reference === p.reference && q.candidate === p.candidate);
+      return r && { label: p.label, d: r.delta_ap, lo: r.ci_low, hi: r.ci_high, bold: p.bold,
+        tip: `${p.label}: ΔAP ${HO.sgn(r.delta_ap, 3)} (95% ${HO.sgn(r.ci_low, 3)} to ${HO.sgn(r.ci_high, 3)}); candidate better in ${r.folds_candidate_better} of ${r.folds} folds; ${r.clusters} block clusters` };
+    }).filter(Boolean);
+    forest(byId('bm-paired'), rows, { lim: 0.2, label: 'Paired AP differences' });
+  };
+  // ablations
+  const drawAbl = learner => {
+    const rows = Object.keys(GROUP_LABEL).map(g => {
+      const r = S.paired.find(q => q.reference === `fusion105_${learner}` && q.candidate === `fusion_minus_${g}_${learner}`);
+      return r && { label: `− ${GROUP_LABEL[g]}`, d: r.delta_ap, lo: r.ci_low, hi: r.ci_high,
+        tip: `Removing ${GROUP_LABEL[g]} from the 105-feature fusion (${LR_LABEL[learner]}): ΔAP ${HO.sgn(r.delta_ap, 3)} (95% ${HO.sgn(r.ci_low, 3)} to ${HO.sgn(r.ci_high, 3)}); ${r.folds_candidate_better} of ${r.folds} folds improved` };
+    }).filter(Boolean);
+    forest(byId('bm-ablation'), rows, { lim: 0.1, label: 'Ablation AP differences' });
+  };
+  // transfer across designs (AUC)
+  const ARMS = [['spatial', '--s1', 'Spatial blocks (150 km)'], ['region', '--s2', 'Leave one region out (mean of 3)'], ['survey', '--s3', 'Austrian survey transfer (313 sites)']];
+  byId('bm-tr-legend').innerHTML = ARMS.map(([, c, l]) => `<span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="${HO.css(c)}"/></svg>${esc(l)}</span>`).join('');
+  const drawTransfer = learner => {
+    const fsets = ['climate19', 'environment41', 'alphaearth64', 'fusion105'];
+    const rows = fsets.map(fs => {
+      const id = `${fs}_${learner}`, v = {};
+      ARMS.forEach(([d]) => { const r = get(d, id); if (r) v[d] = r.auc; });
+      return { label: FS_LABEL[fs], v, id };
+    });
+    if (learner === 'logistic') rows.push({ label: 'Late, equal score', v: Object.fromEntries(ARMS.map(([d]) => [d, (get(d, 'late_env41_ae64_logistic') || {}).auc]).filter(([, x]) => x !== undefined)) });
+    const W = 640, L = 210, Rr = 24, rowH = 40, T = 8, Hh = T + rows.length * rowH + 24, lo = 0.5, hi = 1.0;
+    const x = v => L + (v - lo) / (hi - lo) * (W - L - Rr);
+    let s = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="AUC by holdout design">`;
+    [0.5, 0.6, 0.7, 0.8, 0.9, 1.0].forEach(v => { s += `<line class="axis" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${Hh - 22}"/><text x="${x(v)}" y="${Hh - 6}" text-anchor="middle" style="font-size:11px">${v.toFixed(1)}</text>`; });
+    rows.forEach((r, i) => {
+      const yc = T + i * rowH + rowH / 2;
+      s += `<line class="axis" x1="${L}" x2="${W - Rr}" y1="${yc}" y2="${yc}"/><text x="${L - 10}" y="${yc + 4}" text-anchor="end">${esc(r.label)}</text>`;
+      ARMS.forEach(([d, c, nm], j) => { const v = r.v[d]; if (v === undefined || v === null) return;
+        s += `<circle cx="${x(Math.max(lo, v))}" cy="${yc + (j - 1) * 4}" r="6" fill="${HO.css(c)}" stroke="${HO.css('--surface')}" stroke-width="2" data-tip="${esc(nm)} · ${esc(r.label)} · ${LR_LABEL[learner]}: AUC ${f3(v)}"/>`; });
+    });
+    byId('bm-transfer').innerHTML = `${s}</svg>`;
+  };
+  const seg = (id, draw, first) => { const g = byId(id); g.innerHTML = ['logistic', 'rf', 'brt', 'maxent'].filter(l => id !== 'bm-abl-seg' || l === 'logistic' || l === 'rf').map(l => `<button type="button" data-l="${l}" aria-pressed="${l === first}">${LR_LABEL[l]}</button>`).join('');
+    g.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); draw(b.dataset.l); }); draw(first); };
+  seg('bm-pair-seg', drawPaired, 'rf');
+  seg('bm-abl-seg', drawAbl, 'rf');
+  seg('bm-tr-seg', drawTransfer, 'rf');
+
+  // regions table
+  const regs = ['Americas', 'Europe', 'Asia_Pacific'], RL = { Americas: 'Americas', Europe: 'Europe', Asia_Pacific: 'Asia-Pacific' };
+  const rr = (id, reg) => D.region.by_region.find(r => r.experiment === id && r.fold === reg);
+  const ids = N.region_rows;
+  byId('bm-region').innerHTML = `<thead><tr><th>Features · learner</th>${regs.map(g => { const r = rr(ids[0][0], g); return `<th class="num">${RL[g]}<br><small class="muted">n ${r ? r.n : '—'} · prev ${r ? Math.round(r.prevalence * 100) + '%' : '—'}</small></th>`; }).join('')}</tr></thead><tbody>${
+    ids.map(([id, label]) => `<tr><td>${esc(label)}</td>${regs.map(g => { const r = rr(id, g); return `<td class="num">${r ? f3(r.auc) : '—'}<small class="muted"> · AP ${r ? f3(r.ap) : '—'}</small></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+  byId('bm-failed').innerHTML = N.not_run.map(([k, v]) => `<li><b>${esc(k)}</b> ${esc(v)}</li>`).join('');
+  byId('bm-repro').innerHTML = N.reproducibility.map(t => `<li>${esc(t)}</li>`).join('');
+}
 
 function render(B, R) {
+  renderBenchmark(R);
   renderStatusBoard(B, R);
   renderMatrix(B, R);
   renderReport(R);
   byId('check-grid').innerHTML = R.checks.map(c => `<article class="check"><b>${esc(c.value)}</b><span>${esc(c.label)}</span><p>${esc(c.detail)}</p></article>`).join('');
+  const PSTATE = { blocked: '<span class="ev ev-blocked">Blocked</span>', done: '<span class="ev ev-done">Run 18 Nov · new analysis</span>', partial: '<span class="ev ev-mixed">Partly resolved</span>', planned: '<span class="ev ev-plan">Planned</span>' };
   byId('prio-grid').innerHTML = R.priorities.map(p => `
-    <article class="prio${p.state === 'blocked' ? ' blocked' : ''}">
-      <header><span class="pid">${esc(p.id)}</span>${p.state === 'blocked' ? '<span class="ev ev-blocked">Blocked</span>' : '<span class="ev ev-plan">Planned</span>'}</header>
+    <article class="prio ${esc(p.state)}">
+      <header><span class="pid">${esc(p.id)}</span>${PSTATE[p.state] || PSTATE.planned}</header>
       <h3>${esc(p.title)}</h3><p class="q">${esc(p.question)}</p>
       <ul>${p.items.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
       <p class="blk"><b>Waits on:</b> ${esc(p.blocker)}</p>
@@ -25,15 +114,17 @@ function render(B, R) {
 
 function renderStatusBoard(B, R) {
   const fx = B.foundation.find(r => r.representation === 'AlphaEarth64' && r.learner === 'GLM');
+  const N = R.benchmark;
+  const nFits = N ? Object.values(N.designs).reduce((a, d) => a + d.fits_ok, 0) : 0;
   const cols = [
-    ['done', 'Completed runs', `${B.holdout.n_splits}`, 'holdout splits', 'Benchmarks run in the project code repository, published here as aggregate tables.',
-      ['HiCo-Fuse 2 vs random forest on 20 transfer splits', 'Nine models × nine holdout designs', 'Coherence, weighting, invariance, species pool, observation-aware SDM', `Research ledger of ${B.ledger.length} experiments`], ['#evidence', 'See the evidence']],
+    ['done', 'Completed runs', N ? formatInt(nFits) : `${B.holdout.n_splits}`, N ? 'new held-out fits, 18 Nov' : 'holdout splits', 'Benchmarks run in the project code repository, published here as aggregate tables.',
+      [...(N ? [`18 Nov: ${N.n_experiments} configurations on the recovered 1,601-site cohort, 4 holdout designs`] : []), 'HiCo-Fuse 2 vs random forest on 20 transfer splits', 'Nine models × nine holdout designs', `Research ledger of ${B.ledger.length} experiments`], [N ? '#benchmark' : '#evidence', N ? 'See the new benchmark' : 'See the evidence']],
     ['report', 'Report-derived', f3(fx.AP, 4), 'AlphaEarth + logistic, development AP', 'From the 6 November project report. Its frozen inputs were not recovered, so these are not reproduced and not new runs.',
       ['1,601-site representation and learner benchmark', 'NEON 2025 reused diagnostic', 'Twelve global 2024 maps and their coverage'], ['#report', 'Read the caveats']],
     ['check', 'Handoff checks', `${R.inventory.length}`, 'sources inventoried', 'Downloads, adapters and tests completed on 17 November 2026. Checks, not benchmarks.',
       ['AGES and OpenDengue downloads profiled', 'AGES site count does not match the report (336 vs 313)', '7 of 7 synthetic tests passed'], ['#checks', 'See the checks']],
-    ['plan', 'Planned', `${R.priorities.length}`, 'priorities, P0–P5', 'Designed experiments with no results yet. P0 recovery is blocked on the original project files.',
-      R.priorities.map(p => `${p.id} · ${p.title}`), ['#priorities', 'See the plan']],
+    ['plan', 'Planned', `${R.priorities.filter(p => p.state !== 'done').length}`, 'priorities still open', 'Next experiments, not yet run. Each names the data, accounts or environments it waits on.',
+      R.priorities.map(p => `${p.id} · ${p.title}${p.state === 'done' ? ' (run 18 Nov)' : p.state === 'partial' ? ' (partly resolved)' : ''}`), ['#priorities', 'See the plan']],
   ];
   const tag = { done: '<span class="ev ev-done">Completed runs</span>', report: '<span class="ev ev-report">Report-derived</span>', check: '<span class="ev ev-check">Handoff check</span>', plan: '<span class="ev ev-plan">Planned</span>' };
   byId('status-board-grid').innerHTML = cols.map(([k, t, n, nl, d, items, [href, more]]) => `
@@ -44,12 +135,22 @@ function renderStatusBoard(B, R) {
 function renderMatrix(B, R) {
   const M = R.matrix, rep = (r, c) => B.foundation.find(x => x.representation === r && x.learner === c);
   let group = '', html = `<thead><tr><th>Representation</th>${M.cols.map(([, l]) => `<th>${esc(l)}</th>`).join('')}</tr></thead><tbody>`;
+  const ROWMAP = { BioClim19: 'climate19', Environment41: 'environment41', AlphaEarth64: 'alphaearth64', Environment_AlphaEarth105: 'fusion105' };
+  const COLMAP = { GLM: 'logistic', MaxNet: 'maxent', RF: 'rf', BRT: 'brt' };
+  const S = R.benchmark && R.benchmark.designs.spatial;
+  const done = (rid, c) => {
+    if (!S) return null;
+    const id = rid === 'Late_equal' ? (c === 'GLM' ? 'late_env41_ae64_logistic' : null) : (ROWMAP[rid] && COLMAP[c] ? `${ROWMAP[rid]}_${COLMAP[c]}` : null);
+    return id ? S.summary.find(x => x.experiment === id) : null;
+  };
+  const best = S ? Math.max(...S.summary.filter(x => x.family === 'main' || x.family === 'fusion').map(x => x.ap)) : 0;
   M.rows.forEach(row => {
     if (row.group !== group) { group = row.group; html += `<tr><th class="grp" colspan="${M.cols.length + 1}">${esc(group)}</th></tr>`; }
     html += `<tr><td>${esc(row.label)}</td>`;
     M.cols.forEach(([c, cl]) => {
-      const r = rep(row.id, c), p = (M.planned[row.id] || {})[c];
-      if (r && p) html += `<td><div class="mc m-both" data-tip="${esc(`${row.label} · ${cl}: report AP ${f3(r.AP)} (fold SD ${f3(r.AP_sd)}); re-run planned in ${p}`)}"><b>${f3(r.AP, 3)}</b><span>re-run ${esc(p)}</span></div></td>`;
+      const r = rep(row.id, c), p = (M.planned[row.id] || {})[c], n = done(row.id, c);
+      if (n) html += `<td><div class="mc m-done${n.ap >= best - 0.02 ? ' top' : ''}" data-tip="${esc(`${row.label} · ${cl}: new run AP ${f3(n.ap)} ± ${f3(n.ap_sd)} (fold SD, 6 folds), AUC ${f3(n.auc)}${r ? `; report AP ${f3(r.AP)}, not reproduced` : '; not in the report'}`)}"><b>${f3(n.ap, 3)}</b><span>± ${f3(n.ap_sd, 3)}</span>${r ? `<small>report ${f3(r.AP, 3)}</small>` : ''}</div></td>`;
+      else if (r && p) html += `<td><div class="mc m-both" data-tip="${esc(`${row.label} · ${cl}: report AP ${f3(r.AP)} (fold SD ${f3(r.AP_sd)}); re-run planned in ${p}`)}"><b>${f3(r.AP, 3)}</b><span>re-run ${esc(p)}</span></div></td>`;
       else if (r) html += `<td><div class="mc m-rep" data-tip="${esc(`${row.label} · ${cl}: report AP ${f3(r.AP)} (fold SD ${f3(r.AP_sd)})`)}"><b>${f3(r.AP, 3)}</b>report</div></td>`;
       else if (p) html += `<td><div class="mc m-plan" data-tip="${esc(`${row.label} · ${cl}: planned in ${p}, no result yet`)}"><span>${esc(p)}</span>planned</div></td>`;
       else html += '<td><div class="mc empty">—</div></td>';

@@ -235,7 +235,7 @@
           <article class="card status"><span class="chip mixed">Not established</span><ul class="clean"><li>Calibrated probabilities in a held-out world region: log-loss is still above the forest's there.</li><li>A gain from newer encoders or sparse codes over plain AlphaEarth.</li><li>Occurrence probability: maps are relative rankings.</li></ul></article>
           <article class="card status"><span class="chip proposed">Next</span><ul class="clean"><li>Species-pool data for <i>Culex</i>, <i>Anopheles</i> and other genera (in progress).</li><li>Separate habitat from observation and detection with survey data.</li><li>A locked 2025 validation cohort before any further claim.</li></ul></article>
         </div>
-        <p class="note plan-link">Every planned experiment, report-derived score and access gap is listed in the <a href="#plan">research plan</a>.</p>
+        <p class="note plan-link">The 18 November benchmark of environment, AlphaEarth and fusion across four learners, plus every report-derived score, planned experiment and access gap, is on the <a href="#plan">research plan</a> page.</p>
       </section>
     </div>
   </div>
@@ -471,33 +471,85 @@
   <div class="page" id="page-plan" hidden>
     <div class="wrap">
       <div class="page-head">
-        <span class="kicker"><span class="n">Plan</span><span class="chap">Research handoff · 17 November 2026</span></span>
-        <h1>What is finished, what is reported, and what is still to run</h1>
-        <p class="lede">Every number on this site has one of four statuses. Completed runs come from the project code repository. Report-derived scores come from the 6 November project report and have not been reproduced, because the frozen feature tables and split IDs were not recovered. Handoff checks are small verifications completed on 17 November. Planned experiments have no results yet.</p>
-        <p class="jump"><a href="#status-board">Status</a><a href="#matrix">Experiment matrix</a><a href="#report">Report-derived</a><a href="#checks">Handoff checks</a><a href="#priorities">Planned</a><a href="#gaps">Blocked</a></p>
+        <span class="kicker"><span class="n">Plan</span><span class="chap">Research handoff · 17 November 2026 · benchmark run 18 November 2026</span></span>
+        <h1>What the new benchmark shows, what is reported, and what is still to run</h1>
+        <p class="lede" id="plan-lede">Every number on this site has one of four statuses. Completed runs come from the project code repository, including the 18 November benchmark on the recovered 1,601-site cohort. Report-derived scores come from the 6 November project report and have not been reproduced on its original split IDs. Handoff checks are small verifications completed on 17 November. Planned experiments have no results yet, and each one names what it waits on.</p>
+        <p class="jump"><a href="#benchmark">New benchmark</a><a href="#status-board">Status</a><a href="#matrix">Experiment matrix</a><a href="#report">Report-derived</a><a href="#checks">Handoff checks</a><a href="#priorities">Planned</a><a href="#gaps">Blocked</a></p>
       </div>
 
+      <section class="section" id="benchmark">
+        <div class="section-head">
+          <span class="kicker"><span class="n">01</span><span class="chap">New benchmark · 18 November 2026</span><span class="ev ev-done">Completed runs</span></span>
+          <h2>Environment, embeddings and their fusion, tested on one locked protocol</h2>
+          <p>Presence vs other-mosquito background for <i>Ae. albopictus</i>, recovered 1,601-site 2024 cohort, every model fitted under the same nested, buffered spatial folds. A new analysis on new EPSG:6933 blocks, not a reproduction of the report's split IDs.</p>
+        </div>
+        <div class="figs-row" id="bm-figs"></div>
+        <div class="card">
+          <div class="card-top"><span>What the runs show</span><span class="ev ev-done">Completed runs</span></div>
+          <ul class="clean bm-findings" id="bm-findings"></ul>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="card-top"><span>Paired differences · spatial blocks</span><div class="seg" id="bm-pair-seg"></div></div>
+            <p class="note" style="margin-top:0">ΔAP of the second model minus the first on the same sites, with a 95% paired block-cluster bootstrap interval (1,000 replicates, mean of seeds 42 and 202). Filled dots: interval excludes zero.</p>
+            <div class="chart" id="bm-paired"></div>
+          </div>
+          <div class="card">
+            <div class="card-top"><span>Ablation · remove one group from the 105-feature fusion</span><div class="seg" id="bm-abl-seg"></div></div>
+            <p class="note" style="margin-top:0">ΔAP after removing the group (negative = the group was helping). Same folds, same tuning grid, same sites.</p>
+            <div class="chart" id="bm-ablation"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>Transfer · AUC by holdout design</span><div class="seg" id="bm-tr-seg"></div></div>
+          <div class="legend" id="bm-tr-legend"></div>
+          <div class="chart" id="bm-transfer"></div>
+          <p class="note">AUC is used here because prevalence differs between designs (46% in the cohort, 36% in the Austrian survey), so AP values cannot be compared across them. The survey endpoint is egg detection vs non-detection over sampled 2024 visits; models were trained without any Austrian rows.</p>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="card-top"><span>Leave one region out · AUC and AP</span><span class="ev ev-done">Completed runs</span></div>
+            <div class="table-wrap"><table class="bm-region" id="bm-region"></table></div>
+            <p class="note">Each region is held out in turn and predicted by models trained on the rest (20 km buffer). Africa and West Asia (18 sites) stay in training only.</p>
+          </div>
+          <div class="card">
+            <div class="card-top"><span>Not run, skipped or blocked</span><span class="ev ev-blocked">Blocked</span></div>
+            <ul class="clean small-list" id="bm-failed"></ul>
+          </div>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="card-top"><span>How to read these numbers</span></div>
+            <ul class="clean small-list" id="bm-caveats"></ul>
+          </div>
+          <div class="card">
+            <div class="card-top"><span>Reproducibility</span></div>
+            <ul class="clean small-list" id="bm-repro"></ul>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="status-board">
-        <div class="section-head"><span class="kicker"><span class="n">01</span><span class="chap">Evidence status</span></span><h2>Four kinds of claim, kept apart</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">02</span><span class="chap">Evidence status</span></span><h2>Four kinds of claim, kept apart</h2></div>
         <div class="status-board" id="status-board-grid"></div>
       </section>
 
       <section class="section" id="matrix">
         <div class="section-head">
-          <span class="kicker"><span class="n">02</span><span class="chap">Experiment matrix</span><span class="ev ev-mixed">Report-derived + planned</span></span>
-          <h2>Representations × learners: reported cells and planned cells</h2>
-          <p>Presence vs other-mosquito background for <i>Ae. albopictus</i>, 1,601 sites. Filled cells show the report's development AP (mean over spatial folds). Outlined cells are planned re-runs (P1) or new representation tests (P2). Empty cells are not in the plan.</p>
+          <span class="kicker"><span class="n">03</span><span class="chap">Experiment matrix</span><span class="ev ev-mixed">Completed + report-derived + planned</span></span>
+          <h2>Representations × learners: new runs, reported values and what is still planned</h2>
+          <p>Presence vs other-mosquito background for <i>Ae. albopictus</i>, 1,601 sites. Green cells are the 18 November runs: mean AP over 6 held-out spatial folds ± fold SD, with the report's value beneath for reference. Outlined cells are still planned. Empty cells are not in the plan.</p>
         </div>
         <div class="card">
-          <div class="matrix-legend"><span><i class="m-rep"></i>Report-derived AP · not reproduced</span><span><i class="m-plan"></i>Planned · no result yet</span><span><i class="m-both"></i>Reported, re-run planned</span></div>
+          <div class="matrix-legend"><span><i class="m-done"></i>New run, 18 Nov · AP ± fold SD</span><span><i class="m-done" style="box-shadow:inset 0 0 0 2px var(--ok)"></i>Within 0.02 AP of the best</span><span><i class="m-rep"></i>Report-derived only</span><span><i class="m-plan"></i>Planned · no result yet</span></div>
           <div class="table-wrap"><table class="matrix" id="matrix-table"></table></div>
-          <p class="note">AP ranks presences above background under this sampling design; 0.81 is not 81% accuracy. Top models are near-ties. P1 re-runs on new EPSG:6933 blocks will be a new analysis unless the original split IDs are recovered.</p>
+          <p class="note">AP ranks presences above background under this sampling design (prevalence 46%); 0.81 is not 81% accuracy. New and report values use different spatial blocks and a pre-amendment feature snapshot, so their differences are not a reproduction test. MaxEnt here is the elapid Python implementation, not R maxnet.</p>
         </div>
       </section>
 
       <section class="section" id="report">
         <div class="section-head">
-          <span class="kicker"><span class="n">03</span><span class="chap">Report-derived</span><span class="ev ev-report">Report-derived · not reproduced</span></span>
+          <span class="kicker"><span class="n">04</span><span class="chap">Report-derived</span><span class="ev ev-report">Report-derived · not reproduced</span></span>
           <h2>What the 6 November report says, with its denominators</h2>
           <p id="report-caveat"></p>
         </div>
@@ -517,7 +569,7 @@
 
       <section class="section" id="checks">
         <div class="section-head">
-          <span class="kicker"><span class="n">04</span><span class="chap">Handoff checks</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
+          <span class="kicker"><span class="n">05</span><span class="chap">Handoff checks</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
           <h2>Small checks completed on 17 November</h2>
           <p>Source downloads, adapters and synthetic tests. None of them is a new benchmark result.</p>
         </div>
@@ -526,7 +578,7 @@
 
       <section class="section" id="priorities">
         <div class="section-head">
-          <span class="kicker"><span class="n">05</span><span class="chap">Planned</span><span class="ev ev-plan">Planned · no results</span></span>
+          <span class="kicker"><span class="n">06</span><span class="chap">Planned</span><span class="ev ev-plan">Planned · no results</span></span>
           <h2>Six priorities, in order</h2>
           <p>Each one changes a single axis and has to pass the recovery gate (P0) before it can claim a reproduction.</p>
         </div>
@@ -535,7 +587,7 @@
 
       <section class="section" id="gaps">
         <div class="section-head">
-          <span class="kicker"><span class="n">06</span><span class="chap">Blocked</span><span class="ev ev-blocked">Blocked</span></span>
+          <span class="kicker"><span class="n">07</span><span class="chap">Blocked</span><span class="ev ev-blocked">Blocked</span></span>
           <h2>Access gaps and what they block</h2>
         </div>
         <div class="gap-grid" id="gap-grid"></div>
@@ -569,10 +621,10 @@
     </ul>
     <h3>Four kinds of evidence</h3>
     <table>
-      <tr><td><span class="ev ev-done">Completed runs</span></td><td>Benchmarks run in the project code repository; aggregate tables only.</td></tr>
+      <tr><td><span class="ev ev-done">Completed runs</span></td><td>Benchmarks run in the project code repository, including the 18 November 2026 benchmark; aggregate tables only.</td></tr>
       <tr><td><span class="ev ev-report">Report-derived</span></td><td>Scores from the 6 November project report, not reproduced since.</td></tr>
       <tr><td><span class="ev ev-check">Handoff check</span></td><td>Downloads, adapters and tests completed on 17 November 2026.</td></tr>
-      <tr><td><span class="ev ev-plan">Planned</span></td><td>Designed experiments with no results yet; some are blocked on access.</td></tr>
+      <tr><td><span class="ev ev-plan">Planned</span></td><td>Next experiments, not yet run. Each one names what it waits on (data access, accounts or encoder environments).</td></tr>
     </table>
     <h3>Data policy</h3>
     <p>No raw occurrence or surveillance records, site coordinates, per-site or per-cell predictions, or credentials are published. Original datasets keep their licences. Larger research files are kept in the project Drive.</p>
