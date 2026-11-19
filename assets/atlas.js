@@ -440,11 +440,11 @@ function chapters() {
       },
       enter: () => { setView(WORLD); setLabels(regionLabels()); } },
     { id: 'next', chap: 'What comes next', title: 'What is finished, and what is still to run',
-      body: 'Results on this site carry their status. The 18 November benchmark re-ran the 1,601-site representation comparison on one locked protocol: AlphaEarth helps a linear model a lot, a random forest little, and shows no demonstrated gain on independent Austrian survey data. Remaining experiments are planned and name what they wait on.',
+      body: 'Results on this site carry their status. The report’s benchmark is now reproduced on its own folds. Satellite embeddings (AlphaEarth or TESSERA, interchangeably) rank 2024 held-out blocks best, but across years and new monitoring networks climate-driven tree models transfer more reliably. Remaining experiments are planned and name what they wait on.',
       ctrl: () => `<div class="lists3">
-          <div class="l-done"><b>${EV.done}</b><span>18 Nov benchmark: environment, AlphaEarth and fusion × logistic, RF, BRT and MaxEnt on 1,601 sites, with region and survey transfer tests. HiCo-Fuse 2 on 20 transfer splits and a ${B.ledger.length}-entry research ledger.</span></div>
-          <div class="l-rep"><b>${EV.report}</b><span>The 6 November report's own scores (AlphaEarth + logistic AP ${f3(B.foundation.find(r => r.representation === 'AlphaEarth64' && r.learner === 'GLM').AP, 2)}; the new run gives ${HO.R && HO.R.benchmark ? f3(HO.R.benchmark.designs.spatial.summary.find(r => r.experiment === 'alphaearth64_logistic').ap, 2) : '—'} on new folds), MaxNet, MLP and the NEON 2025 diagnostic.</span></div>
-          <div class="l-plan"><b>${EV.plan}</b><span>Exact reproduction on frozen split IDs → P2 TESSERA → P3 feature ablations → P4 occupancy–detection → P5 dengue branch.</span></div>
+          <div class="l-done"><b>${EV.done}</b><span>18–19 Nov: exact-fold reproduction, TESSERA vs AlphaEarth, MLPs, region, survey and 2025 holdouts on the 1,601-site cohort. HiCo-Fuse 2 on 20 transfer splits and a ${B.ledger.length}-entry research ledger.</span></div>
+          <div class="l-rep"><b>${EV.report}</b><span>The 6 November report (AlphaEarth + logistic AP ${f3(B.foundation.find(r => r.representation === 'AlphaEarth64' && r.learner === 'GLM').AP, 2)}): its benchmark and NEON diagnostic are now reproduced exactly; its global-map coverage figures are not re-run.</span></div>
+          <div class="l-plan"><b>${EV.plan}</b><span>P3 feature-engineering ablations → P4 occupancy–detection → P5 dengue branch. Reproduction, TESSERA, MLP and the 2025 holdout were run on 19 November.</span></div>
         </div>
         <div class="row" style="margin-top:14px"><a class="btn primary" href="#plan">Open the research plan ${arrow}</a><a class="btn quiet" href="#explore">Explore the maps</a></div>`,
       enter: () => { setLayer('albopictus'); setView(WORLD); setLabels(regionLabels()); } },

@@ -92,8 +92,46 @@ function renderBenchmark(R) {
   byId('bm-repro').innerHTML = N.reproducibility.map(t => `<li>${esc(t)}</li>`).join('');
 }
 
+/* ------------------------------------------------------------------ 19 Nov: reproduction, MLP, TESSERA, 2025 */
+const FACT = { BioClim19: 'Climate 19', Environment41: 'Environment 41', AlphaEarth64: 'AlphaEarth 64', Environment_AlphaEarth105: 'Env + AlphaEarth', Nonlinear_late_fusion: 'Nonlinear late fusion', TESSERA128: 'TESSERA 128', Environment_TESSERA169: 'Env + TESSERA', TESSERA_PCA32: 'TESSERA PCA-32' };
+const LRN = { GLM: 'logistic', RF: 'RF', BRT: 'BRT', MaxNet: 'MaxNet', MaxEnt: 'MaxEnt (elapid)', MLP: 'MLP' };
+const ARM = id => { const [f, l] = id.split('__'); return `${FACT[f] || f.replace(/_/g, ' ')} · ${LRN[l] || l}`; };
+
+function renderExtended(R) {
+  const N = R.benchmark, X = N && N.extended; if (!X) return;
+  const I = N.extended_text;
+  byId('rx-figs').innerHTML = I.figures.map(([v, l, d]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span><small>${esc(d)}</small></div>`).join('');
+  byId('rx-findings').innerHTML = I.findings.map(f => `<li><b>${esc(f.head)}</b> ${esc(f.body)}</li>`).join('');
+  const ver = (f, l) => X.reproduction.verified.find(r => r.factor === f && r.learner === l);
+  byId('rx-repro').innerHTML = `<thead><tr><th>Features · learner</th><th class="num">Report AP</th><th class="num">Verified</th><th class="num">Refit</th><th class="num">Max fold Δ</th></tr></thead><tbody>${
+    X.reproduction.verified.map(v => { const b = X.reproduction.refit.find(r => r.factor === v.factor && r.learner === v.learner);
+      return `<tr><td>${esc(ARM(`${v.factor}__${v.learner}`))}</td><td class="num">${f3(b ? b.AP_original : v.AP, 4)}</td><td class="num">${f3(v.AP, 4)}</td><td class="num">${b ? f3(b.AP_refit, 4) : '<span class="muted">R only</span>'}</td><td class="num">${b ? f3(b.max_abs_fold_diff, 3) : '—'}</td></tr>`; }).join('')}</tbody>`;
+  byId('rx-mlp').innerHTML = `<thead><tr><th>Representation</th><th class="num">Report AP</th><th class="num">Seed mean</th><th class="num">Seed range</th></tr></thead><tbody>${
+    X.mlp.map(m => `<tr><td>${esc(FACT[m.representation] || m.representation)}</td><td class="num">${f3(m.AP_original, 4)}</td><td class="num">${f3(m.AP_seed_mean, 4)}</td><td class="num">${f3(m.AP_seed_min, 3)}–${f3(m.AP_seed_max, 3)}</td></tr>`).join('')}</tbody>`;
+  const p2rows = X.p2.paired.map(p => ({ label: `${ARM(p.reference)} → ${ARM(p.candidate).split(' · ')[0]}`, d: p.delta_ap, lo: p.ci_low, hi: p.ci_high,
+    bold: /TESSERA128__GLM$/.test(p.candidate) && /AlphaEarth64/.test(p.reference),
+    tip: `${ARM(p.reference)} → ${ARM(p.candidate)}: ΔAP ${HO.sgn(p.delta_ap, 3)} (95% ${HO.sgn(p.ci_low, 3)} to ${HO.sgn(p.ci_high, 3)}); better in ${p.folds_candidate_better} of 6 folds` }));
+  forest(byId('rx-p2'), p2rows, { lim: 0.2, label: 'TESSERA paired differences' });
+  const TESTS = [['NEON2025|all_primary', 'NEON 2025'], ['AGES2025|without_AGES', 'Austria 2025, no Austrian training rows'], ['AGES2025|all_primary', 'Austria 2025, same traps’ 2024 rows in training']];
+  const g = byId('rx-tr-seg');
+  g.innerHTML = TESTS.map(([k, l], i) => `<button type="button" data-k="${k}" aria-pressed="${i === 0}">${esc(l)}</button>`).join('');
+  const draw = k => {
+    const [test, train] = k.split('|');
+    const rows = X.transfer2025.metrics.filter(r => r.test === test && r.train === train).sort((a, b) => b.AP - a.AP);
+    const best = rows.length ? rows[0].AP : 0, n = rows[0] || {};
+    byId('rx-transfer').innerHTML = `<thead><tr><th>Features · learner</th><th class="num">AP</th><th class="num">AUC</th></tr></thead><tbody>${
+      rows.map(r => `<tr${r.AP === best ? ' class="hl"' : ''}><td>${esc(ARM(r.model.replace('__MaxNet', '__MaxEnt')))}</td><td class="num">${f3(r.AP)}</td><td class="num">${f3(r.AUC)}</td></tr>`).join('')}</tbody>`;
+    const pr = X.transfer2025.paired.filter(p => p.test === test && p.train === train);
+    byId('rx-transfer-note').textContent = `${n.n} sites, ${n.positives} detected (prevalence ${Math.round(n.positives / n.n * 100)}%). ` + I.transfer_notes[k] + ' Paired ΔAP: ' +
+      pr.map(p => `${ARM(p.candidate)} vs ${ARM(p.reference)} ${HO.sgn(p.delta_ap, 3)} (${HO.sgn(p.ci_low, 2)} to ${HO.sgn(p.ci_high, 2)})`).join('; ') + '.';
+  };
+  g.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); draw(b.dataset.k); });
+  draw(TESTS[0][0]);
+}
+
 function render(B, R) {
   renderBenchmark(R);
+  renderExtended(R);
   renderStatusBoard(B, R);
   renderMatrix(B, R);
   renderReport(R);
@@ -144,12 +182,19 @@ function renderMatrix(B, R) {
     return id ? S.summary.find(x => x.experiment === id) : null;
   };
   const best = S ? Math.max(...S.summary.filter(x => x.family === 'main' || x.family === 'fusion').map(x => x.ap)) : 0;
+  const X = R.benchmark && R.benchmark.extended;
+  const cell = (rid, c) => X && X.matrix_cells.find(x => x.row === rid && x.col === c);
+  const xbest = X ? Math.max(...X.matrix_cells.map(x => x.ap)) : 0;
+  const KIND = { refit: 'refit on frozen folds', verified: 'original R predictions recomputed (not refit)', seeds: 'mean of 10 seeds', new: 'new experiment, frozen folds' };
   M.rows.forEach(row => {
     if (row.group !== group) { group = row.group; html += `<tr><th class="grp" colspan="${M.cols.length + 1}">${esc(group)}</th></tr>`; }
     html += `<tr><td>${esc(row.label)}</td>`;
     M.cols.forEach(([c, cl]) => {
-      const r = rep(row.id, c), p = (M.planned[row.id] || {})[c], n = done(row.id, c);
-      if (n) html += `<td><div class="mc m-done${n.ap >= best - 0.02 ? ' top' : ''}" data-tip="${esc(`${row.label} · ${cl}: new run AP ${f3(n.ap)} ± ${f3(n.ap_sd)} (fold SD, 6 folds), AUC ${f3(n.auc)}${r ? `; report AP ${f3(r.AP)}, not reproduced` : '; not in the report'}`)}"><b>${f3(n.ap, 3)}</b><span>± ${f3(n.ap_sd, 3)}</span>${r ? `<small>report ${f3(r.AP, 3)}</small>` : ''}</div></td>`;
+      const r = rep(row.id, c), p = (M.planned[row.id] || {})[c], n = X ? null : done(row.id, c), x = cell(row.id, c);
+      if (x) {
+        const spread = x.kind === 'seeds' ? `${f3(x.lo, 3)}–${f3(x.hi, 3)}` : `± ${f3(x.ap_sd, 3)}`;
+        html += `<td><div class="mc m-done${x.ap >= xbest - 0.02 ? ' top' : ''}" data-tip="${esc(`${row.label} · ${cl}: AP ${f3(x.ap)} (${spread}), ${KIND[x.kind]}${x.report !== null && x.report !== undefined ? `; report ${f3(x.report)}` : '; not in the report'}`)}"><b>${f3(x.ap, 3)}</b><span>${spread}</span>${x.report !== null && x.report !== undefined ? `<small>${x.kind === 'verified' ? 'verified' : `report ${f3(x.report, 3)}`}</small>` : '<small>new</small>'}</div></td>`;
+      } else if (n) html += `<td><div class="mc m-done${n.ap >= best - 0.02 ? ' top' : ''}" data-tip="${esc(`${row.label} · ${cl}: new run AP ${f3(n.ap)} ± ${f3(n.ap_sd)} (fold SD, 6 folds), AUC ${f3(n.auc)}${r ? `; report AP ${f3(r.AP)}, not reproduced` : '; not in the report'}`)}"><b>${f3(n.ap, 3)}</b><span>± ${f3(n.ap_sd, 3)}</span>${r ? `<small>report ${f3(r.AP, 3)}</small>` : ''}</div></td>`;
       else if (r && p) html += `<td><div class="mc m-both" data-tip="${esc(`${row.label} · ${cl}: report AP ${f3(r.AP)} (fold SD ${f3(r.AP_sd)}); re-run planned in ${p}`)}"><b>${f3(r.AP, 3)}</b><span>re-run ${esc(p)}</span></div></td>`;
       else if (r) html += `<td><div class="mc m-rep" data-tip="${esc(`${row.label} · ${cl}: report AP ${f3(r.AP)} (fold SD ${f3(r.AP_sd)})`)}"><b>${f3(r.AP, 3)}</b>report</div></td>`;
       else if (p) html += `<td><div class="mc m-plan" data-tip="${esc(`${row.label} · ${cl}: planned in ${p}, no result yet`)}"><span>${esc(p)}</span>planned</div></td>`;

@@ -1,6 +1,6 @@
 """Merge the 18 November 2026 benchmark into data/research_handoff.json.
 
-Usage:  python tools/build_benchmark_data.py /path/to/handoff/runs/matrix_v1/summary
+Usage:  python tools/build_benchmark_data.py /path/to/handoff/runs/matrix_v1/summary [/path/to/handoff/runs/extended_summary.json]
 
 Reads site_benchmark.json (aggregate fold metrics and paired comparisons written by
 handoff/scripts/summarize_matrix.py) and interpretation.json (findings, caveats and
@@ -31,6 +31,9 @@ bench = json.loads((SUMMARY / "site_benchmark.json").read_text())
 interp = json.loads((SUMMARY / "interpretation.json").read_text())
 bench.update({k: interp[k] for k in ["figures", "findings", "caveats", "paired_spatial", "region_rows", "not_run", "reproducibility"]})
 bench["n_experiments"] = len(bench["designs"]["spatial"]["summary"])
+if len(sys.argv) > 2:
+    bench["extended"] = json.loads(Path(sys.argv[2]).read_text())
+    bench["extended_text"] = interp["extended_text"]
 check(bench)
 
 data = json.loads(OUT.read_text())
@@ -39,6 +42,8 @@ for p in data["priorities"]:
     upd = interp["priorities"].get(p["id"])
     if upd:
         p.update(upd)
+if interp.get("report_caveat"):
+    data["report"]["caveat"] = interp["report_caveat"]
 data["checks"] = interp.get("checks_prepend", []) + data["checks"]
 data["generated"] = bench["generated"]
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
