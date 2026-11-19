@@ -45,6 +45,6 @@ for p in data["priorities"]:
 if interp.get("report_caveat"):
     data["report"]["caveat"] = interp["report_caveat"]
 data["checks"] = interp.get("checks_prepend", []) + data["checks"]
-data["generated"] = bench["generated"]
+data["generated"] = bench.get("extended", {}).get("generated", bench["generated"])
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 print(f"wrote {OUT} ({OUT.stat().st_size:,} bytes); designs: {', '.join(bench['designs'])}")
