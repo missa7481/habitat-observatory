@@ -17,7 +17,10 @@ from scipy.stats import rankdata
 RAMP = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b']
 CMAP = LinearSegmentedColormap.from_list('blue', RAMP)
 MAPS = {'ae2024_AlphaEarth64__GLM': 'map_ae_glm.png', 'clim2024_BioClim19__RF': 'map_clim_rf.png',
-        'clim2024_BioClim19__BRT': 'map_clim_brt.png', 'ae2024_AlphaEarth64__RF': 'map_ae_rf.png'}
+        'clim2024_BioClim19__BRT': 'map_clim_brt.png', 'ae2024_AlphaEarth64__RF': 'map_ae_rf.png',
+        # the project's original post-amendment surfaces (deployment tiles recovered so far: north of ~6 S)
+        'orig2024_Environment41__RF': 'map_orig_env_rf.png', 'orig2024_Environment41__MaxNet': 'map_orig_env_maxnet.png',
+        'orig2024_Environment_AlphaEarth105__GLM': 'map_orig_fusion_glm.png', 'orig2024_Environment_AlphaEarth105__RF': 'map_orig_fusion_rf.png'}
 
 
 def main(src):
@@ -26,7 +29,8 @@ def main(src):
     for stem, name in MAPS.items():
         with rasterio.open(Path(src)/f'{stem}.tif') as r:
             a = r.read(1).astype(np.float64)
-        a[a < 0] = np.nan
+        if 'MaxNet' not in stem:              # MaxNet keeps its raw (negative) link scale; NaN is its nodata
+            a[a < 0] = np.nan
         h, w = a.shape[0] // 5, a.shape[1] // 5
         with np.errstate(all='ignore'):
             b = np.nanmean(a[:h * 5, :w * 5].reshape(h, 5, w, 5), axis=(1, 3))

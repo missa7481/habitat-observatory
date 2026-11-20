@@ -174,6 +174,33 @@ function renderThemes(R) {
     [...new Set(nl.map(r => r.habitat))].map(s => `<tr><td>${esc(ARM(s))}</td>${[1, 5].map(k => { const r = nl.find(x => x.min_km === k && x.habitat === s); return `<td class="num">AUC ${f3(r.AUC)} <small class="muted">(${f3(r.AUC_lo, 2)}–${f3(r.AUC_hi, 2)}) · AP ${f3(r.AP)}</small></td>`; }).join('')}</tr>`).join('')}</tbody>`;
   byId('th-new-note').textContent = I.notes.new_locations;
 
+  // P4 on NEON, original maps, Kraemer check
+  const HL = h => { const [k, m] = h.split(':'); return `${esc(ARM(m))} <small class="muted">${k === 'orig' ? 'original map' : 'refit'}</small>`; };
+  const ci = (v, lo, hi, d = 3) => `${f3(v, d)} <small class="muted">(${f3(lo, 2)}–${f3(hi, 2)})</small>`;
+  const NN = X.p4_neon;
+  if (NN && I.neon_rows) {
+    const n0 = NN.occupancy.find(o => o.habitat === 'null');
+    const ho = (h, d) => (NN.heldout.find(x => x.habitat === h && x.design === d) || {}).delta_ll_vs_null;
+    const dc = (h, sc) => NN.discrimination.find(x => x.habitat === h && x.unit === 'plot_ever_2017_2025' && x.scope === sc);
+    const a0 = dc(I.neon_rows[0], 'all_sites'), w0 = dc(I.neon_rows[0], 'sites_with_detections');
+    byId('th-neon').innerHTML = `<thead><tr><th>Habitat score</th><th class="num">β on ψ (95% CI)</th><th class="num">ΔAIC</th><th class="num">ΔLL 2025</th><th class="num">ΔLL, held-out sites</th><th class="num">AUC, plots ever detected<br><small class="muted">${a0.n} plots · ${a0.detected} detected</small></th><th class="num">AUC within detected sites<br><small class="muted">${w0.n} plots · ${w0.clusters} sites</small></th></tr></thead><tbody>${
+      I.neon_rows.map(h => { const o = NN.occupancy.find(x => x.habitat === h), a = dc(h, 'all_sites'), w = dc(h, 'sites_with_detections');
+        return `<tr><td>${HL(h)}</td><td class="num">${sg(o.beta_habitat, 2)} <small class="muted">(${sg(o.beta_ci_low, 2)} to ${sg(o.beta_ci_high, 2)})</small></td><td class="num">${sg(o.aic - n0.aic, 0)}</td><td class="num">${sg(ho(h, 'future_2025'), 1)}</td><td class="num">${sg(ho(h, 'leave_sites_out_cv5'), 0)}</td><td class="num">${ci(a.AUC, a.AUC_lo, a.AUC_hi)}</td><td class="num">${ci(w.AUC, w.AUC_lo, w.AUC_hi)}</td></tr>`; }).join('')}</tbody>`;
+    byId('th-neon-note').textContent = I.notes.neon;
+  }
+  const OM = X.orig_maps, KR = X.kraemer;
+  if (OM) {
+    byId('th-orig').innerHTML = `<thead><tr><th>Surface</th><th class="num">Rebuilt map vs original (Pearson)</th><th class="num">Shared cells</th><th class="num">Refit model on original cell features (Pearson)</th></tr></thead><tbody>${
+      OM.vs_refit.map(r => { const b = OM.vs_rebuilt.find(x => x.surface === r.surface); return `<tr><td>${esc(ARM(r.surface))}</td><td class="num">${b ? f3(b.pearson) : '<span class="muted">not rebuilt</span>'}</td><td class="num">${b ? formatInt(b.shared_cells) : '—'}</td><td class="num">${f3(r.pearson)}</td></tr>`; }).join('')}</tbody>`;
+  }
+  if (KR && I.kraemer_rows) {
+    const k = (s, sub) => KR.rows.find(r => r.surface === s && r.subset === sub);
+    const h1 = k(I.kraemer_rows[0], 'all'), h2 = k(I.kraemer_rows[0], 'ge100km_from_training');
+    byId('th-kraemer').innerHTML = `<thead><tr><th>Surface</th><th class="num">AUC, all compendium cells<br><small class="muted">${formatInt(h1.presence_cells)} cells vs ${formatInt(h1.background_cells)} random</small></th><th class="num">AUC, ≥ 100 km from training<br><small class="muted">${formatInt(h2.presence_cells)} cells</small></th><th class="num">ΔAUC vs Climate 19 RF, ≥ 100 km</th></tr></thead><tbody>${
+      I.kraemer_rows.map(s => { const a = k(s, 'all'), b = k(s, 'ge100km_from_training'); return `<tr><td>${HL(s)}</td><td class="num">${ci(a.AUC, a.AUC_lo, a.AUC_hi)}</td><td class="num">${ci(b.AUC, b.AUC_lo, b.AUC_hi)}</td><td class="num">${s === 'orig:BioClim19__RF' ? '—' : `${sg(b.dAUC_vs_orig_clim_rf)} <small class="muted">(${sg(b.dAUC_lo, 2)} to ${sg(b.dAUC_hi, 2)})</small>`}</td></tr>`; }).join('')}</tbody>`;
+    byId('th-kraemer-note').textContent = I.notes.kraemer;
+  }
+
   // P5
   const V = X.p5.validation, SPEC = I.p5_specs;
   byId('th-p5').innerHTML = `<thead><tr><th>Model</th><th class="num">Future 2024–25: Δ log-lik / obs</th><th class="num">Deviance vs base</th><th class="num">Municipality ρ</th><th class="num">Leave-one-state-out: Δ log-lik / obs</th><th class="num">Deviance vs base</th><th class="num">Municipality ρ</th></tr></thead><tbody>${
