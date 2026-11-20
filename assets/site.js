@@ -764,7 +764,7 @@ async function main() {
   try {
     const [b, r] = await Promise.all([getJSON('data/model_benchmarks.json'), getJSON('data/research_handoff.json').catch(err => { console.error(err); return null; })]);
     B = b; HO.B = B; HO.R = r;
-    byId('generated').textContent = `Benchmark data generated ${B.generated}`;
+    byId('generated').textContent = `Benchmark data generated ${B.generated}${r && r.generated && r.generated !== B.generated ? ` · research runs updated ${r.generated}` : ''}`;
     const steps = [renderHicoTelemetry, renderArchitecture, renderCoherenceSection, renderExternal, renderHF2, renderCV, renderExtensions, renderLab,
       renderTelemetry, renderFindings, initBenchmark, renderFusion, renderCoherence, renderWeighting, renderCausal, renderDecay, renderPool, renderOADSDM,
       renderFoundation, renderFamilies, renderLedger, renderMethods];

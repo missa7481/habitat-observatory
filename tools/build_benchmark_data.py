@@ -1,6 +1,6 @@
 """Merge the 18 November 2026 benchmark into data/research_handoff.json.
 
-Usage:  python tools/build_benchmark_data.py /path/to/handoff/runs/matrix_v1/summary [/path/to/handoff/runs/extended_summary.json]
+Usage:  python tools/build_benchmark_data.py /path/to/handoff/runs/matrix_v1/summary [/path/to/handoff/runs/extended_summary.json [/path/to/handoff/runs/themes_summary.json]]
 
 Reads site_benchmark.json (aggregate fold metrics and paired comparisons written by
 handoff/scripts/summarize_matrix.py) and interpretation.json (findings, caveats and
@@ -13,7 +13,7 @@ from pathlib import Path
 
 SUMMARY = Path(sys.argv[1])
 OUT = Path(__file__).resolve().parents[1] / "data" / "research_handoff.json"
-FORBIDDEN = {"site_id", "sample_id", "longitude", "latitude", "lon", "lat", "score", "block_id", "coordinates"}
+FORBIDDEN = {"site_id", "sample_id", "longitude", "latitude", "lon", "lat", "score", "block_id", "coordinates", "geocode", "trap", "key"}
 
 
 def check(o, path="benchmark"):
@@ -34,6 +34,9 @@ bench["n_experiments"] = len(bench["designs"]["spatial"]["summary"])
 if len(sys.argv) > 2:
     bench["extended"] = json.loads(Path(sys.argv[2]).read_text())
     bench["extended_text"] = interp["extended_text"]
+if len(sys.argv) > 3:
+    bench["themes"] = json.loads(Path(sys.argv[3]).read_text())
+    bench["themes_text"] = interp["themes_text"]
 check(bench)
 
 data = json.loads(OUT.read_text())
@@ -45,6 +48,6 @@ for p in data["priorities"]:
 if interp.get("report_caveat"):
     data["report"]["caveat"] = interp["report_caveat"]
 data["checks"] = interp.get("checks_prepend", []) + data["checks"]
-data["generated"] = bench.get("extended", {}).get("generated", bench["generated"])
+data["generated"] = bench.get("themes", bench.get("extended", {})).get("generated", bench["generated"])
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 print(f"wrote {OUT} ({OUT.stat().st_size:,} bytes); designs: {', '.join(bench['designs'])}")

@@ -1099,7 +1099,7 @@
  ],
  "report": {
   "title": "Global habitat project report, 6 November 2026",
-  "caveat": "Report-derived, now largely checked: the 12 benchmark configurations and the NEON 2025 diagnostic were reproduced exactly on the frozen folds on 19 November (see the reproduction section). The global-map coverage below is still report-derived.",
+  "caveat": "Report-derived, now checked: all 12 benchmark configurations and the NEON 2025 diagnostic were reproduced on the frozen folds on 19 November, and five of the twelve global maps were rebuilt (see the themes section). The coverage figures below are still the report’s.",
   "cohort": [
    [
     "1,601",
@@ -1327,7 +1327,7 @@
     "Add the two MaxNet configurations through the official R implementation (logistic regression is not MaxEnt).",
     "Use original split IDs for direct reproduction; scores on new EPSG:6933 blocks are labelled a new analysis."
    ],
-   "blocker": "Run 18 Nov on new blocks and 19 Nov on the frozen folds: all 10 Python configurations reproduce within 0.006 mean AP; MaxNet verified from its R predictions."
+   "blocker": "Run 18–19 Nov: all 12 configurations refit on the frozen folds; the two MaxNet configurations reproduce exactly with R maxnet 0.1.4."
   },
   {
    "id": "P2",
@@ -1343,7 +1343,7 @@
   {
    "id": "P3",
    "title": "Feature engineering and support ablations",
-   "state": "planned",
+   "state": "done",
    "question": "What do embeddings add beyond spectra, climate, human activity and coordinates?",
    "items": [
     "Radius point / 250 / 500 / 1,000 m; native vs 250 m working grid.",
@@ -1351,30 +1351,30 @@
     "Coordinates only, coordinates + environment, SatCLIP; frozen Prithvi / SatMAE / CROMA / Clay with raw-input, metadata and random-init controls.",
     "Training fractions 10 / 25 / 50 / 100%; single-source vs equal-N fusion."
    ],
-   "blocker": "Earth Engine, CDS and Earthdata accounts; encoder environments."
+   "blocker": "Run 19 Nov on the frozen folds, using public substitutes: native AlphaEarth COGs, Sentinel-2 L2A from Earth Search (no Cloud Score+, 20 m), NASA POWER weather, SatCLIP and four open encoders. HLS and CDS ERA5 were not used."
   },
   {
    "id": "P4",
    "title": "Observation-aware regional study",
-   "state": "planned",
+   "state": "done",
    "question": "Can repeat surveys separate occupancy from detection?",
    "items": [
     "Single-season occupancy with effort, trap and weather for detection (scripts/occupancy.py).",
     "Negative-binomial counts with a log-effort offset (scripts/count_model.py); sdmTMB for residual structure.",
     "Eggs, adult captures and larval indices stay separate targets."
    ],
-   "blocker": "NEON trap tables (HTTP 403 in the handoff session) and new survey data."
+   "blocker": "Run 19 Nov on AGES ovitrap visits 2021–2025 from GBIF. NEON trap tables still need an API token, so NEON was not modelled as repeat surveys."
   },
   {
    "id": "P5",
    "title": "Disease branch",
-   "state": "planned",
+   "state": "done",
    "question": "Do habitat summaries help explain dengue counts once the vector question is locked?",
    "items": [
     "OpenDengue / WHO / PAHO by admin region and period; count model with a population offset and lagged weather.",
     "Hold out regions and forecast future periods; never assign country cases to centroids."
    ],
-   "blocker": "Waits for P1–P2; WHO and PAHO exports untested."
+   "blocker": "Run 19 Nov for Brazil (InfoDengue/Mosqlimate municipal cases, IBGE population). WHO and PAHO exports were not needed for this design and other countries were not modelled."
   }
  ],
  "gaps": [
@@ -5796,24 +5796,28 @@
   ],
   "not_run": [
    [
-    "R maxnet refit.",
-    "R is not installed here; the two MaxNet configurations are verified from their original R predictions, not refit. Python MaxEnt (elapid) results are shown separately and are not equivalent."
+    "Environment 41 and fusion global maps.",
+    "Their land-cover, water and terrain layers come from Earth Engine, which needs the project account’s interactive sign-in. Climate maps follow the original recipe and AlphaEarth maps use the overview pyramid."
    ],
    [
-    "Post-built-amendment features and global maps.",
-    "The final feature matrix and map rasters sit in 06_Integrated_Features and 08 archives that have not finished uploading. The reproduced benchmark is the one the report used for model selection."
+    "Original-resolution AlphaEarth maps.",
+    "A 500 m global extraction is about 8 million circles; the overview approximation agrees with point predictions (Spearman 0.93 logistic, 0.88 RF) but is not the original surface."
    ],
    [
-    "TESSERA v1.1 and 2025 embeddings.",
-    "Only TESSERA v1 has global 2024 coverage on the public mirror (v1.1 is regional), so v1 was used. 2025 outcomes are scored with 2024 features, as in the original protocol."
+    "NEON repeat-survey occupancy.",
+    "NEON trap tables return 403 without an API token, so P4 uses the Austrian AGES surveys only."
    ],
    [
-    "Austria 2025 at new locations.",
-    "Only 15 of the 270 sites are new locations ≥ 10 km away, too few for a separate test; 67 sites lack stored features."
+    "Cloud Score+ masking and HLS.",
+    "Sentinel-2 chips use the scene classification mask from Earth Search; 30 of 1,601 sites had no clear 2024 observation and are excluded from encoder and S2 arms."
    ],
    [
-    "P3–P5.",
-    "Feature-engineering ablations with new Sentinel-2/HLS inputs, observation-aware occupancy and the dengue branch still need Earth Engine/CDS accounts, NEON trap tables and WHO/PAHO exports."
+    "TESSERA 2025 at all sites.",
+    "The public mirror covers 1,975 of 2,462 locations for 2025."
+   ],
+   [
+    "Original Drive folder.",
+    "The first shared folder now returns 401 and the Drive connector is not authorised; runs use the local extracts made earlier and public sources."
    ]
   ],
   "reproducibility": [
@@ -5822,7 +5826,8 @@
    "Inputs: Drive archives 07_Validation_and_Spatial_Splits (global_mapping_2024) and 05_Land_Water_Terrain_and_Human_Factors (global_mapping_2024, part 1). Cohort table SHA-256 f2f05bbf…a3f1; survey table 448eeadd…d8f810.",
    "Protocol: 150 km EPSG:6933 blocks; 3 outer × 3 inner GroupKFold; 20 km train–test buffer; seeds 42 and 202; inner-fold AP selects C (0.1, 1), min_samples_leaf (3, 12), L2 (1, 10) or MaxEnt β (1, 2). Scaling and PCA are fitted inside training folds.",
    "Environment: Python 3.9.6, scikit-learn 1.5.2, numpy 2.0.2, pandas 2.2.3, pyproj 3.6.1, elapid 1.0.3 on an Apple M3 Pro. This differs from the handoff's Python 3.12 lock.",
-   "Saved per design: fold assignments, fold metrics, out-of-fold predictions, run manifest with input hashes. Per-site files stay in the repository and Drive, not on this site."
+   "Saved per design: fold assignments, fold metrics, out-of-fold predictions, run manifest with input hashes. Per-site files stay in the repository and Drive, not on this site.",
+   "19 Nov (themes): refit_maxnet.py + maxnet_fit.R; final_models.py → worldclim_features.py / ae_overview_map.py → map_agreement.py; extract_alphaearth_cog.py, extract_s2_chips.py → s2_stats.py, encode_s2_chips.py, extract_satclip.py, build_weather_points.py → p3_ablations.py; build_ages_surveys.py → p4_surveys.py; build_brazil_dengue.py, brazil_habitat_summaries.py → p5_dengue.py; transfer_2025.py; summarize_themes.py. Outputs in runs/p3, p4, p5, maps, transfer_2025_v2."
   ],
   "n_experiments": 39,
   "extended": {
@@ -7425,6 +7430,2596 @@
     "AGES2025|without_AGES": "Austrian AGES ovitraps in 2025; models trained on iNaturalist + background only. 203 of the 270 sites have stored features; 25 km clusters.",
     "AGES2025|all_primary": "Same Austrian traps, but the 2024 detections of these locations are in training, so this measures year-to-year persistence as much as habitat skill."
    }
+  },
+  "themes": {
+   "generated": "2026-11-19",
+   "maxnet": [
+    {
+     "factor": "BioClim19",
+     "learner": "MaxNet",
+     "AP_refit": 0.677,
+     "AP_original": 0.677,
+     "max_abs_fold_diff": 0.0,
+     "same_params": 1.0,
+     "min_score_spearman": 1.0,
+     "coef_match": 1.0
+    },
+    {
+     "factor": "Environment41",
+     "learner": "MaxNet",
+     "AP_refit": 0.7729,
+     "AP_original": 0.7729,
+     "max_abs_fold_diff": 0.0,
+     "same_params": 1.0,
+     "min_score_spearman": 1.0,
+     "coef_match": 1.0
+    }
+   ],
+   "maps": [
+    {
+     "surface": "AlphaEarth64__GLM",
+     "source": "AlphaEarth 2024 overviews, 2.56 km pixels averaged to 0.05 deg",
+     "cells": 7605202,
+     "sites_covered": 1.0,
+     "pearson_vs_point": 0.9179,
+     "spearman_vs_point": 0.9268
+    },
+    {
+     "surface": "AlphaEarth64__RF",
+     "source": "AlphaEarth 2024 overviews, 2.56 km pixels averaged to 0.05 deg",
+     "cells": 7605202,
+     "sites_covered": 1.0,
+     "pearson_vs_point": 0.8532,
+     "spearman_vs_point": 0.8824
+    },
+    {
+     "surface": "BioClim19__RF",
+     "source": "WorldClim 2.1 2.5 arc-min at 0.05 deg cell centres (original recipe)",
+     "cells": 7984475,
+     "sites_covered": 0.9975,
+     "pearson_vs_point": 0.9707,
+     "spearman_vs_point": 0.976
+    },
+    {
+     "surface": "BioClim19__BRT",
+     "source": "WorldClim 2.1 2.5 arc-min at 0.05 deg cell centres (original recipe)",
+     "cells": 7984475,
+     "sites_covered": 0.9975,
+     "pearson_vs_point": 0.9789,
+     "spearman_vs_point": 0.979
+    },
+    {
+     "surface": "BioClim19__GLM",
+     "source": "WorldClim 2.1 2.5 arc-min at 0.05 deg cell centres (original recipe)",
+     "cells": 7984475,
+     "sites_covered": 0.9975,
+     "pearson_vs_point": 0.9948,
+     "spearman_vs_point": 0.9931
+    }
+   ],
+   "p3": {
+    "summary": [
+     {
+      "block": "coords",
+      "arm": "Coords_AE__GLM",
+      "AP": 0.8116,
+      "AP_sd": 0.0534,
+      "AUC": 0.8745,
+      "n": 518.3333
+     },
+     {
+      "block": "coords",
+      "arm": "Coords_Env__GLM",
+      "AP": 0.7237,
+      "AP_sd": 0.0695,
+      "AUC": 0.824,
+      "n": 518.3333
+     },
+     {
+      "block": "coords",
+      "arm": "Coords_Env__RF",
+      "AP": 0.812,
+      "AP_sd": 0.049,
+      "AUC": 0.8644,
+      "n": 518.3333
+     },
+     {
+      "block": "coords",
+      "arm": "Coords__GLM",
+      "AP": 0.5337,
+      "AP_sd": 0.0951,
+      "AUC": 0.6153,
+      "n": 518.3333
+     },
+     {
+      "block": "coords",
+      "arm": "Coords__RF",
+      "AP": 0.7091,
+      "AP_sd": 0.0427,
+      "AUC": 0.786,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "clay_AE__GLM",
+      "AP": 0.7529,
+      "AP_sd": 0.0651,
+      "AUC": 0.8176,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "clay__GLM",
+      "AP": 0.6802,
+      "AP_sd": 0.0797,
+      "AUC": 0.7497,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "clay_nometa__GLM",
+      "AP": 0.6745,
+      "AP_sd": 0.0737,
+      "AUC": 0.738,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "clay_random__GLM",
+      "AP": 0.6645,
+      "AP_sd": 0.0625,
+      "AUC": 0.7656,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "croma_AE__GLM",
+      "AP": 0.7652,
+      "AP_sd": 0.0582,
+      "AUC": 0.8243,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "croma__GLM",
+      "AP": 0.684,
+      "AP_sd": 0.0808,
+      "AUC": 0.7513,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "croma_random__GLM",
+      "AP": 0.6412,
+      "AP_sd": 0.0837,
+      "AUC": 0.7242,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "prithvi_AE__GLM",
+      "AP": 0.7071,
+      "AP_sd": 0.0654,
+      "AUC": 0.7916,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "prithvi__GLM",
+      "AP": 0.6458,
+      "AP_sd": 0.0765,
+      "AUC": 0.7324,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "prithvi_random__GLM",
+      "AP": 0.5828,
+      "AP_sd": 0.0856,
+      "AUC": 0.6428,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "satmae_AE__GLM",
+      "AP": 0.7626,
+      "AP_sd": 0.0646,
+      "AUC": 0.8309,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "satmae__GLM",
+      "AP": 0.6749,
+      "AP_sd": 0.0908,
+      "AUC": 0.7483,
+      "n": 518.3333
+     },
+     {
+      "block": "encoder",
+      "arm": "satmae_random__GLM",
+      "AP": 0.6557,
+      "AP_sd": 0.0805,
+      "AUC": 0.7312,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "AE_humanAsBias__GLM",
+      "AP": 0.8026,
+      "AP_sd": 0.0424,
+      "AUC": 0.8656,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "AE_plusHuman__GLM",
+      "AP": 0.8065,
+      "AP_sd": 0.0417,
+      "AUC": 0.869,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "Env37_noHuman__GLM",
+      "AP": 0.6854,
+      "AP_sd": 0.0685,
+      "AUC": 0.7654,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "Env37_noHuman__RF",
+      "AP": 0.7958,
+      "AP_sd": 0.0543,
+      "AUC": 0.8423,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "Env41_humanAsBias__GLM",
+      "AP": 0.6406,
+      "AP_sd": 0.0571,
+      "AUC": 0.737,
+      "n": 518.3333
+     },
+     {
+      "block": "human",
+      "arm": "Env41_humanAsBias__RF",
+      "AP": 0.7404,
+      "AP_sd": 0.0506,
+      "AUC": 0.8104,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r0__GLM",
+      "AP": 0.7892,
+      "AP_sd": 0.0456,
+      "AUC": 0.8573,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r0__RF",
+      "AP": 0.7852,
+      "AP_sd": 0.0424,
+      "AUC": 0.8504,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r1000__GLM",
+      "AP": 0.8118,
+      "AP_sd": 0.0432,
+      "AUC": 0.8696,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r1000__RF",
+      "AP": 0.8021,
+      "AP_sd": 0.0605,
+      "AUC": 0.8591,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r250__GLM",
+      "AP": 0.8076,
+      "AP_sd": 0.0406,
+      "AUC": 0.8665,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r250__RF",
+      "AP": 0.8084,
+      "AP_sd": 0.0474,
+      "AUC": 0.8578,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r500__GLM",
+      "AP": 0.8109,
+      "AP_sd": 0.0464,
+      "AUC": 0.8697,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AE_native_r500__RF",
+      "AP": 0.8057,
+      "AP_sd": 0.063,
+      "AUC": 0.8568,
+      "n": 518.3333
+     },
+     {
+      "block": "radius",
+      "arm": "AlphaEarth64__RF",
+      "AP": 0.8036,
+      "AP_sd": 0.0597,
+      "AUC": 0.8555,
+      "n": 518.3333
+     },
+     {
+      "block": "ref",
+      "arm": "AlphaEarth64__GLM",
+      "AP": 0.8097,
+      "AP_sd": 0.0432,
+      "AUC": 0.8692,
+      "n": 518.3333
+     },
+     {
+      "block": "ref",
+      "arm": "BioClim19__RF",
+      "AP": 0.7153,
+      "AP_sd": 0.0286,
+      "AUC": 0.7971,
+      "n": 518.3333
+     },
+     {
+      "block": "ref",
+      "arm": "Environment41__GLM",
+      "AP": 0.697,
+      "AP_sd": 0.0668,
+      "AUC": 0.7744,
+      "n": 518.3333
+     },
+     {
+      "block": "ref",
+      "arm": "Environment41__RF",
+      "AP": 0.8021,
+      "AP_sd": 0.0542,
+      "AUC": 0.8515,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2_AE__GLM",
+      "AP": 0.8049,
+      "AP_sd": 0.0455,
+      "AUC": 0.8648,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2_Env_AE__GLM",
+      "AP": 0.802,
+      "AP_sd": 0.0378,
+      "AUC": 0.8674,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2_Env__GLM",
+      "AP": 0.7146,
+      "AP_sd": 0.0466,
+      "AUC": 0.7901,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2_Env__RF",
+      "AP": 0.7983,
+      "AP_sd": 0.0527,
+      "AUC": 0.8477,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2stats__GLM",
+      "AP": 0.6317,
+      "AP_sd": 0.0585,
+      "AUC": 0.7217,
+      "n": 518.3333
+     },
+     {
+      "block": "s2",
+      "arm": "S2stats__RF",
+      "AP": 0.6982,
+      "AP_sd": 0.0846,
+      "AUC": 0.7572,
+      "n": 518.3333
+     },
+     {
+      "block": "satclip",
+      "arm": "SatCLIP_Env__GLM",
+      "AP": 0.7796,
+      "AP_sd": 0.0644,
+      "AUC": 0.85,
+      "n": 518.3333
+     },
+     {
+      "block": "satclip",
+      "arm": "SatCLIP__GLM",
+      "AP": 0.7002,
+      "AP_sd": 0.0737,
+      "AUC": 0.7868,
+      "n": 518.3333
+     },
+     {
+      "block": "satclip",
+      "arm": "SatCLIP__RF",
+      "AP": 0.7408,
+      "AP_sd": 0.0496,
+      "AUC": 0.8084,
+      "n": 518.3333
+     },
+     {
+      "block": "weather",
+      "arm": "WeatherLag_Env__GLM",
+      "AP": 0.7025,
+      "AP_sd": 0.0761,
+      "AUC": 0.7976,
+      "n": 518.3333
+     },
+     {
+      "block": "weather",
+      "arm": "WeatherLag_Env__RF",
+      "AP": 0.8009,
+      "AP_sd": 0.0516,
+      "AUC": 0.8562,
+      "n": 518.3333
+     },
+     {
+      "block": "weather",
+      "arm": "WeatherLag__GLM",
+      "AP": 0.629,
+      "AP_sd": 0.0859,
+      "AUC": 0.7326,
+      "n": 518.3333
+     },
+     {
+      "block": "weather",
+      "arm": "WeatherLag__RF",
+      "AP": 0.6939,
+      "AP_sd": 0.0592,
+      "AUC": 0.7898,
+      "n": 518.3333
+     }
+    ],
+    "paired": [
+     {
+      "reference": "Environment41__RF",
+      "candidate": "Coords__RF",
+      "delta_ap": -0.0966,
+      "ci_low": -0.17,
+      "ci_high": -0.0081,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "Coords_Env__GLM",
+      "delta_ap": 0.0288,
+      "ci_low": -0.001,
+      "ci_high": 0.0617,
+      "folds_candidate_better": 5,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__RF",
+      "candidate": "Coords_Env__RF",
+      "delta_ap": 0.0111,
+      "ci_low": -0.0073,
+      "ci_high": 0.0266,
+      "folds_candidate_better": 5,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "Coords_AE__GLM",
+      "delta_ap": 0.003,
+      "ci_low": -0.0071,
+      "ci_high": 0.0124,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "Coords__RF",
+      "delta_ap": -0.1023,
+      "ci_low": -0.1554,
+      "ci_high": -0.0502,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "Env37_noHuman__GLM",
+      "delta_ap": -0.0094,
+      "ci_low": -0.0236,
+      "ci_high": 0.0025,
+      "folds_candidate_better": 1,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__RF",
+      "candidate": "Env37_noHuman__RF",
+      "delta_ap": -0.0044,
+      "ci_low": -0.0177,
+      "ci_high": 0.0087,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "Env41_humanAsBias__GLM",
+      "delta_ap": -0.0648,
+      "ci_low": -0.0893,
+      "ci_high": -0.0329,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__RF",
+      "candidate": "Env41_humanAsBias__RF",
+      "delta_ap": -0.084,
+      "ci_low": -0.1182,
+      "ci_high": -0.045,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "AE_plusHuman__GLM",
+      "delta_ap": -0.0052,
+      "ci_low": -0.0146,
+      "ci_high": 0.0023,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "AE_humanAsBias__GLM",
+      "delta_ap": -0.0145,
+      "ci_low": -0.0226,
+      "ci_high": -0.0041,
+      "folds_candidate_better": 1,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "AE_native_r500__GLM",
+      "delta_ap": 0.0003,
+      "ci_low": -0.0037,
+      "ci_high": 0.0044,
+      "folds_candidate_better": 5,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AE_native_r500__GLM",
+      "candidate": "AE_native_r0__GLM",
+      "delta_ap": -0.0231,
+      "ci_low": -0.0525,
+      "ci_high": 0.0068,
+      "folds_candidate_better": 1,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AE_native_r500__GLM",
+      "candidate": "AE_native_r250__GLM",
+      "delta_ap": -0.0036,
+      "ci_low": -0.014,
+      "ci_high": 0.009,
+      "folds_candidate_better": 2,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AE_native_r500__GLM",
+      "candidate": "AE_native_r1000__GLM",
+      "delta_ap": 0.0046,
+      "ci_low": -0.0085,
+      "ci_high": 0.0146,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__RF",
+      "candidate": "AE_native_r500__RF",
+      "delta_ap": -0.0006,
+      "ci_low": -0.0083,
+      "ci_high": 0.0071,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "S2stats__GLM",
+      "delta_ap": -0.1856,
+      "ci_low": -0.2555,
+      "ci_high": -0.1159,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2stats__GLM",
+      "candidate": "S2_AE__GLM",
+      "delta_ap": 0.177,
+      "ci_low": 0.11,
+      "ci_high": 0.2373,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "S2_Env__GLM",
+      "delta_ap": 0.0138,
+      "ci_low": -0.0086,
+      "ci_high": 0.0402,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__RF",
+      "candidate": "S2_Env__RF",
+      "delta_ap": -0.0073,
+      "ci_low": -0.0163,
+      "ci_high": 0.0039,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2_Env__GLM",
+      "candidate": "S2_Env_AE__GLM",
+      "delta_ap": 0.0856,
+      "ci_low": 0.0487,
+      "ci_high": 0.1267,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "SatCLIP_Env__GLM",
+      "delta_ap": 0.0892,
+      "ci_low": 0.0325,
+      "ci_high": 0.1514,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "SatCLIP__GLM",
+      "delta_ap": -0.1036,
+      "ci_low": -0.1735,
+      "ci_high": -0.047,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Coords__RF",
+      "candidate": "SatCLIP__RF",
+      "delta_ap": 0.0392,
+      "ci_low": -0.0046,
+      "ci_high": 0.077,
+      "folds_candidate_better": 5,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__GLM",
+      "candidate": "WeatherLag_Env__GLM",
+      "delta_ap": 0.0076,
+      "ci_low": -0.0204,
+      "ci_high": 0.0336,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "Environment41__RF",
+      "candidate": "WeatherLag_Env__RF",
+      "delta_ap": -0.0006,
+      "ci_low": -0.012,
+      "ci_high": 0.0106,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "prithvi__GLM",
+      "delta_ap": -0.156,
+      "ci_low": -0.1961,
+      "ci_high": -0.118,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "clay__GLM",
+      "delta_ap": -0.1205,
+      "ci_low": -0.1759,
+      "ci_high": -0.0728,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "croma__GLM",
+      "delta_ap": -0.1128,
+      "ci_low": -0.1562,
+      "ci_high": -0.0714,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "satmae__GLM",
+      "delta_ap": -0.1181,
+      "ci_low": -0.1759,
+      "ci_high": -0.072,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "prithvi_random__GLM",
+      "candidate": "prithvi__GLM",
+      "delta_ap": 0.0674,
+      "ci_low": 0.0272,
+      "ci_high": 0.1118,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "clay_random__GLM",
+      "candidate": "clay__GLM",
+      "delta_ap": 0.0277,
+      "ci_low": -0.0239,
+      "ci_high": 0.0711,
+      "folds_candidate_better": 5,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "croma_random__GLM",
+      "candidate": "croma__GLM",
+      "delta_ap": 0.0504,
+      "ci_low": 0.0111,
+      "ci_high": 0.0951,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "satmae_random__GLM",
+      "candidate": "satmae__GLM",
+      "delta_ap": 0.0301,
+      "ci_low": -0.0197,
+      "ci_high": 0.0697,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "clay_nometa__GLM",
+      "candidate": "clay__GLM",
+      "delta_ap": 0.0038,
+      "ci_low": -0.0178,
+      "ci_high": 0.0245,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2stats__GLM",
+      "candidate": "prithvi__GLM",
+      "delta_ap": 0.0295,
+      "ci_low": -0.0281,
+      "ci_high": 0.087,
+      "folds_candidate_better": 3,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2stats__GLM",
+      "candidate": "clay__GLM",
+      "delta_ap": 0.0651,
+      "ci_low": 0.0112,
+      "ci_high": 0.1153,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2stats__GLM",
+      "candidate": "croma__GLM",
+      "delta_ap": 0.0728,
+      "ci_low": 0.0107,
+      "ci_high": 0.1336,
+      "folds_candidate_better": 6,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "S2stats__GLM",
+      "candidate": "satmae__GLM",
+      "delta_ap": 0.0674,
+      "ci_low": -0.0077,
+      "ci_high": 0.1375,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "prithvi_AE__GLM",
+      "delta_ap": -0.0981,
+      "ci_low": -0.128,
+      "ci_high": -0.0657,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "clay_AE__GLM",
+      "delta_ap": -0.047,
+      "ci_low": -0.0878,
+      "ci_high": -0.0119,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "croma_AE__GLM",
+      "delta_ap": -0.0372,
+      "ci_low": -0.071,
+      "ci_high": -0.012,
+      "folds_candidate_better": 0,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     },
+     {
+      "reference": "AlphaEarth64__GLM",
+      "candidate": "satmae_AE__GLM",
+      "delta_ap": -0.0359,
+      "ci_low": -0.0766,
+      "ci_high": -0.0059,
+      "folds_candidate_better": 1,
+      "folds": 6,
+      "n_sites": 1555,
+      "clusters": 499
+     }
+    ],
+    "fractions": [
+     {
+      "arm": "AlphaEarth64__GLM",
+      "fraction": 0.1,
+      "AP": 0.7313,
+      "AP_sd": 0.0567,
+      "n_train": 101.0
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "fraction": 0.25,
+      "AP": 0.7753,
+      "AP_sd": 0.0576,
+      "n_train": 252.3333
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "fraction": 0.5,
+      "AP": 0.7938,
+      "AP_sd": 0.0373,
+      "n_train": 505.0
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "fraction": 1.0,
+      "AP": 0.8097,
+      "AP_sd": 0.0432,
+      "n_train": 1010.0
+     },
+     {
+      "arm": "BioClim19__RF",
+      "fraction": 0.1,
+      "AP": 0.6176,
+      "AP_sd": 0.0817,
+      "n_train": 101.0
+     },
+     {
+      "arm": "BioClim19__RF",
+      "fraction": 0.25,
+      "AP": 0.6624,
+      "AP_sd": 0.0658,
+      "n_train": 252.3333
+     },
+     {
+      "arm": "BioClim19__RF",
+      "fraction": 0.5,
+      "AP": 0.6923,
+      "AP_sd": 0.0519,
+      "n_train": 505.0
+     },
+     {
+      "arm": "BioClim19__RF",
+      "fraction": 1.0,
+      "AP": 0.7153,
+      "AP_sd": 0.0286,
+      "n_train": 1010.0
+     },
+     {
+      "arm": "Environment41__GLM",
+      "fraction": 0.1,
+      "AP": 0.6482,
+      "AP_sd": 0.08,
+      "n_train": 101.0
+     },
+     {
+      "arm": "Environment41__GLM",
+      "fraction": 0.25,
+      "AP": 0.6721,
+      "AP_sd": 0.0821,
+      "n_train": 252.3333
+     },
+     {
+      "arm": "Environment41__GLM",
+      "fraction": 0.5,
+      "AP": 0.6916,
+      "AP_sd": 0.06,
+      "n_train": 505.0
+     },
+     {
+      "arm": "Environment41__GLM",
+      "fraction": 1.0,
+      "AP": 0.697,
+      "AP_sd": 0.0668,
+      "n_train": 1010.0
+     },
+     {
+      "arm": "Environment41__RF",
+      "fraction": 0.1,
+      "AP": 0.7194,
+      "AP_sd": 0.0754,
+      "n_train": 101.0
+     },
+     {
+      "arm": "Environment41__RF",
+      "fraction": 0.25,
+      "AP": 0.7662,
+      "AP_sd": 0.0689,
+      "n_train": 252.3333
+     },
+     {
+      "arm": "Environment41__RF",
+      "fraction": 0.5,
+      "AP": 0.7885,
+      "AP_sd": 0.0626,
+      "n_train": 505.0
+     },
+     {
+      "arm": "Environment41__RF",
+      "fraction": 1.0,
+      "AP": 0.8021,
+      "AP_sd": 0.0542,
+      "n_train": 1010.0
+     }
+    ],
+    "sources": [
+     {
+      "arm": "AlphaEarth64__GLM",
+      "design": "A_only",
+      "n_train": 621.1667,
+      "AP": 0.6506,
+      "AUC": 0.6775,
+      "AP_test_I_vs_bg": 0.545,
+      "AUC_test_I_vs_bg": 0.6282,
+      "AP_test_A_vs_bg": 0.8009,
+      "AUC_test_A_vs_bg": 0.9725
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "design": "I_equalN",
+      "n_train": 621.1667,
+      "AP": 0.7829,
+      "AUC": 0.8457,
+      "AP_test_I_vs_bg": 0.7652,
+      "AUC_test_I_vs_bg": 0.848,
+      "AP_test_A_vs_bg": 0.3787,
+      "AUC_test_A_vs_bg": 0.8349
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "design": "I_only",
+      "n_train": 941.5,
+      "AP": 0.8,
+      "AUC": 0.8665,
+      "AP_test_I_vs_bg": 0.787,
+      "AUC_test_I_vs_bg": 0.8711,
+      "AP_test_A_vs_bg": 0.3552,
+      "AUC_test_A_vs_bg": 0.8398
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "design": "all_sources",
+      "n_train": 1010.0,
+      "AP": 0.8097,
+      "AUC": 0.8692,
+      "AP_test_I_vs_bg": 0.7839,
+      "AUC_test_I_vs_bg": 0.8643,
+      "AP_test_A_vs_bg": 0.5026,
+      "AUC_test_A_vs_bg": 0.9049
+     },
+     {
+      "arm": "AlphaEarth64__GLM",
+      "design": "fusion_equalN",
+      "n_train": 621.1667,
+      "AP": 0.7744,
+      "AUC": 0.8261,
+      "AP_test_I_vs_bg": 0.7205,
+      "AUC_test_I_vs_bg": 0.8062,
+      "AP_test_A_vs_bg": 0.6787,
+      "AUC_test_A_vs_bg": 0.9454
+     },
+     {
+      "arm": "BioClim19__RF",
+      "design": "A_only",
+      "n_train": 621.1667,
+      "AP": 0.523,
+      "AUC": 0.5361,
+      "AP_test_I_vs_bg": 0.4139,
+      "AUC_test_I_vs_bg": 0.4658,
+      "AP_test_A_vs_bg": 0.7091,
+      "AUC_test_A_vs_bg": 0.9488
+     },
+     {
+      "arm": "BioClim19__RF",
+      "design": "I_equalN",
+      "n_train": 621.1667,
+      "AP": 0.6461,
+      "AUC": 0.7255,
+      "AP_test_I_vs_bg": 0.6409,
+      "AUC_test_I_vs_bg": 0.7557,
+      "AP_test_A_vs_bg": 0.1815,
+      "AUC_test_A_vs_bg": 0.5372
+     },
+     {
+      "arm": "BioClim19__RF",
+      "design": "I_only",
+      "n_train": 941.5,
+      "AP": 0.6903,
+      "AUC": 0.7694,
+      "AP_test_I_vs_bg": 0.6815,
+      "AUC_test_I_vs_bg": 0.7973,
+      "AP_test_A_vs_bg": 0.2454,
+      "AUC_test_A_vs_bg": 0.5696
+     },
+     {
+      "arm": "BioClim19__RF",
+      "design": "all_sources",
+      "n_train": 1010.0,
+      "AP": 0.7108,
+      "AUC": 0.7958,
+      "AP_test_I_vs_bg": 0.6871,
+      "AUC_test_I_vs_bg": 0.7991,
+      "AP_test_A_vs_bg": 0.3161,
+      "AUC_test_A_vs_bg": 0.7831
+     },
+     {
+      "arm": "BioClim19__RF",
+      "design": "fusion_equalN",
+      "n_train": 621.1667,
+      "AP": 0.6376,
+      "AUC": 0.7083,
+      "AP_test_I_vs_bg": 0.5668,
+      "AUC_test_I_vs_bg": 0.6798,
+      "AP_test_A_vs_bg": 0.4794,
+      "AUC_test_A_vs_bg": 0.8797
+     },
+     {
+      "arm": "Environment41__RF",
+      "design": "A_only",
+      "n_train": 621.1667,
+      "AP": 0.5305,
+      "AUC": 0.5497,
+      "AP_test_I_vs_bg": 0.422,
+      "AUC_test_I_vs_bg": 0.4878,
+      "AP_test_A_vs_bg": 0.6508,
+      "AUC_test_A_vs_bg": 0.9129
+     },
+     {
+      "arm": "Environment41__RF",
+      "design": "I_equalN",
+      "n_train": 621.1667,
+      "AP": 0.7377,
+      "AUC": 0.7792,
+      "AP_test_I_vs_bg": 0.728,
+      "AUC_test_I_vs_bg": 0.7903,
+      "AP_test_A_vs_bg": 0.2746,
+      "AUC_test_A_vs_bg": 0.7018
+     },
+     {
+      "arm": "Environment41__RF",
+      "design": "I_only",
+      "n_train": 941.5,
+      "AP": 0.7852,
+      "AUC": 0.8273,
+      "AP_test_I_vs_bg": 0.785,
+      "AUC_test_I_vs_bg": 0.8502,
+      "AP_test_A_vs_bg": 0.3292,
+      "AUC_test_A_vs_bg": 0.6662
+     },
+     {
+      "arm": "Environment41__RF",
+      "design": "all_sources",
+      "n_train": 1010.0,
+      "AP": 0.7927,
+      "AUC": 0.8438,
+      "AP_test_I_vs_bg": 0.772,
+      "AUC_test_I_vs_bg": 0.8388,
+      "AP_test_A_vs_bg": 0.4239,
+      "AUC_test_A_vs_bg": 0.8752
+     },
+     {
+      "arm": "Environment41__RF",
+      "design": "fusion_equalN",
+      "n_train": 621.1667,
+      "AP": 0.721,
+      "AUC": 0.7578,
+      "AP_test_I_vs_bg": 0.6594,
+      "AUC_test_I_vs_bg": 0.7338,
+      "AP_test_A_vs_bg": 0.5883,
+      "AUC_test_A_vs_bg": 0.8918
+     }
+    ],
+    "manifest": {
+     "complete_primary": 1555,
+     "excluded_primary": 46,
+     "inputs": {
+      "AE_r0": 64,
+      "AE_r250": 64,
+      "AE_r500": 64,
+      "AE_r1000": 64,
+      "S2": 41,
+      "SatCLIP": 256,
+      "Weather": 19,
+      "ENC_prithvi": 1024,
+      "ENC_clay": 1024,
+      "ENC_clay_nometa": 1024,
+      "ENC_croma": 768,
+      "ENC_satmae": 768,
+      "ENC_prithvi_random": 1024,
+      "ENC_clay_random": 1024,
+      "ENC_croma_random": 768,
+      "ENC_satmae_random": 768
+     },
+     "folds": "frozen contexts.json (seeds 42/202 x 3)",
+     "human_features": [
+      "worldpop_2024_density",
+      "built_fraction",
+      "night_lights",
+      "accessibility_2015_minutes"
+     ]
+    }
+   },
+   "p4": {
+    "occupancy": [
+     {
+      "habitat": "null",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.283,
+      "occupied_never_detected": 0.046,
+      "mean_p_visit": 0.1982,
+      "mean_cum_detection": 0.9533,
+      "aic": 8849.3295,
+      "beta_habitat": null,
+      "beta_ci_low": null,
+      "beta_ci_high": null,
+      "boot_reps": null
+     },
+     {
+      "habitat": "BioClim19__RF",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.2832,
+      "occupied_never_detected": 0.0467,
+      "mean_p_visit": 0.1984,
+      "mean_cum_detection": 0.9537,
+      "aic": 8798.3327,
+      "beta_habitat": 0.4425,
+      "beta_ci_low": -0.5025,
+      "beta_ci_high": 1.0843,
+      "boot_reps": 200.0
+     },
+     {
+      "habitat": "BioClim19__BRT",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.2826,
+      "occupied_never_detected": 0.0447,
+      "mean_p_visit": 0.1987,
+      "mean_cum_detection": 0.9539,
+      "aic": 8809.9815,
+      "beta_habitat": 0.3849,
+      "beta_ci_low": -0.6292,
+      "beta_ci_high": 0.8842,
+      "boot_reps": 200.0
+     },
+     {
+      "habitat": "BioClim19__GLM",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.2826,
+      "occupied_never_detected": 0.0447,
+      "mean_p_visit": 0.1987,
+      "mean_cum_detection": 0.9538,
+      "aic": 8805.6396,
+      "beta_habitat": 0.4156,
+      "beta_ci_low": -0.3983,
+      "beta_ci_high": 0.8935,
+      "boot_reps": 200.0
+     },
+     {
+      "habitat": "AlphaEarth64__GLM",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.2828,
+      "occupied_never_detected": 0.0454,
+      "mean_p_visit": 0.1984,
+      "mean_cum_detection": 0.9534,
+      "aic": 8832.2768,
+      "beta_habitat": 0.2533,
+      "beta_ci_low": -0.3889,
+      "beta_ci_high": 0.8417,
+      "boot_reps": 200.0
+     },
+     {
+      "habitat": "AlphaEarth64__RF",
+      "n_site_years": 1641,
+      "n_visits": 31972,
+      "naive_occupancy": 0.27,
+      "est_occupancy": 0.2829,
+      "occupied_never_detected": 0.0458,
+      "mean_p_visit": 0.1982,
+      "mean_cum_detection": 0.9533,
+      "aic": 8850.8854,
+      "beta_habitat": 0.038,
+      "beta_ci_low": -0.46,
+      "beta_ci_high": 0.7492,
+      "boot_reps": 200.0
+     }
+    ],
+    "heldout": [
+     {
+      "habitat": "null",
+      "design": "future_2025",
+      "ll": -1131.1823,
+      "n": 299,
+      "delta_ll_vs_null": 0.0
+     },
+     {
+      "habitat": "null",
+      "design": "block25km_cv5",
+      "ll": -4732.3505,
+      "n": 1641,
+      "delta_ll_vs_null": 0.0
+     },
+     {
+      "habitat": "BioClim19__RF",
+      "design": "future_2025",
+      "ll": -1145.9966,
+      "n": 299,
+      "delta_ll_vs_null": -14.8143
+     },
+     {
+      "habitat": "BioClim19__RF",
+      "design": "block25km_cv5",
+      "ll": -4801.9927,
+      "n": 1641,
+      "delta_ll_vs_null": -69.6422
+     },
+     {
+      "habitat": "BioClim19__BRT",
+      "design": "future_2025",
+      "ll": -1140.6743,
+      "n": 299,
+      "delta_ll_vs_null": -9.4919
+     },
+     {
+      "habitat": "BioClim19__BRT",
+      "design": "block25km_cv5",
+      "ll": -4818.5866,
+      "n": 1641,
+      "delta_ll_vs_null": -86.2361
+     },
+     {
+      "habitat": "BioClim19__GLM",
+      "design": "future_2025",
+      "ll": -1136.8765,
+      "n": 299,
+      "delta_ll_vs_null": -5.6941
+     },
+     {
+      "habitat": "BioClim19__GLM",
+      "design": "block25km_cv5",
+      "ll": -4742.9631,
+      "n": 1641,
+      "delta_ll_vs_null": -10.6125
+     },
+     {
+      "habitat": "AlphaEarth64__GLM",
+      "design": "future_2025",
+      "ll": -1127.8495,
+      "n": 299,
+      "delta_ll_vs_null": 3.3328
+     },
+     {
+      "habitat": "AlphaEarth64__GLM",
+      "design": "block25km_cv5",
+      "ll": -4746.973,
+      "n": 1641,
+      "delta_ll_vs_null": -14.6224
+     },
+     {
+      "habitat": "AlphaEarth64__RF",
+      "design": "future_2025",
+      "ll": -1132.4139,
+      "n": 299,
+      "delta_ll_vs_null": -1.2316
+     },
+     {
+      "habitat": "AlphaEarth64__RF",
+      "design": "block25km_cv5",
+      "ll": -4742.1204,
+      "n": 1641,
+      "delta_ll_vs_null": -9.7698
+     }
+    ],
+    "counts": [
+     {
+      "habitat": "null",
+      "n_exposures": 31972,
+      "beta_habitat": null,
+      "nb_size": 0.0191,
+      "heldout2025_ll": -3656.5738,
+      "trap_spearman_2025": 0.1136,
+      "traps_2025": 299,
+      "delta_ll_vs_null": 0.0
+     },
+     {
+      "habitat": "BioClim19__RF",
+      "n_exposures": 31972,
+      "beta_habitat": 0.3794,
+      "nb_size": 0.0195,
+      "heldout2025_ll": -3797.2691,
+      "trap_spearman_2025": 0.1924,
+      "traps_2025": 299,
+      "delta_ll_vs_null": -140.6953
+     },
+     {
+      "habitat": "BioClim19__BRT",
+      "n_exposures": 31972,
+      "beta_habitat": 0.3811,
+      "nb_size": 0.0195,
+      "heldout2025_ll": -3765.8268,
+      "trap_spearman_2025": 0.1912,
+      "traps_2025": 299,
+      "delta_ll_vs_null": -109.2529
+     },
+     {
+      "habitat": "BioClim19__GLM",
+      "n_exposures": 31972,
+      "beta_habitat": 0.4986,
+      "nb_size": 0.0199,
+      "heldout2025_ll": -3708.9039,
+      "trap_spearman_2025": 0.1925,
+      "traps_2025": 299,
+      "delta_ll_vs_null": -52.33
+     },
+     {
+      "habitat": "AlphaEarth64__GLM",
+      "n_exposures": 31972,
+      "beta_habitat": 0.3394,
+      "nb_size": 0.0195,
+      "heldout2025_ll": -3655.5148,
+      "trap_spearman_2025": 0.1797,
+      "traps_2025": 299,
+      "delta_ll_vs_null": 1.059
+     },
+     {
+      "habitat": "AlphaEarth64__RF",
+      "n_exposures": 31972,
+      "beta_habitat": 0.0743,
+      "nb_size": 0.0191,
+      "heldout2025_ll": -3673.6298,
+      "trap_spearman_2025": 0.0858,
+      "traps_2025": 299,
+      "delta_ll_vs_null": -17.056
+     }
+    ],
+    "new_locations": [
+     {
+      "min_km": 1,
+      "habitat": "BioClim19__RF",
+      "n": 401,
+      "detected": 100,
+      "prevalence": 0.2494,
+      "AP": 0.3276,
+      "AP_lo": 0.0955,
+      "AP_hi": 0.4743,
+      "AUC": 0.5768,
+      "AUC_lo": 0.3364,
+      "AUC_hi": 0.6906,
+      "clusters": 40,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 1,
+      "habitat": "BioClim19__BRT",
+      "n": 401,
+      "detected": 100,
+      "prevalence": 0.2494,
+      "AP": 0.3927,
+      "AP_lo": 0.0953,
+      "AP_hi": 0.6315,
+      "AUC": 0.6039,
+      "AUC_lo": 0.2861,
+      "AUC_hi": 0.7697,
+      "clusters": 40,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 1,
+      "habitat": "BioClim19__GLM",
+      "n": 401,
+      "detected": 100,
+      "prevalence": 0.2494,
+      "AP": 0.3956,
+      "AP_lo": 0.0929,
+      "AP_hi": 0.511,
+      "AUC": 0.5941,
+      "AUC_lo": 0.2809,
+      "AUC_hi": 0.7453,
+      "clusters": 40,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 1,
+      "habitat": "AlphaEarth64__GLM",
+      "n": 401,
+      "detected": 100,
+      "prevalence": 0.2494,
+      "AP": 0.3303,
+      "AP_lo": 0.0883,
+      "AP_hi": 0.4636,
+      "AUC": 0.5638,
+      "AUC_lo": 0.3413,
+      "AUC_hi": 0.7102,
+      "clusters": 40,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 1,
+      "habitat": "AlphaEarth64__RF",
+      "n": 401,
+      "detected": 100,
+      "prevalence": 0.2494,
+      "AP": 0.2958,
+      "AP_lo": 0.12,
+      "AP_hi": 0.5478,
+      "AUC": 0.4904,
+      "AUC_lo": 0.3362,
+      "AUC_hi": 0.7295,
+      "clusters": 40,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 5,
+      "habitat": "BioClim19__RF",
+      "n": 227,
+      "detected": 51,
+      "prevalence": 0.2247,
+      "AP": 0.282,
+      "AP_lo": 0.0963,
+      "AP_hi": 0.4282,
+      "AUC": 0.5686,
+      "AUC_lo": 0.3449,
+      "AUC_hi": 0.6765,
+      "clusters": 33,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 5,
+      "habitat": "BioClim19__BRT",
+      "n": 227,
+      "detected": 51,
+      "prevalence": 0.2247,
+      "AP": 0.356,
+      "AP_lo": 0.0767,
+      "AP_hi": 0.639,
+      "AUC": 0.5584,
+      "AUC_lo": 0.1968,
+      "AUC_hi": 0.7776,
+      "clusters": 33,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 5,
+      "habitat": "BioClim19__GLM",
+      "n": 227,
+      "detected": 51,
+      "prevalence": 0.2247,
+      "AP": 0.5259,
+      "AP_lo": 0.0786,
+      "AP_hi": 0.7927,
+      "AUC": 0.5973,
+      "AUC_lo": 0.2505,
+      "AUC_hi": 0.8149,
+      "clusters": 33,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 5,
+      "habitat": "AlphaEarth64__GLM",
+      "n": 227,
+      "detected": 51,
+      "prevalence": 0.2247,
+      "AP": 0.3068,
+      "AP_lo": 0.1047,
+      "AP_hi": 0.5345,
+      "AUC": 0.538,
+      "AUC_lo": 0.3322,
+      "AUC_hi": 0.6868,
+      "clusters": 33,
+      "years": "2021-2025"
+     },
+     {
+      "min_km": 5,
+      "habitat": "AlphaEarth64__RF",
+      "n": 227,
+      "detected": 51,
+      "prevalence": 0.2247,
+      "AP": 0.2287,
+      "AP_lo": 0.0929,
+      "AP_hi": 0.4337,
+      "AUC": 0.4617,
+      "AUC_lo": 0.307,
+      "AUC_hi": 0.6756,
+      "clusters": 33,
+      "years": "2021-2025"
+     }
+    ],
+    "manifest": {
+     "source": "AGES national alien-mosquito ovitrap monitoring 2020-2025 (GBIF DwC-A, CC BY-NC 4.0); 2020 excluded (2 detections)",
+     "habitat_models": "frozen final parameters refitted without Austrian rows (without_AT)",
+     "scores": [
+      "BioClim19__RF",
+      "BioClim19__BRT",
+      "BioClim19__GLM",
+      "AlphaEarth64__GLM",
+      "AlphaEarth64__RF"
+     ],
+     "site_years": 1641,
+     "exposures": 31972,
+     "weather": "NASA POWER daily, nearest cell",
+     "bootstrap": "25 km cells"
+    }
+   },
+   "p5": {
+    "validation": [
+     {
+      "design": "future_2024_2025",
+      "spec": "base",
+      "n": 128087,
+      "alpha": 2.0,
+      "ll_per_obs": -2.4482,
+      "poisson_dev": 5351544.716,
+      "muni_spearman": 0.9733,
+      "top_decile_case_share": 0.2276,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": null,
+      "dev_reduction_vs_base": 0.0,
+      "ll_gain_vs_base": 0.0
+     },
+     {
+      "design": "future_2024_2025",
+      "spec": "clim",
+      "n": 128087,
+      "alpha": 2.0,
+      "ll_per_obs": -2.4474,
+      "poisson_dev": 5372310.514,
+      "muni_spearman": 0.9673,
+      "top_decile_case_share": 0.207,
+      "coef_clim_BioClim19__RF_z": 0.2622,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": null,
+      "dev_reduction_vs_base": -0.0039,
+      "ll_gain_vs_base": 0.0008
+     },
+     {
+      "design": "future_2024_2025",
+      "spec": "ae",
+      "n": 128087,
+      "alpha": 2.0,
+      "ll_per_obs": -2.4438,
+      "poisson_dev": 5329704.2458,
+      "muni_spearman": 0.971,
+      "top_decile_case_share": 0.2087,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": 0.1906,
+      "states": null,
+      "dev_reduction_vs_base": 0.0041,
+      "ll_gain_vs_base": 0.0044
+     },
+     {
+      "design": "future_2024_2025",
+      "spec": "both",
+      "n": 128087,
+      "alpha": 2.0,
+      "ll_per_obs": -2.4446,
+      "poisson_dev": 5373606.0485,
+      "muni_spearman": 0.9675,
+      "top_decile_case_share": 0.2109,
+      "coef_clim_BioClim19__RF_z": 0.2129,
+      "coef_ae_AlphaEarth64__GLM_z": 0.1357,
+      "states": null,
+      "dev_reduction_vs_base": -0.0041,
+      "ll_gain_vs_base": 0.0036
+     },
+     {
+      "design": "future_2024_2025",
+      "spec": "hab_only",
+      "n": 128087,
+      "alpha": 6.0,
+      "ll_per_obs": -2.8695,
+      "poisson_dev": 32261816.5892,
+      "muni_spearman": 0.1021,
+      "top_decile_case_share": 0.0298,
+      "coef_clim_BioClim19__RF_z": 0.3541,
+      "coef_ae_AlphaEarth64__GLM_z": 0.0484,
+      "states": null,
+      "dev_reduction_vs_base": -5.0285,
+      "ll_gain_vs_base": -0.4213
+     },
+     {
+      "design": "leave_one_state_out",
+      "spec": "ae",
+      "n": 529055,
+      "alpha": null,
+      "ll_per_obs": -1.773,
+      "poisson_dev": 9744426.4679,
+      "muni_spearman": 0.9431,
+      "top_decile_case_share": 0.2008,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": 27.0,
+      "dev_reduction_vs_base": 0.0032,
+      "ll_gain_vs_base": 0.0046
+     },
+     {
+      "design": "leave_one_state_out",
+      "spec": "base",
+      "n": 529055,
+      "alpha": null,
+      "ll_per_obs": -1.7775,
+      "poisson_dev": 9776053.8059,
+      "muni_spearman": 0.956,
+      "top_decile_case_share": 0.2048,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": 27.0,
+      "dev_reduction_vs_base": 0.0,
+      "ll_gain_vs_base": 0.0
+     },
+     {
+      "design": "leave_one_state_out",
+      "spec": "both",
+      "n": 529055,
+      "alpha": null,
+      "ll_per_obs": -1.7707,
+      "poisson_dev": 9858752.7308,
+      "muni_spearman": 0.9438,
+      "top_decile_case_share": 0.18,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": 27.0,
+      "dev_reduction_vs_base": -0.0085,
+      "ll_gain_vs_base": 0.0068
+     },
+     {
+      "design": "leave_one_state_out",
+      "spec": "clim",
+      "n": 529055,
+      "alpha": null,
+      "ll_per_obs": -1.7725,
+      "poisson_dev": 9798769.1834,
+      "muni_spearman": 0.9443,
+      "top_decile_case_share": 0.1898,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": 27.0,
+      "dev_reduction_vs_base": -0.0023,
+      "ll_gain_vs_base": 0.005
+     },
+     {
+      "design": "leave_one_state_out",
+      "spec": "hab_only",
+      "n": 529055,
+      "alpha": null,
+      "ll_per_obs": -2.0784,
+      "poisson_dev": 53187168.3524,
+      "muni_spearman": 0.1659,
+      "top_decile_case_share": 0.0442,
+      "coef_clim_BioClim19__RF_z": null,
+      "coef_ae_AlphaEarth64__GLM_z": null,
+      "states": 27.0,
+      "dev_reduction_vs_base": -4.4406,
+      "ll_gain_vs_base": -0.3009
+     }
+    ],
+    "coefficients": [
+     {
+      "spec": "clim",
+      "term": "clim_BioClim19__RF_z",
+      "coef": 0.2281,
+      "lo": 0.2216,
+      "hi": 0.2345,
+      "alpha": 2
+     },
+     {
+      "spec": "ae",
+      "term": "ae_AlphaEarth64__GLM_z",
+      "coef": 0.1863,
+      "lo": 0.1804,
+      "hi": 0.1921,
+      "alpha": 2
+     },
+     {
+      "spec": "both",
+      "term": "clim_BioClim19__RF_z",
+      "coef": 0.1784,
+      "lo": 0.1716,
+      "hi": 0.1852,
+      "alpha": 2
+     },
+     {
+      "spec": "both",
+      "term": "ae_AlphaEarth64__GLM_z",
+      "coef": 0.1391,
+      "lo": 0.1331,
+      "hi": 0.1452,
+      "alpha": 2
+     },
+     {
+      "spec": "hab_only",
+      "term": "clim_BioClim19__RF_z",
+      "coef": 0.2725,
+      "lo": 0.265,
+      "hi": 0.2799,
+      "alpha": 6
+     },
+     {
+      "spec": "hab_only",
+      "term": "ae_AlphaEarth64__GLM_z",
+      "coef": 0.1217,
+      "lo": 0.1143,
+      "hi": 0.1291,
+      "alpha": 6
+     }
+    ],
+    "manifest": {
+     "municipalities": 5569,
+     "rows": 529055,
+     "months": "2018-2025",
+     "cases": 14978587,
+     "state_wins_vs_base": {
+      "clim": 16,
+      "ae": 15,
+      "both": 18
+     },
+     "states": 27,
+     "sources": {
+      "cases": "InfoDengue/Mosqlimate municipality-week compilation (project AFR+PA Drive folder)",
+      "population": "IBGE SIDRA 6579 estimates + 4709 census 2022",
+      "weather": "NASA POWER monthly MERRA-2",
+      "boundaries": "IBGE malhas API v3",
+      "habitat": "frozen 2024 models: BioClim19 RF (WorldClim), AlphaEarth64 GLM (2024 overviews)"
+     }
+    }
+   },
+   "transfer_v2": {
+    "year": [
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "AlphaEarth64__GLM",
+      "ap_2024emb": 0.4223055638318378,
+      "ap_2025emb": 0.3780446876479559,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0442608761838819,
+      "lo": -0.1184007229806266,
+      "hi": 0.0120687251735655
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "AlphaEarth64__RF",
+      "ap_2024emb": 0.6121865862186864,
+      "ap_2025emb": 0.6762772165255901,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": 0.0640906303069037,
+      "lo": -0.0677882972989402,
+      "hi": 0.1578273925175034
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment_AlphaEarth105__GLM",
+      "ap_2024emb": 0.4736929380137316,
+      "ap_2025emb": 0.4590154238425702,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0146775141711613,
+      "lo": -0.0497172114204088,
+      "hi": 0.025290787190192
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment_AlphaEarth105__RF",
+      "ap_2024emb": 0.740982781033963,
+      "ap_2025emb": 0.7050974180371243,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment_TESSERA169__GLM",
+      "ap_2024emb": 0.532587839988531,
+      "ap_2025emb": 0.4293807672603122,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "TESSERA128__GLM",
+      "ap_2024emb": 0.6024721918998697,
+      "ap_2025emb": 0.5406897798321997,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0617824120676699,
+      "lo": -0.1384809652780838,
+      "hi": 0.0664265453086819
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "TESSERA128__RF",
+      "ap_2024emb": 0.8032969952285582,
+      "ap_2025emb": 0.5974553443582562,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "TESSERA_PCA32__GLM",
+      "ap_2024emb": 0.6740642305303722,
+      "ap_2025emb": 0.6172097541219109,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "AlphaEarth64__GLM",
+      "ap_2024emb": 0.342284836353418,
+      "ap_2025emb": 0.2664963270763169,
+      "n_2024": 389,
+      "n_2025": 389,
+      "delta": -0.0757885092771011,
+      "lo": -0.2376301398453839,
+      "hi": -0.0067994570316686
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "AlphaEarth64__RF",
+      "ap_2024emb": 0.1929842428473762,
+      "ap_2025emb": 0.1415708674682657,
+      "n_2024": 389,
+      "n_2025": 389,
+      "delta": -0.0514133753791105,
+      "lo": -0.1182779281017497,
+      "hi": 0.0546074903587198
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "Environment_AlphaEarth105__GLM",
+      "ap_2024emb": 0.4124065215446165,
+      "ap_2025emb": 0.3062399680126483,
+      "n_2024": 389,
+      "n_2025": 389,
+      "delta": -0.1061665535319682,
+      "lo": -0.1893354686861242,
+      "hi": -0.0117553509883826
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "Environment_AlphaEarth105__RF",
+      "ap_2024emb": 0.228411679547806,
+      "ap_2025emb": 0.1948267538244163,
+      "n_2024": 389,
+      "n_2025": 389,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "Environment_TESSERA169__GLM",
+      "ap_2024emb": 0.4534287654000017,
+      "ap_2025emb": 0.3912078937197868,
+      "n_2024": 389,
+      "n_2025": 337,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "TESSERA128__GLM",
+      "ap_2024emb": 0.3993451868186983,
+      "ap_2025emb": 0.3918134573010053,
+      "n_2024": 389,
+      "n_2025": 337,
+      "delta": -0.1090847780223577,
+      "lo": -0.2580994313826497,
+      "hi": 0.0216799761736992
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "TESSERA128__RF",
+      "ap_2024emb": 0.2562131523563186,
+      "ap_2025emb": 0.1773269982427423,
+      "n_2024": 389,
+      "n_2025": 337,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "TESSERA_PCA32__GLM",
+      "ap_2024emb": 0.405437621056857,
+      "ap_2025emb": 0.3488995310377906,
+      "n_2024": 389,
+      "n_2025": 337,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "AlphaEarth64__GLM",
+      "ap_2024emb": 0.5281698191158771,
+      "ap_2025emb": 0.4486068738523954,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0795629452634817,
+      "lo": -0.172024597475831,
+      "hi": 0.0402244241643684
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "AlphaEarth64__RF",
+      "ap_2024emb": 0.5517737178676059,
+      "ap_2025emb": 0.5374372429139905,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0143364749536153,
+      "lo": -0.0328443346607421,
+      "hi": 0.0261129617395311
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "Environment_AlphaEarth105__GLM",
+      "ap_2024emb": 0.4901764456221874,
+      "ap_2025emb": 0.5176992591191355,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": 0.0275228134969481,
+      "lo": -0.0527788029092547,
+      "hi": 0.1014645485900207
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "Environment_AlphaEarth105__RF",
+      "ap_2024emb": 0.6517447152952023,
+      "ap_2025emb": 0.6210882995853614,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "Environment_TESSERA169__GLM",
+      "ap_2024emb": 0.5883850840781879,
+      "ap_2025emb": 0.4712176177170183,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "TESSERA128__GLM",
+      "ap_2024emb": 0.6162566638840434,
+      "ap_2025emb": 0.5779510096309888,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": -0.0383056542530546,
+      "lo": -0.15273142815527,
+      "hi": 0.0624871752797121
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "TESSERA128__RF",
+      "ap_2024emb": 0.6243736762747626,
+      "ap_2025emb": 0.6119669382230235,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "TESSERA_PCA32__GLM",
+      "ap_2024emb": 0.670323531929519,
+      "ap_2025emb": 0.6229257793685431,
+      "n_2024": 203,
+      "n_2025": 203,
+      "delta": null,
+      "lo": null,
+      "hi": null
+     }
+    ],
+    "maxnet": [
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "BioClim19__MaxNet",
+      "ap_rmaxnet": 0.4810159930381846,
+      "ap_elapid": 0.3680143650629334
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "BioClim19__MaxNet",
+      "ap_rmaxnet": 0.5897743718286655,
+      "ap_elapid": 0.5992179634465891
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "Environment41__MaxNet",
+      "ap_rmaxnet": 0.3719082597422706,
+      "ap_elapid": 0.3668926452746632
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment41__MaxNet",
+      "ap_rmaxnet": 0.5347108037763275,
+      "ap_elapid": 0.4452449778069228
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "BioClim19__MaxNet",
+      "ap_rmaxnet": 0.5826984866881094,
+      "ap_elapid": 0.5763351333212432
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "Environment41__MaxNet",
+      "ap_rmaxnet": 0.5104336986041988,
+      "ap_elapid": 0.4803501407233951
+     }
+    ],
+    "top": [
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment_AlphaEarth105__RF",
+      "AP": 0.8053,
+      "AUC": 0.8605,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "TESSERA128__RF",
+      "AP": 0.8033,
+      "AUC": 0.8568,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "all_primary",
+      "test": "AGES2025",
+      "model": "Environment41__RF",
+      "AP": 0.798,
+      "AUC": 0.8738,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "BioClim19__BRT",
+      "AP": 0.7436,
+      "AUC": 0.7784,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "BioClim19__RF",
+      "AP": 0.7245,
+      "AUC": 0.7332,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "without_AGES",
+      "test": "AGES2025",
+      "model": "Environment41__BRT",
+      "AP": 0.6994,
+      "AUC": 0.7536,
+      "n": 203,
+      "positives": 75
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "BioClim19__MaxNet",
+      "AP": 0.481,
+      "AUC": 0.8906,
+      "n": 389,
+      "positives": 43
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "BioClim19__RF",
+      "AP": 0.4771,
+      "AUC": 0.9102,
+      "n": 389,
+      "positives": 43
+     },
+     {
+      "train": "all_primary",
+      "test": "NEON2025",
+      "model": "Environment_TESSERA169__GLM",
+      "AP": 0.4534,
+      "AUC": 0.8714,
+      "n": 389,
+      "positives": 43
+     }
+    ]
+   }
+  },
+  "themes_text": {
+   "figures": [
+    [
+     "12 / 12",
+     "report configurations reproduced by refitting",
+     "R maxnet 0.1.4 refit on the frozen folds matches both MaxNet configurations exactly (0.6770 and 0.7729), so every one of the 12 is now refit, not only recomputed."
+    ],
+    [
+     "−0.11 to −0.16",
+     "open S2 encoders vs AlphaEarth, ΔAP",
+     "Frozen Prithvi-EO-2.0, Clay v1.5, CROMA and SatMAE on 2024 Sentinel-2 chips, logistic head, 1,555 sites; every interval excludes 0."
+    ],
+    [
+     "−0.076",
+     "NEON 2025 AP with 2025 embeddings",
+     "AlphaEarth + logistic falls from 0.342 to 0.266 (95% −0.238 to −0.007) when the outcome-year embedding replaces the 2024 one."
+    ],
+    [
+     "+0.004",
+     "dengue log-likelihood per obs from habitat",
+     "Brazil, 5,569 municipalities, forecasting 2024–25: the AlphaEarth habitat summary barely improves a model with weather, season and past incidence (municipality ρ 0.971 vs 0.973)."
+    ]
+   ],
+   "findings": [
+    {
+     "head": "MaxNet now refits exactly, and transfers well.",
+     "body": "The official R maxnet (default features, cloglog) reproduces Climate 19 MaxNet 0.6770 and Environment 41 MaxNet 0.7729 to every fold. On NEON 2025, R MaxNet on Climate 19 reaches AP 0.481, tied with the best model (Climate 19 + RF, 0.477). The Python elapid stand-in had given 0.368, so earlier MaxEnt transfer results understated it."
+    },
+    {
+     "head": "Support size and grid do not matter between 250 m and 1 km.",
+     "body": "AlphaEarth re-extracted from the native 10 m layer gives AP 0.808 at 250 m, 0.811 at 500 m and 0.812 at 1 km; the single point pixel is lower (0.789; −0.023, −0.053 to +0.007). Native extraction equals the original 250 m working-grid features (+0.0003, −0.004 to +0.004)."
+    },
+    {
+     "head": "AlphaEarth beats raw spectra and four open encoders.",
+     "body": "Quarterly Sentinel-2 statistics with seasonal dynamics reach AP 0.632 with a logistic head, 0.186 below AlphaEarth (−0.256 to −0.116). Frozen Prithvi, Clay, CROMA and SatMAE embeddings of the same 1.44 km chips score 0.646–0.684, all 0.11–0.16 below AlphaEarth. Pretraining helps (+0.03 to +0.07 over random weights; the Prithvi and CROMA intervals exclude 0), and Clay’s time and location metadata add nothing (+0.004). Adding any of them to AlphaEarth lowers AP by 0.04–0.10."
+    },
+    {
+     "head": "Location stands in for missing nonlinearity, and human features carry sampling signal.",
+     "body": "Coordinates alone reach AP 0.709 with RF (−0.097 vs Environment 41 RF) and add nothing to AlphaEarth (+0.003). SatCLIP lifts a logistic Environment 41 by +0.089 (+0.033 to +0.151) but not past AlphaEarth. Dropping the four human-activity features costs little (−0.009 logistic, −0.004 RF). Fixing them at the training median, as a bias covariate, costs −0.065 and −0.084, so part of the held-out score rewards where people record mosquitoes. Lagged weather adds nothing (+0.008, −0.001)."
+    },
+    {
+     "head": "AlphaEarth is the most data-efficient, and sources do not substitute.",
+     "body": "With 10% of training sites (about 101), AlphaEarth + logistic reaches AP 0.731, matching Environment 41 + RF trained on the same subsets (0.719); it leads at every fraction. Training only on AGES ovitrap detections ranks AGES detections well (AlphaEarth 0.80) but iNaturalist poorly (0.55), and iNaturalist-only training does the reverse. Pooling all sources is best overall."
+    },
+    {
+     "head": "Repeat surveys show detection is not the problem; habitat scores add little within Austria.",
+     "body": "In 1,641 AGES trap-years (31,972 weekly visits, 2021–2025), per-visit detection is 0.20 and cumulative detection 0.95, so about 5% of occupied trap-years were never detected. No habitat score has an occupancy coefficient whose interval excludes 0. On held-out data the scores lower log-likelihood versus a year-only model, except AlphaEarth + logistic for 2025 (+3.3). At traps new to the network (≥ 1 km from earlier traps), AUC is 0.49–0.60 and every interval includes 0.5."
+    },
+    {
+     "head": "Dengue: habitat summaries are consistent but small.",
+     "body": "In a negative-binomial model of monthly municipal dengue cases with a population offset, lagged weather, season and past incidence, both habitat summaries have positive coefficients (Climate 19 RF 0.23, AlphaEarth 0.19 per SD). Forecasting 2024–25 they add +0.0008 to +0.0044 log-likelihood per municipality-month and change deviance by −0.4% to +0.4%. Leaving out each state in turn, they improve log-likelihood in 15–18 of 27 states. On their own they explain little (municipality ρ 0.10–0.17)."
+    },
+    {
+     "head": "Supported conclusion.",
+     "body": "AlphaEarth is the strongest and most data-efficient representation for ranking held-out 2024 blocks, and it beats raw spectra, location encoders and four open S2 foundation models. That advantage does not carry to new years, monitoring networks or disease counts. There, climate models (RF, BRT, R MaxNet) transfer at least as well, and outcome-year embeddings make transfer worse. Use embeddings as a within-distribution ranking tool, not as evidence of better transfer."
+    }
+   ],
+   "maps": [
+    {
+     "label": "AlphaEarth · logistic",
+     "src": "assets/maps/map_ae_glm.png",
+     "alt": "World map of relative suitability from the AlphaEarth logistic model, 2024",
+     "caption": "AlphaEarth 64 + logistic, 2024, from AlphaEarth overview tiles (2.56 km pixels averaged to 0.05°); shown as within-map percentile at 0.25°. An approximation: the original used 500 m circles."
+    },
+    {
+     "label": "Climate 19 · RF",
+     "src": "assets/maps/map_clim_rf.png",
+     "alt": "World map of relative suitability from the Climate 19 random-forest model",
+     "caption": "Climate 19 + RF from WorldClim 2.1 at 0.05° cell centres, the original recipe; within-map percentile at 0.25°."
+    },
+    {
+     "label": "Climate 19 · BRT",
+     "src": "assets/maps/map_clim_brt.png",
+     "alt": "World map of relative suitability from the Climate 19 boosted-tree model",
+     "caption": "Climate 19 + BRT from WorldClim 2.1 at 0.05° cell centres; within-map percentile at 0.25°."
+    },
+    {
+     "label": "AlphaEarth · RF",
+     "src": "assets/maps/map_ae_rf.png",
+     "alt": "World map of relative suitability from the AlphaEarth random-forest model",
+     "caption": "AlphaEarth 64 + RF from 2024 overview tiles; within-map percentile at 0.25°."
+    }
+   ],
+   "notes": {
+    "maps": "Final models refit on all 1,601 sites with the frozen parameters. Climate maps use the original recipe; AlphaEarth maps use the published overview pyramid, which tracks 500 m circle means closely (r ≈ 0.995) but is not identical. Both extrapolate high values into deserts and tropical regions far from any training site. Read colour as rank within one map, not as probability. Environment 41 and fusion surfaces were not rebuilt: they need Earth Engine layers.",
+    "p3": "Frozen folds, 1,555 sites with every new input (46 primary sites lack Sentinel-2, SatCLIP or weather inputs). Paired 150 km block bootstrap, 1,000 replicates, on pooled out-of-fold scores; about 40 pairs are tested, so treat single borderline intervals with care.",
+    "sources": "Positives restricted by source in training; the test folds are unchanged. Small numbers after each AP are the same model scored only on iNaturalist presences or only on AGES detections against background.",
+    "occupancy": "Single-season occupancy per trap-year: ψ from the habitat score (z-scored) plus year; detection from log trap-days, week, week² and NASA POWER mean temperature over the exposure. Intervals: 200 bootstrap replicates over 25 km cells. ΔLL compares held-out log-likelihood with the year-only model; positive is better.",
+    "new_locations": "First survey year of traps at least 1 or 5 km from every trap in earlier years, pooled 2021–2025, scored with models trained without Austrian rows. Intervals resample 25 km clusters.",
+    "p5": "Negative-binomial GLM (log link, log-population offset, α profiled). Base: calendar month, NASA POWER temperature, rain and humidity lagged 1–2 months, 12-month mean temperature, log population density and log incidence lagged 1 and 12 months. Cases are InfoDengue/Mosqlimate municipal counts; habitat summaries average the frozen 2024 maps over each municipality. Disease counts were never used as mosquito labels. GLM intervals ignore spatial clustering, so the state-level results are the better guide.",
+    "year": "Same 2024-trained models; test-site features taken from the 2024 or the 2025 embedding at the same 500 m support. TESSERA 2025 tiles are partial on the public mirror (337 of 389 NEON sites), so its paired difference uses the shared sites only. R MaxNet rows compare with the Python elapid stand-in on the same 2024 features."
+   },
+   "p3_pairs": [
+    [
+     "AlphaEarth64__GLM",
+     "AE_native_r500__GLM",
+     "Native 10 m vs 250 m grid (500 m)",
+     false
+    ],
+    [
+     "AE_native_r500__GLM",
+     "AE_native_r0__GLM",
+     "500 m → point pixel",
+     false
+    ],
+    [
+     "AE_native_r500__GLM",
+     "AE_native_r250__GLM",
+     "500 m → 250 m",
+     false
+    ],
+    [
+     "AE_native_r500__GLM",
+     "AE_native_r1000__GLM",
+     "500 m → 1 km",
+     false
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "S2stats__GLM",
+     "AlphaEarth → raw S2 statistics",
+     true
+    ],
+    [
+     "S2_Env__GLM",
+     "S2_Env_AE__GLM",
+     "S2 + Env → + AlphaEarth",
+     false
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "prithvi__GLM",
+     "AlphaEarth → Prithvi",
+     true
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "clay__GLM",
+     "AlphaEarth → Clay",
+     true
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "croma__GLM",
+     "AlphaEarth → CROMA",
+     true
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "satmae__GLM",
+     "AlphaEarth → SatMAE",
+     true
+    ],
+    [
+     "prithvi_random__GLM",
+     "prithvi__GLM",
+     "Prithvi: random → pretrained",
+     false
+    ],
+    [
+     "clay_random__GLM",
+     "clay__GLM",
+     "Clay: random → pretrained",
+     false
+    ],
+    [
+     "croma_random__GLM",
+     "croma__GLM",
+     "CROMA: random → pretrained",
+     false
+    ],
+    [
+     "satmae_random__GLM",
+     "satmae__GLM",
+     "SatMAE: random → pretrained",
+     false
+    ],
+    [
+     "clay_nometa__GLM",
+     "clay__GLM",
+     "Clay: + time/location metadata",
+     false
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "croma_AE__GLM",
+     "AlphaEarth → + CROMA",
+     false
+    ],
+    [
+     "Environment41__RF",
+     "Coords__RF",
+     "Env 41 RF → coordinates only",
+     false
+    ],
+    [
+     "AlphaEarth64__GLM",
+     "Coords_AE__GLM",
+     "AlphaEarth → + coordinates",
+     false
+    ],
+    [
+     "Environment41__GLM",
+     "SatCLIP_Env__GLM",
+     "Env 41 → + SatCLIP",
+     false
+    ],
+    [
+     "Environment41__GLM",
+     "Env37_noHuman__GLM",
+     "Env 41 → drop human features",
+     false
+    ],
+    [
+     "Environment41__GLM",
+     "Env41_humanAsBias__GLM",
+     "Env 41 → human as bias covariate",
+     true
+    ],
+    [
+     "Environment41__RF",
+     "Env41_humanAsBias__RF",
+     "Env 41 RF → human as bias covariate",
+     false
+    ],
+    [
+     "Environment41__GLM",
+     "WeatherLag_Env__GLM",
+     "Env 41 → + lagged weather",
+     false
+    ]
+   ],
+   "source_designs": [
+    [
+     "all_sources",
+     "All sources (iNaturalist + AGES)"
+    ],
+    [
+     "I_only",
+     "iNaturalist only"
+    ],
+    [
+     "A_only",
+     "AGES only"
+    ],
+    [
+     "I_equalN",
+     "iNaturalist, matched N"
+    ],
+    [
+     "fusion_equalN",
+     "Both sources, matched N"
+    ]
+   ],
+   "p5_specs": [
+    [
+     "base",
+     "Weather + season + past incidence (base)"
+    ],
+    [
+     "clim",
+     "Base + Climate 19 RF habitat"
+    ],
+    [
+     "ae",
+     "Base + AlphaEarth habitat"
+    ],
+    [
+     "both",
+     "Base + both habitat summaries"
+    ],
+    [
+     "hab_only",
+     "Habitat summaries only"
+    ]
+   ],
+   "year_models": [
+    "AlphaEarth64__GLM",
+    "AlphaEarth64__RF",
+    "Environment_AlphaEarth105__GLM",
+    "TESSERA128__GLM"
+   ]
   }
  }
 }

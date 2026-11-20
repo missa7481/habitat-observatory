@@ -93,7 +93,7 @@ function renderBenchmark(R) {
 }
 
 /* ------------------------------------------------------------------ 19 Nov: reproduction, MLP, TESSERA, 2025 */
-const FACT = { BioClim19: 'Climate 19', Environment41: 'Environment 41', AlphaEarth64: 'AlphaEarth 64', Environment_AlphaEarth105: 'Env + AlphaEarth', Nonlinear_late_fusion: 'Nonlinear late fusion', TESSERA128: 'TESSERA 128', Environment_TESSERA169: 'Env + TESSERA', TESSERA_PCA32: 'TESSERA PCA-32' };
+const FACT = { Coords: 'Coordinates', Coords_Env: 'Coordinates + Env', Coords_AE: 'Coordinates + AlphaEarth', Env37_noHuman: 'Environment 37 (no human)', Env41_humanAsBias: 'Environment 41, human as bias', AE_plusHuman: 'AlphaEarth + human', AE_humanAsBias: 'AlphaEarth, human as bias', AE_native_r0: 'AlphaEarth point pixel', AE_native_r250: 'AlphaEarth 250 m (native)', AE_native_r500: 'AlphaEarth 500 m (native)', AE_native_r1000: 'AlphaEarth 1 km (native)', S2stats: 'Sentinel-2 quarterly stats', S2_AE: 'S2 stats + AlphaEarth', S2_Env: 'S2 stats + Env', S2_Env_AE: 'S2 + Env + AlphaEarth', SatCLIP: 'SatCLIP', SatCLIP_Env: 'SatCLIP + Env', WeatherLag: 'Lagged weather', WeatherLag_Env: 'Lagged weather + Env', prithvi: 'Prithvi-EO-2.0', clay: 'Clay v1.5', clay_nometa: 'Clay, no metadata', croma: 'CROMA', satmae: 'SatMAE', prithvi_random: 'Prithvi, random weights', clay_random: 'Clay, random weights', croma_random: 'CROMA, random weights', satmae_random: 'SatMAE, random weights', prithvi_AE: 'Prithvi + AlphaEarth', clay_AE: 'Clay + AlphaEarth', croma_AE: 'CROMA + AlphaEarth', satmae_AE: 'SatMAE + AlphaEarth', BioClim19: 'Climate 19', Environment41: 'Environment 41', AlphaEarth64: 'AlphaEarth 64', Environment_AlphaEarth105: 'Env + AlphaEarth', Nonlinear_late_fusion: 'Nonlinear late fusion', TESSERA128: 'TESSERA 128', Environment_TESSERA169: 'Env + TESSERA', TESSERA_PCA32: 'TESSERA PCA-32' };
 const LRN = { GLM: 'logistic', RF: 'RF', BRT: 'BRT', MaxNet: 'MaxNet', MaxEnt: 'MaxEnt (elapid)', MLP: 'MLP' };
 const ARM = id => { const [f, l] = id.split('__'); return `${FACT[f] || f.replace(/_/g, ' ')} · ${LRN[l] || l}`; };
 
@@ -104,7 +104,7 @@ function renderExtended(R) {
   byId('rx-findings').innerHTML = I.findings.map(f => `<li><b>${esc(f.head)}</b> ${esc(f.body)}</li>`).join('');
   const ver = (f, l) => X.reproduction.verified.find(r => r.factor === f && r.learner === l);
   byId('rx-repro').innerHTML = `<thead><tr><th>Features · learner</th><th class="num">Report AP</th><th class="num">Verified</th><th class="num">Refit</th><th class="num">Max fold Δ</th></tr></thead><tbody>${
-    X.reproduction.verified.map(v => { const b = X.reproduction.refit.find(r => r.factor === v.factor && r.learner === v.learner);
+    X.reproduction.verified.map(v => { const b = X.reproduction.refit.find(r => r.factor === v.factor && r.learner === v.learner) || ((N.themes && N.themes.maxnet) || []).find(r => r.factor === v.factor && r.learner === v.learner);
       return `<tr><td>${esc(ARM(`${v.factor}__${v.learner}`))}</td><td class="num">${f3(b ? b.AP_original : v.AP, 4)}</td><td class="num">${f3(v.AP, 4)}</td><td class="num">${b ? f3(b.AP_refit, 4) : '<span class="muted">R only</span>'}</td><td class="num">${b ? f3(b.max_abs_fold_diff, 3) : '—'}</td></tr>`; }).join('')}</tbody>`;
   byId('rx-mlp').innerHTML = `<thead><tr><th>Representation</th><th class="num">Report AP</th><th class="num">Seed mean</th><th class="num">Seed range</th></tr></thead><tbody>${
     X.mlp.map(m => `<tr><td>${esc(FACT[m.representation] || m.representation)}</td><td class="num">${f3(m.AP_original, 4)}</td><td class="num">${f3(m.AP_seed_mean, 4)}</td><td class="num">${f3(m.AP_seed_min, 3)}–${f3(m.AP_seed_max, 3)}</td></tr>`).join('')}</tbody>`;
@@ -129,20 +129,82 @@ function renderExtended(R) {
   draw(TESTS[0][0]);
 }
 
+/* ------------------------------------------------------------------ 19 Nov: remaining themes */
+function renderThemes(R) {
+  const N = R.benchmark, X = N && N.themes, I = N && N.themes_text; if (!X || !I) return;
+  const pc = v => `${Math.round(v * 100)}%`, sg = (v, d = 3) => (v === null || v === undefined) ? '—' : HO.sgn(v, d);
+  byId('th-figs').innerHTML = I.figures.map(([v, l, d]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span><small>${esc(d)}</small></div>`).join('');
+  byId('th-findings').innerHTML = I.findings.map(f => `<li><b>${esc(f.head)}</b> ${esc(f.body)}</li>`).join('');
+
+  // rebuilt maps
+  const seg = byId('th-map-seg');
+  seg.innerHTML = I.maps.map((m, i) => `<button type="button" data-i="${i}" aria-pressed="${i === 0}">${esc(m.label)}</button>`).join('');
+  const show = i => { const m = I.maps[i]; const img = byId('th-map-img'); img.src = m.src; img.alt = m.alt; byId('th-map-cap').textContent = m.caption; };
+  seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); show(+b.dataset.i); });
+  show(0);
+  byId('th-maps').innerHTML = `<thead><tr><th>Surface</th><th>Built from</th><th class="num">Cells (0.05°)</th><th class="num">Agreement with 500 m point predictions (Spearman)</th></tr></thead><tbody>${
+    X.maps.map(m => `<tr><td>${esc(ARM(m.surface))}</td><td>${esc(m.source)}</td><td class="num">${formatInt(m.cells)}</td><td class="num">${f3(m.spearman_vs_point)}</td></tr>`).join('')}</tbody>`;
+  byId('th-maps-note').textContent = I.notes.maps;
+
+  // P3 forest
+  const P = X.p3;
+  if (P) {
+    const rows = I.p3_pairs.map(([ref, cand, label, bold]) => { const r = P.paired.find(q => q.reference === ref && q.candidate === cand);
+      return r && { label, d: r.delta_ap, lo: r.ci_low, hi: r.ci_high, bold,
+        tip: `${label}: ΔAP ${sg(r.delta_ap)} (95% ${sg(r.ci_low)} to ${sg(r.ci_high)}); candidate better in ${r.folds_candidate_better} of ${r.folds} folds; ${r.n_sites} sites, ${r.clusters} block clusters` }; }).filter(Boolean);
+    forest(byId('th-p3'), rows, { lim: 0.3, label: 'P3 paired AP differences' });
+    byId('th-p3-note').textContent = I.notes.p3;
+    const fr = P.fractions, arms = [...new Set(fr.map(r => r.arm))], fracs = [0.1, 0.25, 0.5, 1];
+    byId('th-frac').innerHTML = `<thead><tr><th>Features · learner</th>${fracs.map(f => `<th class="num">${pc(f)}</th>`).join('')}</tr></thead><tbody>${
+      arms.map(a => `<tr><td>${esc(ARM(a))}</td>${fracs.map(f => { const r = fr.find(x => x.arm === a && x.fraction === f); return `<td class="num">${r ? f3(r.AP) : '—'}</td>`; }).join('')}</tr>`).join('')}</tbody>`;
+    const sr = P.sources, D = I.source_designs;
+    byId('th-src').innerHTML = `<thead><tr><th>Training positives</th>${[...new Set(sr.map(r => r.arm))].map(a => `<th class="num">${esc(ARM(a))}</th>`).join('')}</tr></thead><tbody>${
+      D.map(([d, l]) => `<tr><td>${esc(l)}</td>${[...new Set(sr.map(r => r.arm))].map(a => { const r = sr.find(x => x.arm === a && x.design === d); return `<td class="num">${r ? f3(r.AP) : '—'}<small class="muted"> · iNat ${r && r.AP_test_I_vs_bg != null ? f3(r.AP_test_I_vs_bg) : '—'} · AGES ${r && r.AP_test_A_vs_bg != null ? f3(r.AP_test_A_vs_bg) : '—'}</small></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+    byId('th-src-note').textContent = I.notes.sources;
+  }
+
+  // P4
+  const occ = X.p4.occupancy, ho = X.p4.heldout;
+  byId('th-occ').innerHTML = `<thead><tr><th>Habitat score on ψ</th><th class="num">β (95% CI)</th><th class="num">ΔAIC</th><th class="num">ΔLL 2025</th><th class="num">ΔLL 25 km CV</th></tr></thead><tbody>${
+    occ.map(o => { const n = occ.find(x => x.habitat === 'null'); const h = d => (ho.find(x => x.habitat === o.habitat && x.design === d) || {}).delta_ll_vs_null;
+      return `<tr><td>${o.habitat === 'null' ? 'None (year only)' : esc(ARM(o.habitat))}</td><td class="num">${o.habitat === 'null' ? '—' : `${sg(o.beta_habitat, 2)} (${sg(o.beta_ci_low, 2)} to ${sg(o.beta_ci_high, 2)})`}</td><td class="num">${o.habitat === 'null' ? '—' : sg(o.aic - n.aic, 1)}</td><td class="num">${o.habitat === 'null' ? '—' : sg(h('future_2025'), 1)}</td><td class="num">${o.habitat === 'null' ? '—' : sg(h('block25km_cv5'), 1)}</td></tr>`; }).join('')}</tbody>`;
+  byId('th-occ-note').textContent = I.notes.occupancy;
+  const nl = X.p4.new_locations;
+  byId('th-new').innerHTML = `<thead><tr><th>Habitat score</th>${[1, 5].map(k => { const r = nl.find(x => x.min_km === k); return `<th class="num">≥ ${k} km<br><small class="muted">${r.n} traps · ${r.detected} detected</small></th>`; }).join('')}</tr></thead><tbody>${
+    [...new Set(nl.map(r => r.habitat))].map(s => `<tr><td>${esc(ARM(s))}</td>${[1, 5].map(k => { const r = nl.find(x => x.min_km === k && x.habitat === s); return `<td class="num">AUC ${f3(r.AUC)} <small class="muted">(${f3(r.AUC_lo, 2)}–${f3(r.AUC_hi, 2)}) · AP ${f3(r.AP)}</small></td>`; }).join('')}</tr>`).join('')}</tbody>`;
+  byId('th-new-note').textContent = I.notes.new_locations;
+
+  // P5
+  const V = X.p5.validation, SPEC = I.p5_specs;
+  byId('th-p5').innerHTML = `<thead><tr><th>Model</th><th class="num">Future 2024–25: Δ log-lik / obs</th><th class="num">Deviance vs base</th><th class="num">Municipality ρ</th><th class="num">Leave-one-state-out: Δ log-lik / obs</th><th class="num">Deviance vs base</th><th class="num">Municipality ρ</th></tr></thead><tbody>${
+    SPEC.map(([s, l]) => { const f = V.find(r => r.design === 'future_2024_2025' && r.spec === s), o = V.find(r => r.design === 'leave_one_state_out' && r.spec === s);
+      return `<tr${s === 'base' ? ' class="hl"' : ''}><td>${esc(l)}</td><td class="num">${s === 'base' ? '0' : sg(f.ll_gain_vs_base, 4)}</td><td class="num">${s === 'base' ? '—' : sg(-f.dev_reduction_vs_base * 100, 1) + '%'}</td><td class="num">${f3(f.muni_spearman)}</td><td class="num">${s === 'base' ? '0' : sg(o.ll_gain_vs_base, 4)}</td><td class="num">${s === 'base' ? '—' : sg(-o.dev_reduction_vs_base * 100, 1) + '%'}</td><td class="num">${f3(o.muni_spearman)}</td></tr>`; }).join('')}</tbody>`;
+  byId('th-p5-note').textContent = I.notes.p5;
+
+  // 2025 revisited
+  const Y = X.transfer_v2, TL = { NEON2025: 'NEON 2025', AGES2025: 'Austria 2025' }, TR = { all_primary: 'all 1,601 sites', without_AGES: 'no Austrian rows' };
+  const yr = Y.year.filter(r => I.year_models.includes(r.model));
+  byId('th-yr').innerHTML = `<thead><tr><th>Test · training</th><th>Features · learner</th><th class="num">AP, 2024 embeddings</th><th class="num">AP, 2025 embeddings</th><th class="num">Paired ΔAP (95% CI)</th></tr></thead><tbody>${
+    yr.map(r => `<tr><td>${TL[r.test]} · ${TR[r.train]}</td><td>${esc(ARM(r.model))}</td><td class="num">${f3(r.ap_2024emb)}</td><td class="num">${f3(r.ap_2025emb)}</td><td class="num">${sg(r.delta)} <small class="muted">(${sg(r.lo, 2)} to ${sg(r.hi, 2)})</small></td></tr>`).join('')}${
+    Y.maxnet.map(r => `<tr><td>${TL[r.test]} · ${TR[r.train]}</td><td>${esc(ARM(r.model))} <small class="muted">R maxnet (was elapid ${f3(r.ap_elapid)})</small></td><td class="num" colspan="2">${f3(r.ap_rmaxnet)}</td><td class="num">${sg(r.ap_rmaxnet - r.ap_elapid)} <small class="muted">vs elapid</small></td></tr>`).join('')}</tbody>`;
+  byId('th-yr-note').textContent = I.notes.year;
+}
+
 function render(B, R) {
   renderBenchmark(R);
   renderExtended(R);
+  renderThemes(R);
   renderStatusBoard(B, R);
   renderMatrix(B, R);
   renderReport(R);
   byId('check-grid').innerHTML = R.checks.map(c => `<article class="check"><b>${esc(c.value)}</b><span>${esc(c.label)}</span><p>${esc(c.detail)}</p></article>`).join('');
-  const PSTATE = { blocked: '<span class="ev ev-blocked">Blocked</span>', done: '<span class="ev ev-done">Run 18 Nov · new analysis</span>', partial: '<span class="ev ev-mixed">Partly resolved</span>', planned: '<span class="ev ev-plan">Planned</span>' };
+  const PSTATE = { blocked: '<span class="ev ev-blocked">Blocked</span>', done: '<span class="ev ev-done">Run 18–19 Nov · new analysis</span>', partial: '<span class="ev ev-mixed">Partly resolved</span>', planned: '<span class="ev ev-plan">Planned</span>' };
   byId('prio-grid').innerHTML = R.priorities.map(p => `
     <article class="prio ${esc(p.state)}">
       <header><span class="pid">${esc(p.id)}</span>${PSTATE[p.state] || PSTATE.planned}</header>
       <h3>${esc(p.title)}</h3><p class="q">${esc(p.question)}</p>
       <ul>${p.items.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
-      <p class="blk"><b>Waits on:</b> ${esc(p.blocker)}</p>
+      <p class="blk"><b>${p.state === 'done' ? 'Status:' : 'Waits on:'}</b> ${esc(p.blocker)}</p>
     </article>`).join('');
   byId('gap-grid').innerHTML = R.gaps.map(g => `<article class="card"><h3>${esc(g.title)}</h3><ul class="clean">${g.items.map(t => `<li>${esc(t)}</li>`).join('')}</ul></article>`).join('');
   byId('drive-link').href = R.drive_folder;
@@ -156,13 +218,13 @@ function renderStatusBoard(B, R) {
   const nFits = N ? Object.values(N.designs).reduce((a, d) => a + d.fits_ok, 0) : 0;
   const cols = [
     ['done', 'Completed runs', N ? formatInt(nFits) : `${B.holdout.n_splits}`, N ? 'new held-out fits, 18 Nov' : 'holdout splits', 'Benchmarks run in the project code repository, published here as aggregate tables.',
-      [...(N ? [`18 Nov: ${N.n_experiments} configurations on the recovered 1,601-site cohort, 4 holdout designs`] : []), 'HiCo-Fuse 2 vs random forest on 20 transfer splits', 'Nine models × nine holdout designs', `Research ledger of ${B.ledger.length} experiments`], [N ? '#benchmark' : '#evidence', N ? 'See the new benchmark' : 'See the evidence']],
-    ['report', 'Report-derived', f3(fx.AP, 4), 'AlphaEarth + logistic, development AP', 'From the 6 November project report. Its frozen inputs were not recovered, so these are not reproduced and not new runs.',
+      [...(N ? [`18 Nov: ${N.n_experiments} configurations on the recovered 1,601-site cohort, 4 holdout designs`] : []), 'HiCo-Fuse 2 vs random forest on 20 transfer splits', 'Nine models × nine holdout designs', `Research ledger of ${B.ledger.length} experiments`], [N ? '#new-benchmark' : '#evidence', N ? 'See the new benchmark' : 'See the evidence']],
+    ['report', 'Report-derived', f3(fx.AP, 4), 'AlphaEarth + logistic, development AP', 'From the 6 November project report. Its benchmark and NEON diagnostic were since reproduced exactly on the frozen folds (19 Nov); its map-coverage figures are still the report’s.',
       ['1,601-site representation and learner benchmark', 'NEON 2025 reused diagnostic', 'Twelve global 2024 maps and their coverage'], ['#report', 'Read the caveats']],
     ['check', 'Handoff checks', `${R.inventory.length}`, 'sources inventoried', 'Downloads, adapters and tests completed on 17 November 2026. Checks, not benchmarks.',
       ['AGES and OpenDengue downloads profiled', 'AGES site count does not match the report (336 vs 313)', '7 of 7 synthetic tests passed'], ['#checks', 'See the checks']],
-    ['plan', 'Planned', `${R.priorities.filter(p => p.state !== 'done').length}`, 'priorities still open', 'Next experiments, not yet run. Each names the data, accounts or environments it waits on.',
-      R.priorities.map(p => `${p.id} · ${p.title}${p.state === 'done' ? ' (run 18 Nov)' : p.state === 'partial' ? ' (partly resolved)' : ''}`), ['#priorities', 'See the plan']],
+    ['plan', 'Planned', `${R.priorities.filter(p => p.state !== 'done').length}`, 'priorities still open', R.priorities.every(p => p.state === 'done') ? 'Every priority has now been run. Each card names what is still blocked and which public substitute was used.' : 'Next experiments, not yet run. Each names the data, accounts or environments it waits on.',
+      R.priorities.map(p => `${p.id} · ${p.title}${p.state === 'done' ? ' (done)' : p.state === 'partial' ? ' (partly resolved)' : ''}`), ['#priorities', 'See the plan']],
   ];
   const tag = { done: '<span class="ev ev-done">Completed runs</span>', report: '<span class="ev ev-report">Report-derived</span>', check: '<span class="ev ev-check">Handoff check</span>', plan: '<span class="ev ev-plan">Planned</span>' };
   byId('status-board-grid').innerHTML = cols.map(([k, t, n, nl, d, items, [href, more]]) => `

@@ -473,11 +473,11 @@
       <div class="page-head">
         <span class="kicker"><span class="n">Plan</span><span class="chap">Research handoff · 17 November 2026 · runs 18–19 November 2026</span></span>
         <h1>What the new benchmark shows, what is reported, and what is still to run</h1>
-        <p class="lede" id="plan-lede">Every number on this site has one of four statuses. Completed runs come from the project code repository, including the 18 November benchmark on the recovered 1,601-site cohort. The 6 November report’s 12 benchmark configurations are now reproduced exactly on its frozen folds; its other scores stay labelled report-derived. Handoff checks are small verifications completed on 17 November. Planned experiments have no results yet, and each one names what it waits on.</p>
-        <p class="jump"><a href="#benchmark">New benchmark</a><a href="#reproduction">Reproduction · TESSERA · 2025</a><a href="#status-board">Status</a><a href="#matrix">Experiment matrix</a><a href="#report">Report-derived</a><a href="#checks">Handoff checks</a><a href="#priorities">Planned</a><a href="#gaps">Blocked</a></p>
+        <p class="lede" id="plan-lede">Every number on this site has one of four statuses. Completed runs come from the project code repository, including the 18 November benchmark on the recovered 1,601-site cohort. The 6 November report’s 12 benchmark configurations are now reproduced exactly on its frozen folds; its other scores stay labelled report-derived. The remaining themes (R MaxNet, rebuilt maps, P3 ablations, P4 surveys and P5 dengue) were run on 19 November. Handoff checks are small verifications completed on 17 November. What still cannot run is listed with the account or data it waits on.</p>
+        <p class="jump"><a href="#new-benchmark">New benchmark</a><a href="#reproduction">Reproduction · TESSERA · 2025</a><a href="#themes">MaxNet · maps · P3–P5</a><a href="#status-board">Status</a><a href="#matrix">Experiment matrix</a><a href="#report">Report-derived</a><a href="#checks">Handoff checks</a><a href="#priorities">Planned</a><a href="#gaps">Blocked</a></p>
       </div>
 
-      <section class="section" id="benchmark">
+      <section class="section" id="new-benchmark">
         <div class="section-head">
           <span class="kicker"><span class="n">01</span><span class="chap">New benchmark · 18 November 2026</span><span class="ev ev-done">Completed runs</span></span>
           <h2>Environment, embeddings and their fusion under four holdout designs</h2>
@@ -564,14 +564,72 @@
         </div>
       </section>
 
+      <section class="section" id="themes">
+        <div class="section-head">
+          <span class="kicker"><span class="n">03</span><span class="chap">Remaining themes · 19 November 2026</span><span class="ev ev-done">Completed runs</span></span>
+          <h2>MaxNet refit, rebuilt maps, feature ablations, occupancy and dengue</h2>
+          <p>The last open items of the plan, run on the report’s frozen folds where the question is about the benchmark, and on new public survey and surveillance data where it is not. Every input is public; where an Earth Engine-only product was unavailable, the substitute is named.</p>
+        </div>
+        <div class="figs-row" id="th-figs"></div>
+        <div class="card">
+          <div class="card-top"><span>What the remaining runs show</span><span class="ev ev-done">Completed runs</span></div>
+          <ul class="clean bm-findings" id="th-findings"></ul>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>Rebuilt 2024 relative-suitability surfaces</span><span class="ev ev-done">Rebuilt from public inputs</span></div>
+          <div class="seg" id="th-map-seg"></div>
+          <figure class="th-map"><img id="th-map-img" alt="" width="1440" height="600" loading="lazy"><figcaption id="th-map-cap"></figcaption></figure>
+          <div class="th-ramp" aria-hidden="true"><span>lower</span><i></i><span>higher relative suitability (percentile within map)</span></div>
+          <div class="table-wrap"><table id="th-maps"></table></div>
+          <p class="note" id="th-maps-note"></p>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>P3 · Feature and support ablations · paired ΔAP on the frozen folds</span><span class="ev ev-done">Completed runs</span></div>
+          <p class="note" style="margin-top:0" id="th-p3-note"></p>
+          <div class="chart" id="th-p3"></div>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="card-top"><span>P3 · Training fraction</span><span class="ev ev-done">Exact folds</span></div>
+            <div class="table-wrap"><table id="th-frac"></table></div>
+            <p class="note">Five stratified subsamples of every training fold per fraction; nested selection repeated inside each subsample.</p>
+          </div>
+          <div class="card">
+            <div class="card-top"><span>P4 · Occupancy from repeat ovitrap surveys, Austria 2021–2025</span><span class="ev ev-done">Completed runs</span></div>
+            <div class="table-wrap"><table id="th-occ"></table></div>
+            <p class="note" id="th-occ-note"></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>P3 · Single source vs equal-N fusion</span><span class="ev ev-done">Exact folds</span></div>
+          <div class="table-wrap"><table id="th-src"></table></div>
+          <p class="note" id="th-src-note"></p>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>P4 · New trap locations (first survey year)</span><span class="ev ev-done">Completed runs</span></div>
+          <div class="table-wrap"><table id="th-new"></table></div>
+          <p class="note" id="th-new-note"></p>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>P5 · Dengue in Brazil, municipality × month · does habitat add to a weather + incidence model?</span><span class="ev ev-done">Completed runs</span></div>
+          <div class="table-wrap"><table id="th-p5"></table></div>
+          <p class="note" id="th-p5-note"></p>
+        </div>
+        <div class="card">
+          <div class="card-top"><span>2025 holdout, revisited · outcome-year embeddings and official R MaxNet</span><span class="ev ev-done">Completed runs</span></div>
+          <div class="table-wrap"><table id="th-yr"></table></div>
+          <p class="note" id="th-yr-note"></p>
+        </div>
+      </section>
+
       <section class="section" id="status-board">
-        <div class="section-head"><span class="kicker"><span class="n">03</span><span class="chap">Evidence status</span></span><h2>Four kinds of claim, kept apart</h2></div>
+        <div class="section-head"><span class="kicker"><span class="n">04</span><span class="chap">Evidence status</span></span><h2>Four kinds of claim, kept apart</h2></div>
         <div class="status-board" id="status-board-grid"></div>
       </section>
 
       <section class="section" id="matrix">
         <div class="section-head">
-          <span class="kicker"><span class="n">04</span><span class="chap">Experiment matrix</span><span class="ev ev-mixed">Completed + planned</span></span>
+          <span class="kicker"><span class="n">05</span><span class="chap">Experiment matrix</span><span class="ev ev-mixed">Completed + planned</span></span>
           <h2>Representations × learners: new runs, reported values and what is still planned</h2>
           <p>Presence vs other-mosquito background for <i>Ae. albopictus</i>, 1,601 sites. Green cells are runs on the report’s frozen spatial folds (mean AP over 6 folds ± fold SD, or the 10-seed range for MLPs), with the report’s value beneath. Outlined cells are still planned; empty cells are not in the plan.</p>
         </div>
@@ -584,7 +642,7 @@
 
       <section class="section" id="report">
         <div class="section-head">
-          <span class="kicker"><span class="n">05</span><span class="chap">Report-derived</span><span class="ev ev-report">Report-derived · benchmark since reproduced</span></span>
+          <span class="kicker"><span class="n">06</span><span class="chap">Report-derived</span><span class="ev ev-report">Report-derived · benchmark since reproduced</span></span>
           <h2>What the 6 November report says, with its denominators</h2>
           <p id="report-caveat"></p>
         </div>
@@ -604,7 +662,7 @@
 
       <section class="section" id="checks">
         <div class="section-head">
-          <span class="kicker"><span class="n">06</span><span class="chap">Handoff checks</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
+          <span class="kicker"><span class="n">07</span><span class="chap">Handoff checks</span><span class="ev ev-check">Handoff · 17 Nov 2026</span></span>
           <h2>Small checks completed on 17 November</h2>
           <p>Source downloads, adapters and synthetic tests. None of them is a new benchmark result.</p>
         </div>
@@ -613,7 +671,7 @@
 
       <section class="section" id="priorities">
         <div class="section-head">
-          <span class="kicker"><span class="n">07</span><span class="chap">Planned</span><span class="ev ev-plan">Planned · no results</span></span>
+          <span class="kicker"><span class="n">08</span><span class="chap">Planned</span><span class="ev ev-plan">Planned · no results</span></span>
           <h2>Six priorities, in order</h2>
           <p>Each one changes a single axis and has to pass the recovery gate (P0) before it can claim a reproduction.</p>
         </div>
@@ -622,7 +680,7 @@
 
       <section class="section" id="gaps">
         <div class="section-head">
-          <span class="kicker"><span class="n">08</span><span class="chap">Blocked</span><span class="ev ev-blocked">Blocked</span></span>
+          <span class="kicker"><span class="n">09</span><span class="chap">Blocked</span><span class="ev ev-blocked">Blocked</span></span>
           <h2>Access gaps and what they block</h2>
         </div>
         <div class="gap-grid" id="gap-grid"></div>
@@ -634,7 +692,7 @@
   <footer class="site-footer">
     <div class="wrap">
       <span class="footer-notice">Independent research prototype · not an official NASA product</span>
-      <p>Data: iNaturalist research-grade observations via GBIF; WorldClim, ERA5-Land, MODIS, JRC, WorldPop, GHSL, VIIRS; Google AlphaEarth Foundations 2024; Sentinel-2; Kraemer et al. (2015); NEON; Austrian AGES; AIMSurv. Original datasets keep their licenses. Only aggregate results and rendered map previews are shown; no observation coordinates.</p>
+      <p>Data: iNaturalist research-grade observations via GBIF; WorldClim, ERA5-Land, MODIS, JRC, WorldPop, GHSL, VIIRS; Google AlphaEarth Foundations 2024–2025; TESSERA; Sentinel-2 (Earth Search); NASA POWER; SatCLIP; Prithvi-EO-2.0, Clay, CROMA, SatMAE; Kraemer et al. (2015); NEON; Austrian AGES; AIMSurv; InfoDengue/Mosqlimate; IBGE. Original datasets keep their licenses. Only aggregate results and rendered map previews are shown; no observation coordinates.</p>
       <p>Code and benchmark tables: <a href="https://github.com/missa7481/NASA_Global_Habitat_Mapping" target="_blank" rel="noopener">github.com/missa7481/NASA_Global_Habitat_Mapping ↗</a> · <span id="generated"></span></p>
     </div>
   </footer>
