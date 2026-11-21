@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-19",
+ "generated": "2026-11-20",
  "source": "Habitat Mapping research handoff, prepared 2026-11-17",
  "drive_folder": "https://drive.google.com/drive/folders/1BGxZ4w-XJ6B2Yb82ERhMquEp0ZB7QsZ6",
  "inventory": [
@@ -1099,7 +1099,7 @@
  ],
  "report": {
   "title": "Global habitat project report, 6 November 2026",
-  "caveat": "Report-derived, now checked: all 12 benchmark configurations and the NEON 2025 diagnostic were reproduced on the frozen folds on 19 November, five global maps were rebuilt, and all twelve original surfaces were recovered north of about 6° S (see the themes section). The coverage figures below are still the report’s.",
+  "caveat": "Report-derived, now checked: all 12 benchmark configurations and the NEON 2025 diagnostic were reproduced on the frozen folds on 19 November, five global maps were rebuilt (AlphaEarth at 500 m circle support), and all twelve original surfaces were recovered north of about 6° S (see the themes section). The coverage figures below are still the report’s.",
   "cohort": [
    [
     "1,601",
@@ -5800,8 +5800,8 @@
     "Parts 18–21 of the Drive archive (06 derived_global_mapping_2024) are not uploaded yet; north of 6° S the original 12 surfaces are recovered from the deployment tiles. Rebuilding Environment 41 from scratch needs Earth Engine."
    ],
    [
-    "Original-resolution AlphaEarth maps.",
-    "A 500 m global extraction is about 8 million circles; the overview approximation agrees with point predictions (Spearman 0.93 logistic, 0.88 RF) but is not the original surface."
+    "Native 10 m AlphaEarth maps.",
+    "Reading every 10 m block would be about 100 TB, so the global AlphaEarth maps use 500 m circles from the 160 m overview instead (20 Nov; Pearson 0.998 logistic and 0.958 RF with the original surfaces)."
    ],
    [
     "Cloud Score+ masking and HLS.",
@@ -5827,7 +5827,8 @@
    "Protocol: 150 km EPSG:6933 blocks; 3 outer × 3 inner GroupKFold; 20 km train–test buffer; seeds 42 and 202; inner-fold AP selects C (0.1, 1), min_samples_leaf (3, 12), L2 (1, 10) or MaxEnt β (1, 2). Scaling and PCA are fitted inside training folds.",
    "Environment: Python 3.9.6, scikit-learn 1.5.2, numpy 2.0.2, pandas 2.2.3, pyproj 3.6.1, elapid 1.0.3 on an Apple M3 Pro. This differs from the handoff's Python 3.12 lock.",
    "Saved per design: fold assignments, fold metrics, out-of-fold predictions, run manifest with input hashes. Per-site files stay in the repository and Drive, not on this site.",
-   "19 Nov (themes): refit_maxnet.py + maxnet_fit.R; final_models.py → worldclim_features.py / ae_overview_map.py → map_agreement.py; extract_alphaearth_cog.py, extract_s2_chips.py → s2_stats.py, encode_s2_chips.py, extract_satclip.py, build_weather_points.py → p3_ablations.py; build_ages_surveys.py → p4_surveys.py; build_brazil_dengue.py, brazil_habitat_summaries.py → p5_dengue.py; transfer_2025.py; summarize_themes.py. Outputs in runs/p3, p4, p5, maps, transfer_2025_v2."
+   "19 Nov (themes): refit_maxnet.py + maxnet_fit.R; final_models.py → worldclim_features.py / ae_overview_map.py → map_agreement.py; extract_alphaearth_cog.py, extract_s2_chips.py → s2_stats.py, encode_s2_chips.py, extract_satclip.py, build_weather_points.py → p3_ablations.py; build_ages_surveys.py → p4_surveys.py; build_brazil_dengue.py, brazil_habitat_summaries.py → p5_dengue.py; transfer_2025.py; summarize_themes.py. Outputs in runs/p3, p4, p5, maps, transfer_2025_v2.",
+   "20 Nov (AlphaEarth maps): ae_circle_map.py points → validate_ae160.py; ae_circle_map.py tiles → grid; compare_ae160.py; map_agreement.py. Outputs in runs/maps/ae160."
   ],
   "n_experiments": 39,
   "extended": {
@@ -7432,7 +7433,7 @@
    }
   },
   "themes": {
-   "generated": "2026-11-19",
+   "generated": "2026-11-20",
    "maxnet": [
     {
      "factor": "BioClim19",
@@ -7456,6 +7457,38 @@
     }
    ],
    "maps": [
+    {
+     "surface": "AlphaEarth64__GLM",
+     "source": "Original project surface (500 m circles at cell centres; tiles north of ~6 S)",
+     "cells": 5028928,
+     "sites_covered": 0.8938,
+     "pearson_vs_point": 0.8686,
+     "spearman_vs_point": 0.8794
+    },
+    {
+     "surface": "AlphaEarth64__RF",
+     "source": "Original project surface (500 m circles at cell centres; tiles north of ~6 S)",
+     "cells": 5028928,
+     "sites_covered": 0.8938,
+     "pearson_vs_point": 0.7938,
+     "spearman_vs_point": 0.8304
+    },
+    {
+     "surface": "AlphaEarth64__GLM",
+     "source": "AlphaEarth 2024 160 m overview, 500 m circles at 0.05 deg cell centres",
+     "cells": 8641407,
+     "sites_covered": 1.0,
+     "pearson_vs_point": 0.8779,
+     "spearman_vs_point": 0.8978
+    },
+    {
+     "surface": "AlphaEarth64__RF",
+     "source": "AlphaEarth 2024 160 m overview, 500 m circles at 0.05 deg cell centres",
+     "cells": 8641407,
+     "sites_covered": 1.0,
+     "pearson_vs_point": 0.8122,
+     "spearman_vs_point": 0.8542
+    },
     {
      "surface": "AlphaEarth64__GLM",
      "source": "AlphaEarth 2024 overviews, 2.56 km pixels averaged to 0.05 deg",
@@ -10789,6 +10822,94 @@
      }
     }
    },
+   "ae160": {
+    "vs_orig": [
+     {
+      "surface": "AlphaEarth64__GLM",
+      "candidate": "ae160 (160 m circles)",
+      "shared_cells": 4893053,
+      "pearson": 0.9975,
+      "spearman": 0.9996,
+      "mean_abs_diff": 0.0109,
+      "p99_abs_diff": 0.078
+     },
+     {
+      "surface": "AlphaEarth64__GLM",
+      "candidate": "overview (2.56 km)",
+      "shared_cells": 4893053,
+      "pearson": 0.9669,
+      "spearman": 0.9894,
+      "mean_abs_diff": 0.0255,
+      "p99_abs_diff": 0.252
+     },
+     {
+      "surface": "AlphaEarth64__RF",
+      "candidate": "ae160 (160 m circles)",
+      "shared_cells": 4893053,
+      "pearson": 0.9583,
+      "spearman": 0.9507,
+      "mean_abs_diff": 0.0315,
+      "p99_abs_diff": 0.1145
+     },
+     {
+      "surface": "AlphaEarth64__RF",
+      "candidate": "overview (2.56 km)",
+      "shared_cells": 4893053,
+      "pearson": 0.9406,
+      "spearman": 0.9335,
+      "mean_abs_diff": 0.037,
+      "p99_abs_diff": 0.1491
+     }
+    ],
+    "new_cells": 3612479,
+    "validation": {
+     "sites": 1593,
+     "axis_r_min": 0.9993471177123672,
+     "axis_r_median": 0.9996986964565262,
+     "site_cosine_median": 0.9999513004254733,
+     "site_cosine_p05": 0.9998185582459641,
+     "mean_abs_diff": 0.005281752883741118,
+     "mean_bias": -0.0004977656365823232,
+     "valid_share_median": 1.0,
+     "AlphaEarth64__GLM_score_pearson": 0.9989786583606571,
+     "AlphaEarth64__GLM_score_spearman": 0.9996602010921799,
+     "AlphaEarth64__GLM_score_mean_abs_diff": 0.023086426099610195,
+     "AlphaEarth64__RF_score_pearson": 0.9850073478369672,
+     "AlphaEarth64__RF_score_spearman": 0.9870108594525197,
+     "AlphaEarth64__RF_score_mean_abs_diff": 0.03618792012200676,
+     "frozen_fold_AP": {
+      "AE_f16_r500__GLM": 0.8145,
+      "AE_f16_r500__RF": 0.8082,
+      "AE_native_r500__GLM": 0.8129,
+      "AE_native_r500__RF": 0.8045
+     },
+     "complete_sites": 1593
+    },
+    "paired": [
+     {
+      "reference": "AE_native_r500__GLM",
+      "candidate": "AE_f16_r500__GLM",
+      "delta_ap": 0.0048,
+      "ci_low": 0.0003,
+      "ci_high": 0.0105,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1593,
+      "clusters": 506
+     },
+     {
+      "reference": "AE_native_r500__RF",
+      "candidate": "AE_f16_r500__RF",
+      "delta_ap": 0.0005,
+      "ci_low": -0.005,
+      "ci_high": 0.0078,
+      "folds_candidate_better": 4,
+      "folds": 6,
+      "n_sites": 1593,
+      "clusters": 506
+     }
+    ]
+   },
    "kraemer": {
     "rows": [
      {
@@ -12011,7 +12132,7 @@
     },
     {
      "head": "The original maps are recovered north of about 6° S and the rebuilt ones match them.",
-     "body": "The project’s original post-amendment deployment tiles (1,752 of 2,913) reproduce all 12 original surfaces over 5.0 million cells. Rebuilt climate maps agree with them at Pearson 0.986–0.999 and the AlphaEarth overview maps at 0.94–0.97; the refit final models applied to the original cell features agree at 0.96–0.999. Against 1,223 Kraemer et al. (2015) albopictus cells vs random land, the Environment 41 maps score highest (AUC 0.92–0.95), then AlphaEarth (0.90–0.91) and Climate 19 RF (0.87); the order holds 100 km or more from any training site. Human-activity features likely help here because both compendium and iNaturalist records follow people."
+     "body": "The project’s original post-amendment deployment tiles (1,752 of 2,913) reproduce all 12 original surfaces over 5.0 million cells. Rebuilt climate maps agree with them at Pearson 0.986–0.999 and the AlphaEarth maps, rebuilt from 500 m circles on the 160 m overview, at 0.998 (logistic) and 0.958 (RF); the refit final models applied to the original cell features agree at 0.96–0.999. Against 1,223 Kraemer et al. (2015) albopictus cells vs random land, the Environment 41 maps score highest (AUC 0.92–0.95), then AlphaEarth (0.90–0.91) and Climate 19 RF (0.87); the order holds 100 km or more from any training site. Human-activity features likely help here because both compendium and iNaturalist records follow people."
     },
     {
      "head": "Dengue: habitat summaries are consistent but small.",
@@ -12025,9 +12146,9 @@
    "maps": [
     {
      "label": "AlphaEarth · logistic",
-     "src": "assets/maps/map_ae_glm.png",
+     "src": "assets/maps/map_ae160_glm.png",
      "alt": "World map of relative suitability from the AlphaEarth logistic model, 2024",
-     "caption": "AlphaEarth 64 + logistic, 2024, from AlphaEarth overview tiles (2.56 km pixels averaged to 0.05°); shown as within-map percentile at 0.25°. An approximation: the original used 500 m circles."
+     "caption": "AlphaEarth 64 + logistic, 2024: 500 m circles at each 0.05° cell centre, read from the 160 m AlphaEarth overview (as the original was built); shown as within-map percentile at 0.25°. Matches the original surface at Pearson 0.998 and covers the south too."
     },
     {
      "label": "Climate 19 · RF",
@@ -12043,9 +12164,9 @@
     },
     {
      "label": "AlphaEarth · RF",
-     "src": "assets/maps/map_ae_rf.png",
+     "src": "assets/maps/map_ae160_rf.png",
      "alt": "World map of relative suitability from the AlphaEarth random-forest model",
-     "caption": "AlphaEarth 64 + RF from 2024 overview tiles; within-map percentile at 0.25°."
+     "caption": "AlphaEarth 64 + RF, 500 m circles from the 160 m overview; within-map percentile at 0.25°. Matches the original at Pearson 0.958, the limit set by the refit forest itself (0.962)."
     },
     {
      "label": "Original · Env 41 RF",
@@ -12073,7 +12194,7 @@
     }
    ],
    "notes": {
-    "maps": "Final models refit on all 1,601 sites with the frozen parameters. Climate maps use the original recipe; AlphaEarth maps use the published overview pyramid, which tracks 500 m circle means closely (r ≈ 0.995) but is not identical. Both extrapolate high values into deserts and tropical regions far from any training site. Read colour as rank within one map, not as probability. Environment 41 and fusion surfaces cannot be rebuilt without Earth Engine, so the original surfaces are shown from the recovered deployment tiles (north of about 6° S; parts 18–21 of the Drive archive are not uploaded yet).",
+    "maps": "Final models refit on all 1,601 sites with the frozen parameters. Climate maps use the original recipe; AlphaEarth maps take 500 m circles at every cell centre from the 160 m level of the AlphaEarth tiles (the native 10 m read would be about 100 TB); at the 1,593 sites these circle means match native 10 m circles at r ≥ 0.9993 per axis with equal frozen-fold AP. Like the original surfaces, they agree less with site predictions (Spearman 0.90 logistic, 0.85 RF; originals 0.88, 0.83) than maps that average the whole cell, because one circle stands for a 5.5 km cell. Both extrapolate high values into deserts and tropical regions far from any training site. Read colour as rank within one map, not as probability. Environment 41 and fusion surfaces cannot be rebuilt without Earth Engine, so the original surfaces are shown from the recovered deployment tiles (north of about 6° S; parts 18–21 of the Drive archive are not uploaded yet).",
     "p3": "Frozen folds, 1,555 sites with every new input (46 primary sites lack Sentinel-2, SatCLIP or weather inputs). Paired 150 km block bootstrap, 1,000 replicates, on pooled out-of-fold scores; about 40 pairs are tested, so treat single borderline intervals with care.",
     "sources": "Positives restricted by source in training; the test folds are unchanged. Small numbers after each AP are the same model scored only on iNaturalist presences or only on AGES detections against background.",
     "occupancy": "Single-season occupancy per trap-year: ψ from the habitat score (z-scored) plus year; detection from log trap-days, week, week² and NASA POWER mean temperature over the exposure. Intervals: 200 bootstrap replicates over 25 km cells. ΔLL compares held-out log-likelihood with the year-only model; positive is better.",

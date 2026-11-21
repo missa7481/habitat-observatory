@@ -191,7 +191,9 @@ function renderThemes(R) {
   const OM = X.orig_maps, KR = X.kraemer;
   if (OM) {
     byId('th-orig').innerHTML = `<thead><tr><th>Surface</th><th class="num">Rebuilt map vs original (Pearson)</th><th class="num">Shared cells</th><th class="num">Refit model on original cell features (Pearson)</th></tr></thead><tbody>${
-      OM.vs_refit.map(r => { const b = OM.vs_rebuilt.find(x => x.surface === r.surface); return `<tr><td>${esc(ARM(r.surface))}</td><td class="num">${b ? f3(b.pearson) : '<span class="muted">not rebuilt</span>'}</td><td class="num">${b ? formatInt(b.shared_cells) : '—'}</td><td class="num">${f3(r.pearson)}</td></tr>`; }).join('')}</tbody>`;
+      OM.vs_refit.map(r => { const b = OM.vs_rebuilt.find(x => x.surface === r.surface), c = X.ae160 && X.ae160.vs_orig.find(x => x.surface === r.surface && x.candidate.startsWith('ae160'));
+        const reb = c ? `${f3(c.pearson)} <small class="muted">500 m circles · overview ${b ? f3(b.pearson) : '—'}</small>` : (b ? f3(b.pearson) : '<span class="muted">not rebuilt</span>');
+        return `<tr><td>${esc(ARM(r.surface))}</td><td class="num">${reb}</td><td class="num">${c ? formatInt(c.shared_cells) : b ? formatInt(b.shared_cells) : '—'}</td><td class="num">${f3(r.pearson)}</td></tr>`; }).join('')}</tbody>`;
   }
   if (KR && I.kraemer_rows) {
     const k = (s, sub) => KR.rows.find(r => r.surface === s && r.subset === sub);

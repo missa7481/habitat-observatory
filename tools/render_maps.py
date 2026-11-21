@@ -16,7 +16,8 @@ from scipy.stats import rankdata
 
 RAMP = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b']
 CMAP = LinearSegmentedColormap.from_list('blue', RAMP)
-MAPS = {'ae2024_AlphaEarth64__GLM': 'map_ae_glm.png', 'clim2024_BioClim19__RF': 'map_clim_rf.png',
+MAPS = {'ae160/ae160_2024_AlphaEarth64__GLM': 'map_ae160_glm.png', 'ae160/ae160_2024_AlphaEarth64__RF': 'map_ae160_rf.png',
+        'ae2024_AlphaEarth64__GLM': 'map_ae_glm.png', 'clim2024_BioClim19__RF': 'map_clim_rf.png',
         'clim2024_BioClim19__BRT': 'map_clim_brt.png', 'ae2024_AlphaEarth64__RF': 'map_ae_rf.png',
         # the project's original post-amendment surfaces (deployment tiles recovered so far: north of ~6 S)
         'orig2024_Environment41__RF': 'map_orig_env_rf.png', 'orig2024_Environment41__MaxNet': 'map_orig_env_maxnet.png',
