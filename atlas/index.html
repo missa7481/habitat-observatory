@@ -427,72 +427,45 @@ function px(im, x, y) { const c = pc.getContext('2d', {willReadFrequently: true}
 /* ------------------------------------------------------------------ story */
 const sc = s => inScope(s), lossTxt = v => (v > 0 ? '−' : '+') + Math.abs(v).toFixed(2) + '%';
 const LS = SITE.lessons, sgn = (v, d) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(d);
-let lesson = 0, lscope = 'all';
-const LSCOPE = [['all', 'All tests'], ['block10', 'Nearby'], ['zone', 'Climate zones'], ['loro', 'Continents']];
-function lessonHTML() {
-  if (lesson === 0) {
-    const rows = LS.single, lo = .5, hi = .76;
-    return `<p class="small" style="margin:12px 0 6px">Mean AUC over the four mosquito groups, whole blocks held out (0.5 is chance).</p>
-      ${rows.map(r => `<div class="hb sm${r.id === 'Single:AlphaEarth' ? ' hi' : ''}"><span title="${esc(r.name)}">${esc(r.name)}</span><div class="t"><i class="${r.single ? '' : 'b'}" style="width:${Math.max(2, (r.auc - lo) / (hi - lo) * 100)}%"></i></div><span class="v">${f(r.auc, 3)}</span></div>`).join('')}
-      <p class="small" style="margin-top:8px"><b>AlphaEarth alone ties every fusion.</b> Its 64 numbers beat climate, landscape and human footprint by 0.09–0.12 AUC, and adding all three moves the best model by only ${sgn(LS.single.find(x => x.id === 'MLPEarly').auc - LS.single[0].auc, 3)}. The presence maps agree: AlphaEarth with a logistic model reaches AP ${f(LS.pb.ae, 3)} against ${f(LS.pb.fusion, 3)} for the full fusion, and it beats four open satellite foundation models by 0.11–0.16 AP.</p>`;
-  }
-  const rows = [...LS.fusion].filter(r => r.name !== 'No information').sort((a, b) => a.loss[lscope] - b.loss[lscope]);
-  const vals = rows.map(r => r.loss[lscope]), mn = Math.min(...vals), mx = Math.max(...vals);
-  return `<div class="seg" id="stLscope" style="margin:12px 0 6px">${LSCOPE.map(([k, n]) => `<button type="button" data-s="${k}" aria-pressed="${k === lscope}">${n}</button>`).join('')}</div>
-    <p class="small" style="margin:0 0 6px">Held-out loss on the same tests; a longer bar means lower loss (better).</p>
-    ${rows.map((r, i) => `<div class="hb sm${r.name.startsWith('Random forest') ? ' hi' : ''}"><span title="${esc(r.what)}">${i + 1}. ${esc(r.name)}</span><div class="t"><i class="${r.name.startsWith('Random forest') ? 'b' : ''}" style="width:${12 + (mx - r.loss[lscope]) / (mx - mn) * 88}%"></i></div><span class="v">${f(r.loss[lscope], 3)}</span></div>`).join('')}
-    <p class="small" style="margin-top:8px"><b>More sophisticated fusion is not better spatial prediction.</b> Stacked and attention weights beat the forest near the training data, but every learned weighting loses more than the forest when whole continents are held out. There the forest ranks second, behind only to an invariance penalty that is weaker everywhere else. Holding out whole regions costs a neural network ${f(LS.optimism.MLP, 2)} AUC against the forest’s ${f(LS.optimism.RF, 2)}. So the local term is one plain forest, with the inputs mixing inside its trees.</p>`;
-}
-function wireLesson(r) { const s = r.querySelector('#stLscope'); if (s) s.onclick = e => { const b = e.target.closest('button'); if (!b) return; lscope = b.dataset.s; r.querySelector('#lessonBody').innerHTML = lessonHTML(); wireLesson(r); }; }
+const MLP4 = LS.single.find(x => x.id === 'MLPEarly');
 const STEPS = [
   {chap: 'A global habitat atlas', cover: true,
    title: 'Where could the Asian tiger mosquito live, and how far can we trust the map?',
-   body: `The Asian tiger mosquito, <i>Aedes albopictus</i>, carries dengue, chikungunya and Zika and now lives on every inhabited continent. This story follows one model, <b>HiCo-Fuse 2</b>, from raw observations to a global map, one step at a time. It ends with the results: where the model beats a strong standard method and where it does not.`,
+   body: `The Asian tiger mosquito, <i>Aedes albopictus</i>, carries dengue, chikungunya and Zika and now lives on every inhabited continent. This story builds one model, <b>HiCo-Fuse 2</b>, from raw observations to a global map. Each step fixes a problem the step before it leaves open, and the story ends with the test: where the finished model beats a strong standard method and where it does not.`,
    figs: [[int(SITE.hico_study.reports), '', 'mosquito reports'], ['105', '', 'numbers describe each place'], [HC.all.splits, '', 'held-out tests']],
    enter: () => { setHico('albopictus'); fly(WORLD); setNotes(); }},
   {chap: 'What we observe',
    title: 'Start from what people report',
    body: `Volunteers photograph mosquitoes and upload them to iNaturalist, where experts confirm the species. We kept the research-grade reports from ${SITE.hico_study.years} and grouped them into cells of 0.05°, about 5.5 km across. Each report belongs to one of five groups: <i>Ae. albopictus</i> (${int(H.class_records.Ae_albopictus)}), <i>Ae. aegypti</i> (${int(H.class_records.Ae_aegypti)}), <i>Culex</i> (${int(H.class_records.Culex)}), <i>Anopheles</i> (${int(H.class_records.Anopheles)}) and other mosquitoes (${int(H.class_records.other)}).`,
-   more: `<p>The model learns the <b>mix</b> of groups in a cell, not how many reports it has. The count mostly tracks how many people go looking. That effort raises every group equally, so it cancels out of the mix. The map shows where any mosquito community is reported at all.</p>`,
+   more: `<p>Reports pile up where people live and look, so their <b>number</b> mostly measures effort. The model therefore learns the <b>mix</b> of groups in a cell instead: effort raises every group together, so it cancels out of the mix. The map shows where any mosquito community is reported at all. The question for the rest of the story is: <i>given a place, which mosquitoes do people find there?</i></p>`,
    figs: [[int(SITE.hico_study.reports), '', 'reports'], [int(SITE.hico_study.cells), '', 'cells with reports'], ['5', '', 'groups to tell apart']],
    enter: () => { setHico('support'); fly(WORLD); setNotes(); }},
   {chap: 'What each place looks like',
    title: 'Describe every cell with 105 numbers',
-   body: `For each cell the model reads <b>26 climate</b> variables, <b>11 landscape</b> variables, <b>4 measures of human presence</b> and <b>64 numbers from AlphaEarth</b>, Google’s satellite embedding that condenses a year of imagery into a fingerprint of the place. All are averaged over a 500 m circle at the cell centre.`,
-   more: `<p>The map shows how differently each family of inputs sees the world. These are the presence models from the 2024 cohort, which use the same kinds of inputs. Switch the family to compare.</p>`,
-   ctrl: () => `<div class="seg full" id="stFam">${LAYERS.families.map(x => `<button type="button" data-f="${x.id}" aria-pressed="${x.id === pres.fam}">${esc(x.name)}</button>`).join('')}</div>`,
+   body: `To answer that question the model needs to know what each place is like. For every cell it reads <b>26 climate</b> variables, <b>11 landscape</b> variables, <b>4 measures of human presence</b> and <b>64 numbers from AlphaEarth</b>, Google’s satellite embedding that condenses a year of imagery into a fingerprint of the place. All are averaged over a 500 m circle at the cell centre.`,
+   more: `<p>The map shows how differently each family of inputs sees the world, using the presence models from the 2024 cohort. Switch the family to compare. Before building anything we benchmarked these families: <b>AlphaEarth alone</b> (${f(LS.single[0].auc, 2)} AUC) matches all four fused (${f(MLP4.auc, 2)}), and it also encodes where people are.</p>`,
+   ctrl: () => `<div class="seg full" id="stFam">${LAYERS.families.map(x => `<button type="button" data-f="${x.id}" aria-pressed="${x.id === pres.fam}">${esc(x.name)}</button>`).join('')}</div>
+     <button class="side" type="button" data-goto="representation"><span><small>Representation benchmark</small><b>Which inputs matter, how to combine them, and why AlphaEarth sees the human footprint</b></span><i>→</i></button>`,
    wire: r => r.querySelector('#stFam').onclick = e => { const b = e.target.closest('button'); if (!b) return; r.querySelectorAll('#stFam button').forEach(x => x.setAttribute('aria-pressed', x === b)); setPres(b.dataset.f, 'RF'); },
    figs: [['105', '', 'inputs per cell'], ['64', '', 'from the satellite embedding'], ['500', 'm', 'circle averaged per cell']],
    enter: () => { setPres(null, 'RF'); fly([[34, -12], [60, 32]]); setNotes(); }},
-  {chap: 'What the benchmarks taught us',
-   title: 'Two lessons decided how the inputs are combined',
-   body: `Before building HiCo-Fuse 2 we scored each family of inputs on its own, then ${LS.fusion.length} ways of fusing them, always on places the model had not seen. Two findings came out of it.`,
-   ctrl: () => `<div class="seg full" id="stLesson"><button type="button" data-k="0" aria-pressed="${lesson === 0}">1 · AlphaEarth alone</button><button type="button" data-k="1" aria-pressed="${lesson === 1}">2 · Fancier fusion</button></div>
-     <div id="lessonBody">${lessonHTML()}</div>
-     <button class="side" type="button" data-goto="footprint"><span><small>Side study</small><b>Does AlphaEarth simply see where people are?</b></span><i>→</i></button>`,
-   wire: r => {
-     r.querySelector('#stLesson').onclick = e => { const b = e.target.closest('button'); if (!b) return; lesson = +b.dataset.k;
-       r.querySelectorAll('#stLesson button').forEach(x => x.setAttribute('aria-pressed', x === b)); r.querySelector('#lessonBody').innerHTML = lessonHTML(); wireLesson(r); };
-     wireLesson(r); },
-   figs: [[f(LS.single[0].auc, 2), '', 'AlphaEarth alone, mean AUC'], [sgn(LS.single.find(x => x.id === 'MLPEarly').auc - LS.single[0].auc, 3), '', 'from fusing all four families'], ['1st', `of ${LS.fusion.length}`, 'the plain forest, by held-out loss']],
-   enter: () => { setPres('alphaearth', 'RF'); fly(WORLD); setNotes(); }},
   {chap: 'Step 1 · The local term',
    title: 'A random forest reads all 105 numbers at once',
-   body: `The first part is a <b>random forest</b>: several hundred decision trees, each voting on which group a report belongs to, given the 105 numbers of its cell. Their average gives every cell a local score for every group.`,
-   more: `<p>The inputs are mixed inside the forest itself. We tried learned encoders and gating networks that weigh each data type. They matched the forest in training and lost when tested in new places, so they were dropped. On its own, this forest is the <b>matched comparator</b> for every result later in the story.</p>`,
-   figs: [['105', '', 'inputs read together'], [f(R117.loss, 4), '', 'loss of the forest alone'], ['0', '', 'learned encoders kept']],
+   body: `How should 105 numbers of four kinds be combined? We compared ${LS.fusion.length} ways, and the plainest won: one <b>random forest</b>, several hundred decision trees voting on which group a report belongs to, given every number of its cell. Their average gives every cell a local score for every group.`,
+   more: `<p>Stacked and attention weights did slightly better near the training data, but they, neural networks and gated experts all lost more than the forest when whole continents were held out. So the inputs simply mix inside the trees. This forest is also the <b>matched comparator</b> for every result later in the story. Its limit: it sees only the cell itself, not whether a species has ever reached the region around it.</p>`,
+   figs: [['1st', `of ${LS.fusion.length}`, 'fusion methods, by held-out loss'], [f(R117.loss, 4), '', 'loss of the forest alone'], ['0', '', 'learned encoders kept']],
    enter: () => { setHico('albopictus'); fly([[24, -88], [31.5, -79.5]]); setNotes([{lat: 25.8, lon: -80.2, html: 'Miami<small>dense reports</small>', place: true}]); }},
   {chap: 'Step 2 · The regional term',
    title: 'Ask how much of each mosquito a region holds',
-   body: `The world is cut into 0.5° regions, about 55 km across. For each region the model combines two things: the forest’s own regional average, and a <b>species pool</b> built from sources the forest never sees. Those are the Kraemer occurrence compendium and ${(H.gbif_records_pool / 1e6).toFixed(2)} million GBIF mosquito records up to 2021, summarised per 5° tile.`,
-   more: `<p>The pool tells the model which species have actually arrived in a region. That is where most errors in new places come from. Only <b>${H.n_params} numbers</b> are learned here, and a penalty pulls them back towards the plain forest.</p>`,
+   body: `Two places with the same climate can hold different mosquitoes, simply because one species has arrived and the other has not. So the second part works at a coarser scale. The world is cut into 0.5° regions, about 55 km across, and for each one the model combines the forest’s own regional average with a <b>species pool</b>: the Kraemer occurrence compendium and ${(H.gbif_records_pool / 1e6).toFixed(2)} million GBIF mosquito records up to 2021, summarised per 5° tile, which the forest never sees.`,
+   more: `<p>The pool tells the model which species are actually present nearby, the main source of error in new places. Only <b>${H.n_params} numbers</b> are learned here, and a penalty pulls them back towards the plain forest.</p>`,
    eq: `<span class="a">A(P)</span> = α + γ · <span class="b">M(P)</span> + w · <span class="c">z(P)</span>`,
    eqkey: 'A: regional amount · M: the forest’s regional map · z: the independent species pool',
    figs: [[H.n_params, '', 'numbers learned'], [int(H.regions_with_reports), '', 'regions with reports'], [(H.gbif_records_pool / 1e6).toFixed(2), 'M', 'GBIF records in the pool']],
    enter: () => { setHico('aegypti'); fly([[-35, -100], [35, -30]]); setNotes([{lat: 6, lon: -66, html: '<i>Ae. aegypti</i> is established here; the pool says so', wrap: true}]); }},
   {chap: 'Step 3 · Coherence',
    title: 'Make every local map add up to its region',
-   body: `The local score only <b>shares out</b> the regional total among the cells inside the region. The average of the cells therefore equals the region exactly, so a city-scale map can never contradict its region.`,
+   body: `Now there are two answers, one per cell from Step 1 and one per region from Step 2, and they can disagree. The fix: the local score only <b>shares out</b> the regional total among the cells inside the region. The cells then average to the region exactly, so a city-scale map can never contradict its region.`,
    eq: `η(x) = <span class="a">A(P)</span> + <span class="b">B(x)</span> − log mean<sub>x′∈P</sub> e<sup>B(x′)</sup>`,
    eqkey: 'η: score of cell x · A: regional term · B: local forest score · the last term keeps the cells’ average equal to the region',
    more: `<p>When the two scales were fitted separately, <b>${pct(H.coherence.separate_off2x)}</b> of regions were off by more than a factor of two. With this rule, <b>none</b> are. Applying the rule to the plain forest cost nothing: it won ${H.coherence.rf_recon.wins} of ${H.coherence.rf_recon.n} tests, no different from chance (p = ${f(H.coherence.rf_recon.p, 2)}).</p>`,
@@ -500,23 +473,23 @@ const STEPS = [
    enter: () => { setHico('albopictus'); fly([[40.6, 6.5], [47.2, 15]]); setNotes([{lat: 41.9, lon: 12.5, html: 'Rome', place: true}]); }},
   {chap: 'Step 4 · Environmental shrinkage',
    title: 'Trust the regional adjustment only where the environment is familiar',
-   body: `Each region gets a <b>trust weight</b> from how far its environment lies from the regions used in fitting. Up to the novelty seen in training, the regional adjustment applies in full. By twice that distance, the model has fallen back to the plain forest.`,
-   more: `<p>The rule was fixed before testing and adds no fitted numbers. The final version measures novelty in environment only. An earlier release also measured distance in the species pool, and it scored slightly worse. In the released global maps, ${pct(H.trust.trust_share_full)} of regions get full trust and ${pct(H.trust.trust_share_rf, 1)} fall back fully to the forest.</p>`,
+   body: `The regional term of Step 2 was learned where reports exist. In a region unlike any seen in fitting it can be wrong, and Step 3 would pass that error to every cell inside. So each region gets a <b>trust weight</b> from how far its environment lies from the fitting regions. Up to the novelty seen in training the adjustment applies in full; by twice that distance the model has fallen back to the plain forest of Step 1.`,
+   more: `<p>The rule was fixed before testing and adds no fitted numbers. It measures novelty in environment only; an earlier version also used the species pool and scored slightly worse. In the released global maps, ${pct(H.trust.trust_share_full)} of regions get full trust and ${pct(H.trust.trust_share_rf, 1)} fall back fully to the forest.</p>`,
    eq: `ρ(P) = clip(2 − d(P) / q<sub>90</sub>, 0, 1)`,
    eqkey: 'ρ: trust · d: environmental distance to the training regions · q90: the novelty seen while fitting',
    figs: [['0', '', 'new fitted numbers'], [pct(H.trust.trust_share_full), '', 'of regions fully trusted'], [pct(H.trust.trust_share_rf, 1), '', 'fall back to the forest']],
    enter: () => { setHico('albopictus'); fly([[-35, -20], [30, 55]]); setNotes([{lat: 2, lon: 22, html: 'Few reports and unfamiliar environments: the model leans on the forest', wrap: true}]); }},
   {chap: 'Step 5 · The published map',
    title: 'Multiply by where any mosquito community is seen',
-   body: `A mix of groups means nothing where nobody reports mosquitoes, and maps of the mix alone ranked deserts highest. A second model estimates where a mosquito community is reported at all, with observer effort held at its global average. The published map is that <b>support × the tiger-mosquito share</b>.`,
-   more: `<p>This lifted agreement with the independent Kraemer occurrence compendium from AUC ${f(H.external.composition.albo_all, 2)} to <b>${f(H.external.two_part.albo_all, 2)}</b> (AUC is the chance a known site scores above a random one). Switch between the two parts.</p>`,
+   body: `Steps 1 to 4 predict the <b>mix</b> of mosquitoes, the quantity chosen in the first chapter because it cancels effort. But a mix means nothing where nobody reports mosquitoes, and maps of the mix alone ranked deserts highest. A second model estimates where a mosquito community is reported at all, with observer effort held at its global average. The published map is that <b>support × the tiger-mosquito share</b>.`,
+   more: `<p>Holding effort fixed matters because the inputs, AlphaEarth above all, also encode where people are (see the representation benchmark in chapter 2). The two-part map lifted agreement with the independent Kraemer compendium from AUC ${f(H.external.composition.albo_all, 2)} to <b>${f(H.external.two_part.albo_all, 2)}</b> (AUC is the chance a known site scores above a random one). Switch between the two parts.</p>`,
    ctrl: () => `<div class="seg full" id="stPart"><button type="button" data-l="albopictus" aria-pressed="true">Published map</button><button type="button" data-l="support" aria-pressed="false">Community support</button></div>`,
    wire: r => r.querySelector('#stPart').onclick = e => { const b = e.target.closest('button'); if (!b) return; r.querySelectorAll('#stPart button').forEach(x => x.setAttribute('aria-pressed', x === b)); setHico(b.dataset.l); },
    figs: [[f(H.support_auc, 3), '', 'support model, spatial AUC'], [`${f(H.external.composition.albo_all, 2)}→${f(H.external.two_part.albo_all, 2)}`, '', 'Kraemer AUC'], [f(H.external.two_part.neon, 2), '', 'AUC on NEON 2026 traps']],
    enter: () => { setHico('albopictus'); fly([[5, -20], [40, 62]]); setNotes([{lat: 23, lon: 12, html: 'Mix-only maps ranked the <b>Sahara and Arabia</b> highest', wrap: true}]); }},
   {chap: 'The results',
-   title: `${HC.all.splits} held-out tests against a matched forest`,
-   body: `Each test hides part of the data, fits on the rest, and scores the hidden reports by <b>loss</b>: the penalty for giving little probability to the group actually reported. Lower is better. The comparator is the same random forest given the same 117 inputs.`,
+   title: `Does it beat the Step 1 forest? ${HC.all.splits} held-out tests`,
+   body: `Steps 2 to 4 add only ${H.n_params} numbers to the forest of Step 1, so the fair test is against that forest, given the same 117 inputs including the species pool. Each test hides part of the data, fits on the rest, and scores the hidden reports by <b>loss</b>: the penalty for giving little probability to the group actually reported. Lower is better.`,
    more: `<p>Over all ${HC.all.splits} tests, HiCo-Fuse 2 cut mean loss by <b>${f(TOP.vs117, 2)}%</b> and won <b>${TOP.wins117} of ${HC.all.splits}</b>. Against the forest on the 105 local inputs alone, the cut is ${f(TOP.vs105, 2)}%.</p>`,
    ctrl: () => {
      const rows = [['block10', 'Nearby areas held out'], ['env', 'Unfamiliar environments'], ['zone', 'Whole climate zones'], ['loro', 'Whole continents'], ['all', 'All tests']];
@@ -527,19 +500,19 @@ const STEPS = [
    enter: () => { setHico('albopictus'); fly(WORLD); setNotes(); }},
   {chap: 'Where it holds',
    title: 'Better near the data, not yet across continents',
-   body: `The gains come from places near the training data and from climates the model has seen. When a <b>whole continent</b> is held out, the plain forest is better: HiCo-Fuse 2’s loss is ${f(-sc('loro').vs117, 2)}% higher, and it wins ${sc('loro').wins117} of ${HC.loro.splits} continents.`,
-   more: `<p>The forest also ranks reports slightly better overall (AUC ${f(R117.auc)} vs ${f(TOP.auc)}). Far from any training report, agreement with the Kraemer compendium falls from AUC ${f(H.external.two_part.albo_all, 2)} to ${f(H.external.two_part.albo_far, 2)}. These are the limits to keep in mind when reading a region with no reports.</p>`,
+   body: `The average hides where the gain comes from: places near the training data and climates the model has seen. When a <b>whole continent</b> is held out, the plain forest is better: HiCo-Fuse 2’s loss is ${f(-sc('loro').vs117, 2)}% higher, and it wins ${sc('loro').wins117} of ${HC.loro.splits} continents. It is the same pattern the fusion benchmark showed: what is learned from the training geography travels least.`,
+   more: `<p>The forest also ranks reports slightly better overall (AUC ${f(R117.auc)} vs ${f(TOP.auc)}). Far from any training report, agreement with the Kraemer compendium falls from AUC ${f(H.external.two_part.albo_all, 2)} to ${f(H.external.two_part.albo_far, 2)}. Step 4 softens this but does not remove it, so read regions with no reports with care.</p>`,
    figs: [[lossTxt(sc('loro').vs117), '', 'loss vs forest, continent held out'], [`${sc('loro').wins117}/${HC.loro.splits}`, '', 'continents won'], [f(H.external.two_part.albo_far, 2), '', 'Kraemer AUC >110 km from reports']],
    enter: () => { setHico('albopictus'); fly([[-40, -20], [40, 60]]); setNotes(); }},
   {chap: 'Why this model',
    title: 'Why we map with HiCo-Fuse 2',
-   body: `Five reasons, each tested rather than assumed:`,
+   body: `Five reasons, one from each part of the story, each tested rather than assumed:`,
    more: `<ol class="reasons">
-     <li><span><b>One model from globe to city block.</b> Regional and local maps can never contradict each other, at no cost in accuracy.</span></li>
-     <li><span><b>It knows which species have arrived.</b> The species pool adds independent records the forest cannot see.</span></li>
-     <li><span><b>It is cautious where it should be.</b> In unfamiliar environments it falls back to the plain forest.</span></li>
-     <li><span><b>It is small.</b> Only ${H.n_params} numbers sit on top of a standard forest, so it is hard to overfit and easy to audit.</span></li>
-     <li><span><b>It is judged fairly.</b> It was tested against a matched comparator on ${HC.all.splits} held-out splits, and the losses are shown with the gains.</span></li></ol>
+     <li><span><b>It starts from the strongest simple base.</b> The forest of Step 1 won the fusion benchmark, so nothing is added on top of a weak model.</span></li>
+     <li><span><b>It knows which species have arrived.</b> The species pool of Step 2 adds independent records the forest cannot see.</span></li>
+     <li><span><b>One model from globe to city block.</b> With Step 3, regional and local maps never contradict each other, at no cost in accuracy.</span></li>
+     <li><span><b>It is cautious where it should be.</b> Step 4 falls back to the plain forest in unfamiliar environments, and Step 5 holds observer effort fixed.</span></li>
+     <li><span><b>It is small and judged fairly.</b> Only ${H.n_params} numbers sit on top of the forest, tested against that same forest on ${HC.all.splits} held-out splits, losses shown with the gains.</span></li></ol>
      <p class="small">The gain is modest (${f(TOP.vs117, 2)}%), and the next test is a survey cohort no model has seen. Open Explore for every map, or Benchmark for the full tables.</p>`,
    ctrl: () => `<div class="row"><button class="btn primary" type="button" data-goto="explore">Explore the maps ${ARROW}</button><button class="btn quiet" type="button" data-goto="benchmark">See the benchmark</button></div>`,
    enter: () => { setHico('albopictus'); fly(WORLD); setNotes(); }}];
@@ -607,45 +580,63 @@ function openSheet(kind) {
     root.querySelector('.sheet').focus();
     return;
   }
-  root.innerHTML = `<div class="scrim"></div><section class="sheet ${kind === 'benchmark' ? 'wide' : ''}" aria-label="${kind === 'benchmark' ? 'Benchmark' : kind === 'footprint' ? 'AlphaEarth and human footprint' : 'About the model'}" tabindex="-1">
+  root.innerHTML = `<div class="scrim"></div><section class="sheet ${kind === 'benchmark' || kind === 'representation' ? 'wide' : ''}" aria-label="${kind === 'benchmark' ? 'Benchmark' : kind === 'representation' ? 'Representation benchmark' : 'About the model'}" tabindex="-1">
     <button class="btn quiet close" type="button" aria-label="Close">Close ×</button><div id="sheetbody"></div></section>`;
   root.querySelector('.scrim').onclick = () => setMode(lastMap);
   root.querySelector('.close').onclick = () => setMode(lastMap);
-  kind === 'benchmark' ? benchmark() : kind === 'footprint' ? footprint() : about();
+  kind === 'benchmark' ? benchmark() : kind === 'representation' ? representation() : about();
   root.querySelector('.sheet').focus();
 }
-function footprint() {
-  const e = LS.effort, A = LS.proxy.auc, pb = LS.pb;
+let lscope = 'all';
+const LSCOPE = [['all', 'All tests'], ['block10', 'Nearby'], ['zone', 'Climate zones'], ['loro', 'Continents']];
+function fusionBars() {
+  const rows = [...LS.fusion].filter(r => r.name !== 'No information').sort((a, b) => a.loss[lscope] - b.loss[lscope]);
+  const vals = rows.map(r => r.loss[lscope]), mn = Math.min(...vals), mx = Math.max(...vals);
+  return rows.map((r, i) => { const rf = r.name.startsWith('Random forest');
+    return `<div class="hb sm${rf ? ' hi' : ''}"><span title="${esc(r.what)}">${i + 1}. ${esc(r.name)}</span><div class="t"><i class="${rf ? 'b' : ''}" style="width:${12 + (mx - r.loss[lscope]) / (mx - mn) * 88}%"></i></div><span class="v">${f(r.loss[lscope], 3)}</span></div>`; }).join('');
+}
+function representation() {
+  const e = LS.effort, A = LS.proxy.auc, pb = LS.pb, lo = .5, hi = .76;
   const prow = [['AE', 'All of AlphaEarth'], ['AE_hat (driver-explained)', 'Part explained by climate, landscape, human'], ['AE_perp (residual)', 'Part those miss (residual)'], ['Drivers+Human', 'Climate + landscape + human, no AlphaEarth']];
-  $('#sheetbody').innerHTML = `<div class="kicker"><span class="n">Side study</span><span class="chap">AlphaEarth and human footprint</span></div>
-    <h2>Does AlphaEarth simply see where people are?</h2>
-    <p class="lead">Every report comes from a person, so a model can score well just by learning where people look for mosquitoes. AlphaEarth is made from satellite imagery, which shows roofs, roads and lights. If it encodes human presence, part of its strength in the previous chapter could be <b>reporting effort</b>, not habitat.</p>
+  $('#sheetbody').innerHTML = `<div class="kicker"><span class="n">Representation benchmark</span><span class="chap">behind chapters 2 and 3</span></div>
+    <h2>Which inputs matter, and how to combine them</h2>
+    <p class="lead">Before building HiCo-Fuse 2 we scored each family of inputs on its own, then ${LS.fusion.length} ways of fusing them, always on places the model had not seen. Three findings shaped the model.</p>
 
-    <h3>Test 1 · Can AlphaEarth predict human-footprint variables?</h3>
-    <p>At the same report cells, each human-footprint variable was predicted from AlphaEarth’s 64 numbers, and separately from 37 environmental and ecological variables. Scores are R² under spatial cross-validation (whole blocks held out): 1 is perfect, 0 is no better than the average.</p>
+    <h3>1 · AlphaEarth alone is remarkably strong</h3>
+    <p>Mean AUC over the four mosquito groups, whole blocks held out (0.5 is chance). Navy: one family alone. Gold: all four fused.</p>
+    <div class="fp">${LS.single.map(r => `<div class="hb sm${r.id === 'Single:AlphaEarth' ? ' hi' : ''}"><span>${esc(r.name)}</span><div class="t"><i class="${r.single ? '' : 'b'}" style="width:${Math.max(2, (r.auc - lo) / (hi - lo) * 100)}%"></i></div><span class="v">${f(r.auc, 3)}</span></div>`).join('')}</div>
+    <p>AlphaEarth’s 64 numbers beat climate, landscape and human footprint by 0.09–0.12 AUC, and fusing all four moves the best model by only ${sgn(MLP4.auc - LS.single[0].auc, 3)}. The presence-map benchmark agrees: AlphaEarth with a logistic model reaches AP ${f(pb.ae, 3)} against ${f(pb.fusion, 3)} for the full fusion, and it beats raw Sentinel-2 spectra (${f(pb.spectra, 3)}) and four open satellite foundation models (${f(pb.encoders[0], 3)}–${f(pb.encoders[1], 3)}).</p>
+
+    <h3>2 · More sophisticated fusion is not better spatial prediction</h3>
+    <p>The ${LS.fusion.length - 1} fusion methods on the same held-out tests (the “no information” floor left out). A longer bar means lower loss; gold is the forest used in Step 1.</p>
+    <div class="seg" id="repScope" style="margin:4px 0 8px">${LSCOPE.map(([k, n]) => `<button type="button" data-s="${k}" aria-pressed="${k === lscope}">${n}</button>`).join('')}</div>
+    <div class="fp" id="repBars">${fusionBars()}</div>
+    <p>The plain forest has the lowest loss over all tests. Stacked and attention weights beat it near the training data, but every learned weighting loses more than the forest when whole continents are held out; there the forest ranks second, behind only an invariance penalty that is weaker everywhere else. Holding out whole regions costs a neural network ${f(LS.optimism.MLP, 2)} AUC against the forest’s ${f(LS.optimism.RF, 2)}. Weights learned from the training geography do not travel, so Step 1 keeps one forest with the inputs mixing inside its trees.</p>
+
+    <h3>3 · AlphaEarth also sees the human footprint</h3>
+    <p>Every report comes from a person, so a model can score well just by learning where people look. AlphaEarth is made from imagery that shows roofs, roads and lights. We predicted four human-footprint variables at the report cells from AlphaEarth’s 64 numbers, and separately from 37 environmental and ecological variables (R² under spatial cross-validation: 1 is perfect, 0 is no better than the average).</p>
     <div class="fpk"><span><i></i>AlphaEarth (64)</span><span><i class="b"></i>Environment (37)</span></div>
     ${e.map(r => `<div class="fp"><b>${esc(r.name)}</b>
       <div class="hb sm"><span>AlphaEarth</span><div class="t"><i style="width:${r.ae * 100}%"></i></div><span class="v">${f(r.ae, 2)}</span></div>
       <div class="hb sm"><span>Environment</span><div class="t"><i class="b" style="width:${r.env * 100}%"></i></div><span class="v">${f(r.env, 2)}</span></div></div>`).join('')}
-    <p><b>Yes.</b> AlphaEarth recovers population density, built-up area and night lights with R² 0.82–0.88, ahead of the environmental variables on every one. Travel time to a city is harder for both (${f(e[3].ae, 2)} vs ${f(e[3].env, 2)}).</p>
-
-    <h3>Test 2 · Does that signal reach the benchmark score?</h3>
-    <p>In the presence-map benchmark, the four human-footprint variables <b>alone</b> reach AP ${f(pb.human_alone, 2)} on held-out blocks. That is far above what habitat should allow, so it is a sign of reporting bias. Dropping them from a model that already has AlphaEarth costs almost nothing (${f(Math.abs(pb.drop_human[0]), 3)} logistic, ${f(Math.abs(pb.drop_human[1]), 3)} forest), because AlphaEarth carries the same signal. Holding them at the training median instead, as a pure bias correction, costs <b>${f(Math.abs(pb.fix_human[0]), 3)}</b> and <b>${f(Math.abs(pb.fix_human[1]), 3)}</b> AP. Part of every held-out score rewards knowing where people record mosquitoes.</p>
-
-    <h3>Test 3 · Is AlphaEarth only a proxy?</h3>
-    <p>No. A linear model of AlphaEarth on the named climate, landscape and human variables explains only R² ${f(LS.proxy.r2, 2)}. Splitting AlphaEarth into the part those variables explain and the residual they miss, then scoring each the same way (AUC, 0.5 is chance):</p>
+    <p><b>AlphaEarth recovers population, built-up area and night lights with R² 0.82–0.88</b>, ahead of the environmental variables on every one; travel time to a city is harder for both (${f(e[3].ae, 2)} vs ${f(e[3].env, 2)}). That signal reaches the scores. In the presence-map benchmark the four human variables <b>alone</b> reach AP ${f(pb.human_alone, 2)} on held-out blocks, a sign of reporting bias. Dropping them from a model that has AlphaEarth costs almost nothing (${f(Math.abs(pb.drop_human[0]), 3)} logistic, ${f(Math.abs(pb.drop_human[1]), 3)} forest), because AlphaEarth carries the same signal. Holding them at the training median, as a bias correction, costs ${f(Math.abs(pb.fix_human[0]), 3)} and ${f(Math.abs(pb.fix_human[1]), 3)} AP: part of every held-out score rewards knowing where people record mosquitoes.</p>
+    <p>AlphaEarth is not only a proxy, though. The named climate, landscape and human variables explain just R² ${f(LS.proxy.r2, 2)} of it. Split into the part they explain and the residual they miss, and scored the same way (AUC):</p>
     <div class="tw"><table><thead><tr><th>Inputs</th><th class="n">Nearby</th><th class="n">Climate zones</th><th class="n">Continents</th></tr></thead>
       <tbody>${prow.map(([k, n]) => `<tr><td>${n}</td><td class="n">${f(A[k].block10, 3)}</td><td class="n">${f(A[k].zone, 3)}</td><td class="n">${f(A[k].loro, 3)}</td></tr>`).join('')}</tbody></table></div>
-    <p>The residual still carries signal nearby (${f(A['AE_perp (residual)'].block10, 2)}) but falls close to chance on a new continent (${f(A['AE_perp (residual)'].loro, 2)}): it behaves like a <b>regional fingerprint</b>. The named variables transfer better to a new continent than AlphaEarth as a whole (${f(A['Drivers+Human'].loro, 3)} vs ${f(A.AE.loro, 3)}).</p>
+    <p>The residual carries signal nearby (${f(A['AE_perp (residual)'].block10, 2)}) but falls close to chance on a new continent (${f(A['AE_perp (residual)'].loro, 2)}): it behaves like a <b>regional fingerprint</b>, and the named variables transfer better to a new continent than AlphaEarth as a whole (${f(A['Drivers+Human'].loro, 3)} vs ${f(A.AE.loro, 3)}).</p>
 
-    <h3>What HiCo-Fuse 2 does about it</h3>
+    <h3>How the model uses these findings</h3>
     <ul class="plain">
-      <li><b>It models the mix, not the count.</b> Effort raises every mosquito group together, so it cancels out of the species mix the forest predicts.</li>
-      <li><b>Effort is held fixed in the published map.</b> The community-support model sets observer effort to its global average before mapping (Step 5).</li>
-      <li><b>Unfamiliar places fall back to the plain forest.</b> The trust rule stops the regional fingerprint from being stretched to new regions (Step 4).</li></ul>
-    <p class="note">Open question: the surveys available today do not span the urban-to-rural gradient, so this bias can be reduced but not yet measured directly. Sources: Habitat Observatory benchmark data (effort R², AlphaEarth decomposition) and this workspace’s presence-map benchmark (19 November 2026). Aggregates only.</p>
+      <li><b>Step 1</b> keeps one forest on all 105 inputs, AlphaEarth included, because no fancier fusion did better away from the data.</li>
+      <li><b>The target is the mix, not the count</b> (chapter 1), so effort that raises every group together cancels out.</li>
+      <li><b>Step 4</b> falls back to the forest in unfamiliar regions, so the regional fingerprint is not stretched too far.</li>
+      <li><b>Step 5</b> holds observer effort at its global average in the published map.</li></ul>
+    <p class="note">Open question: the surveys available today do not span the urban-to-rural gradient, so this bias can be reduced but not yet measured directly. Sources: Habitat Framework Studio ranking (fusion losses), Habitat Observatory benchmark data (single-family AUC, effort R², AlphaEarth decomposition) and this workspace’s presence-map benchmark (19 November 2026). Aggregates only.</p>
     <div class="row" style="margin-top:14px"><button class="btn primary" type="button" data-back>← Back to the story</button></div>`;
-  $('#sheetbody [data-back]').onclick = () => setMode('story');
+  const b = $('#sheetbody');
+  b.querySelector('#repScope').onclick = ev => { const x = ev.target.closest('button'); if (!x) return; lscope = x.dataset.s;
+    b.querySelectorAll('#repScope button').forEach(y => y.setAttribute('aria-pressed', y === x)); b.querySelector('#repBars').innerHTML = fusionBars(); };
+  b.querySelector('[data-back]').onclick = () => setMode('story');
 }
 function closeSheet() { $('#sheetroot').innerHTML = ''; }
 
@@ -722,8 +713,9 @@ function about() {
 
 /* ------------------------------------------------------------------ modes */
 let mode = 'story', lastMap = 'story';
-const SHEETS = ['benchmark', 'tutorial', 'footprint', 'about'];
+const SHEETS = ['benchmark', 'tutorial', 'representation', 'about'];
 function setMode(m) {
+  if (m === 'footprint') m = 'representation';
   if (!['story', 'explore', ...SHEETS].includes(m)) m = 'story';
   mode = m;
   document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
@@ -742,7 +734,7 @@ addEventListener('keydown', e => {
 });
 
 initMap();
-const h0 = location.hash.slice(1);
+const h0 = location.hash.slice(1) === 'footprint' ? 'representation' : location.hash.slice(1);
 if (SHEETS.includes(h0)) { go(0); setMode(h0); } else setMode(h0 || 'story');
 
 </script>
