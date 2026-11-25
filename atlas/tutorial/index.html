@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HiCo-Fuse 2, Step by Step</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=Source+Sans+3:ital,wght@0,300..700;1,400&family=Barlow:wght@300;400;500;600&display=swap">
+<style>
+/* Layout: a five-minute lecture. A chapter strip with timings on top; each screen pairs the idea and its
+   formula (left) with one live widget (right). Atlas palette: paper, ink, navy, gold; serif display.
+   One deliberate light theme, like a printed handout. */
+:root{
+  --bg:#ECE9E1; --card:#FBFAF6; --paper:#F7F5EF; --paper-2:#F1EEE6;
+  --ink:#1B1F27; --ink-2:#474D59; --ink-3:#7D828C; --rule:rgba(27,31,39,.13); --rule-2:rgba(27,31,39,.07);
+  --navy:#012169; --navy-l:#C9D3E3; --gold:#F2A900; --gold-t:#A87400; --gold-l:#FBE7B0; --green:#2E6B3A; --terra:#B5432C;
+  --c-clim:#5B7FA6; --c-land:#2E6B3A; --c-hum:#B5432C; --c-ae:#A87400;
+  --serif:'Newsreader','Sitka Text',Georgia,serif; --sans:'Source Sans 3','Segoe UI',system-ui,sans-serif; --num:'Barlow','Bahnschrift',sans-serif;
+  --shadow:0 1px 1px rgba(27,31,39,.04),0 14px 34px -14px rgba(27,31,39,.22);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold-t);outline-offset:2px}
+.wrap{width:min(1240px,100%);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top */
+header{padding-block:18px 10px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:30px;height:30px;color:var(--navy)}
+.brand b{font-family:var(--serif);font-weight:500;font-size:21px}
+.brand i{font-style:normal;font-size:13px;color:var(--ink-3);display:block}
+.clock{font-family:var(--num);font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.clock b{color:var(--navy);font-weight:500}
+.chapters{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin-top:14px}
+.chapters button{border:0;background:none;padding:0;text-align:left;display:flex;flex-direction:column;gap:5px;min-width:0}
+.chapters button i{display:block;height:3px;border-radius:2px;background:var(--rule)}
+.chapters button.done i{background:var(--ink-3)} .chapters button.on i{background:var(--navy)}
+.chapters span{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chapters button.on span{color:var(--ink);font-weight:600}
+.chapters small{font-family:var(--num);font-size:11px;color:var(--ink-3)}
+
+/* stage */
+main{padding-block:10px 28px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:18px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:24px 26px;min-width:0}
+.kicker{display:flex;gap:8px;align-items:baseline;color:var(--ink-3);font-size:13px;margin-bottom:10px}
+.kicker .n{font-family:var(--num);font-weight:500;color:var(--gold-t);font-size:14px}
+.kicker .c{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--ink-2)}
+h1{font-family:var(--serif);font-weight:420;font-size:clamp(25px,2.6vw,32px);line-height:1.1;letter-spacing:-.012em;margin:0 0 14px;text-wrap:balance}
+.panel p{font-size:16px;line-height:1.58;color:var(--ink-2);margin:0 0 12px;max-width:62ch}
+.panel p b{color:var(--ink);font-weight:600}
+.math{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink);background:var(--paper);border:1px solid var(--rule-2);border-radius:4px;padding:12px 14px;margin:6px 0 6px;line-height:1.55;overflow-x:auto}
+.math .up{font-style:normal;font-family:var(--sans);font-size:15px}
+.math .a{color:var(--navy)} .math .b{color:var(--green)} .math .c{color:var(--gold-t)} .math .d{color:var(--terra)}
+.words{font-size:14px!important;color:var(--ink-3)!important;margin:0 0 14px!important}
+.words b{color:var(--ink-2)!important}
+.figs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 14px;padding-top:12px;border-top:1px solid var(--rule);margin-top:6px}
+.fig b{display:block;font-family:var(--num);font-weight:300;font-size:28px;color:var(--navy);line-height:1.05;font-variant-numeric:tabular-nums}
+.fig b small{font-size:14px;color:var(--ink-2);font-weight:400;margin-left:2px}
+.fig span{font-size:12.5px;color:var(--ink-3);line-height:1.3;display:block;margin-top:3px}
+.vis h3{font-family:var(--serif);font-weight:500;font-size:17px;margin:0 0 4px}
+.vis .sub{font-size:13px;color:var(--ink-3);margin:0 0 14px;line-height:1.45}
+.tag{display:inline-block;font-size:11.5px;color:var(--gold-t);background:var(--gold-l);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.ctl{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:13.5px;color:var(--ink-2);margin:8px 0}
+.ctl output{font-family:var(--num);font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--navy)}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+.presets button{border:1px solid var(--rule);background:var(--paper);border-radius:4px;padding:5px 10px;font-size:13px;color:var(--ink-2)}
+.presets button:hover{background:var(--paper-2);color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
+.readout div b{display:block;font-family:var(--num);font-weight:300;font-size:24px;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.1}
+.readout div span{font-size:12px;color:var(--ink-3);line-height:1.3;display:block;margin-top:2px}
+svg text{font-family:var(--num);fill:var(--ink-2)}
+svg .lbl{font-family:var(--sans);font-size:12px;fill:var(--ink-2)}
+svg .ax{stroke:var(--rule);stroke-width:1}
+.mapfig{border-radius:4px;overflow:hidden;border:1px solid var(--rule-2);background:#AFC3CF}
+.mapfig img{display:block;width:100%;height:auto}
+.cap{font-size:12.5px;color:var(--ink-3);margin-top:6px;line-height:1.45}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-top:8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.barcode{display:grid;grid-template-columns:repeat(15,1fr);gap:3px}
+.barcode i{aspect-ratio:1;border-radius:2px;display:block}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:grid;grid-template-columns:26px 1fr;gap:6px;padding:8px 0;border-top:1px solid var(--rule-2);font-size:15px;line-height:1.45;color:var(--ink-2)}
+.list li:first-child{border-top:0}
+.list li b{color:var(--ink)}
+.list li em{font-style:normal;font-family:var(--num);font-weight:500;color:var(--gold-t)}
+.list.bad li em{color:var(--terra)}
+.chain{display:flex;flex-direction:column;gap:6px}
+.chain div{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:baseline;font-size:14px;color:var(--ink-2);padding:6px 0;border-top:1px solid var(--rule-2)}
+.chain div:first-child{border-top:0}
+.chain b{font-family:var(--serif);font-weight:500;color:var(--ink);font-size:15px}
+.chain code{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--navy)}
+
+/* methods table */
+.presets button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.mtab{position:relative;height:504px}
+.mrow{position:absolute;left:0;right:0;height:36px;display:grid;grid-template-columns:20px minmax(0,1fr) 44px 150px;gap:8px;align-items:center;border-top:1px solid var(--rule-2);transition:top .6s cubic-bezier(.22,.7,.2,1);font-size:13px}
+.mrow.rf{background:var(--gold-l);border-radius:3px}
+.mrow .rk{font-family:var(--num);color:var(--ink-3);text-align:right}
+.mrow .nm{min-width:0;line-height:1.15}.mrow .nm b{display:block;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .nm small{display:block;font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .lv{font-family:var(--num);font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.mrow .bar{position:relative;height:16px;border-left:0}.mrow .bar::before{content:'';position:absolute;left:50%;top:-4px;bottom:-4px;border-left:1px solid var(--ink-3)}
+.mrow .bar i{position:absolute;top:3px;height:10px;border-radius:2px;transition:all .6s cubic-bezier(.22,.7,.2,1)}
+.mrow .bar em{position:absolute;top:0;font-style:normal;font-family:var(--num);font-size:11px;color:var(--ink-2);white-space:nowrap}
+.readout.r4{grid-template-columns:repeat(4,1fr)}
+/* before/after map */
+.mapcmp{position:relative;aspect-ratio:1800/725;overflow:hidden;border-radius:4px;border:1px solid var(--rule-2);background:#C9D3DA}
+.mapcmp .lyr{position:absolute;inset:0}
+.mapcmp .mz{position:absolute;inset:0;transform-origin:0 0;transition:transform .8s cubic-bezier(.22,.7,.2,1)}
+.mapcmp img{display:block;width:100%;height:100%}
+.mapcmp .divider{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#F2A900;box-shadow:0 0 0 1px rgba(27,31,39,.35)}
+.mapcmp .chip{position:absolute;top:8px;font-size:11.5px;background:rgba(251,250,246,.92);border-radius:3px;padding:2px 7px;color:var(--ink)}
+.mapcmp .chip.l{left:8px}.mapcmp .chip.r{right:8px}
+/* title band (first and last screens) */
+.band{grid-column:1/-1;display:flex;align-items:center;gap:22px;background:var(--card);border:1px solid var(--rule);border-top:3px solid var(--navy);border-radius:6px;box-shadow:var(--shadow);padding:16px 24px}
+.band .lock{display:flex;align-items:center;gap:14px;flex:none;padding-right:22px;border-right:1px solid var(--rule)}
+.band .lock img{height:58px;width:auto;display:block}
+.band .lock span{font-family:var(--serif);font-size:15px;line-height:1.2;color:var(--navy);max-width:13ch}
+.band .tt{min-width:0}
+.band .tt b{display:block;font-family:var(--serif);font-weight:460;font-size:clamp(19px,1.9vw,23px);line-height:1.2;color:var(--ink);text-wrap:balance}
+.band .tt p{margin:6px 0 0;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.band .tt p strong{color:var(--ink);font-weight:600}
+.band .nasa{display:inline-block;font-family:var(--num);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-t);background:var(--gold-l);border-radius:999px;padding:2px 9px;margin-left:4px;vertical-align:1px}
+@media (max-width:900px){.band{flex-direction:column;align-items:flex-start;gap:12px;padding:14px 16px}.band .lock{border-right:0;padding-right:0}.band .lock img{height:46px}}
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--card);border-radius:4px;padding:9px 15px 10px;font-size:14.5px;line-height:1}
+.btn:hover{background:var(--paper-2)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:#0B2C7A}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.hint{font-size:12.5px;color:var(--ink-3)}
+.fade{animation:fin .45s cubic-bezier(.22,.7,.2,1) both}
+@keyframes fin{from{opacity:.001;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* narration */
+.player{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.voicesel{font-size:13px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.voicesel select{font:inherit;font-size:13.5px;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:6px 8px}
+.btn.play{gap:9px}
+.btn.play svg{width:14px;height:14px;fill:currentColor}
+.btn.play .i-pause{display:none} .btn.play.on .i-pause{display:inline} .btn.play.on .i-play{display:none}
+.chapters button i{position:relative;overflow:hidden}
+.chapters button i b{position:absolute;inset:0 auto 0 0;width:0;background:var(--gold);border-radius:2px}
+.caption{margin-top:14px;background:var(--ink);color:#F4F2EC;border-radius:6px;padding:12px 16px;font-size:16px;line-height:1.5;min-height:50px;display:flex;gap:12px;align-items:flex-start}
+.caption .who{font-family:var(--num);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-l);padding-top:3px;white-space:nowrap}
+.caption .say{flex:1;min-width:0}
+.caption .say span{color:rgba(244,242,236,.45)}
+.caption .ctl2{display:flex;gap:6px}
+.caption button{border:1px solid rgba(244,242,236,.3);background:none;color:#F4F2EC;border-radius:4px;padding:3px 9px;font-size:12.5px}
+.caption button:hover{background:rgba(244,242,236,.12)}
+
+@media (max-width:900px){
+  .caption{flex-wrap:wrap}
+  .stage{grid-template-columns:1fr}
+  .chapters{grid-template-columns:repeat(4,1fr);row-gap:10px}
+  .mrow{grid-template-columns:18px minmax(0,1fr) 40px 96px}
+  .panel{padding:18px}
+  .ctl{grid-template-columns:110px minmax(0,1fr) 52px}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}}
+</style>
+</head>
+<body>
+
+
+<header class="wrap">
+  <div class="head">
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 16h22M16 5c-4.2 4-4.2 18 0 22M16 5c4.2 4 4.2 18 0 22" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="21.5" cy="10.5" r="2.6" fill="#F2A900"/></svg>
+      <div><b>HiCo-Fuse 2, step by step</b><i>A narrated tutorial for readers new to habitat mapping</i></div></div>
+    <div class="player">
+      <button class="btn primary play" type="button" id="play" aria-label="Play the narrated tour"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="i-play" d="M6 4 L16 10 L6 16 Z"/><g class="i-pause"><rect x="5" y="4" width="3" height="12"/><rect x="12" y="4" width="3" height="12"/></g></svg><span id="playtxt">Play narrated tour</span></button>
+      <label class="voicesel" for="voicesel">Voice <select id="voicesel"></select></label>
+      <div class="clock" id="clock"></div>
+    </div>
+  </div>
+  <nav class="chapters" id="chapters" aria-label="Chapters"></nav>
+</header>
+
+<main class="wrap">
+  <div class="stage" id="stage"></div>
+  <div class="caption" id="caption"><span class="who">Narrator</span><div class="say" id="say"></div><div class="ctl2"><button type="button" id="replay">Replay screen</button><button type="button" id="cc">Hide captions</button></div></div>
+  <audio id="voice" preload="metadata"></audio>
+  <div class="nav">
+    <button class="btn" type="button" id="prev">← Back</button>
+    <span class="hint">Arrow keys move between screens · space plays or pauses</span>
+    <button class="btn primary" type="button" id="next">Next →</button>
+  </div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const fx = (x, d = 2) => Number(x).toFixed(d);
+const sig = x => 1 / (1 + Math.exp(-x));
+
+/* real numbers (Habitat Framework Studio @437ddb6, Habitat Observatory @0c0ca1e) */
+const D = {reports: 17232, cells: 7004, groups: {'Ae. albopictus': 2978, 'Ae. aegypti': 989, 'Culex': 1387, 'Anopheles': 1083, 'Other mosquitoes': 10795},
+  lossTop: 1.0871, lossMatched: 1.0909, lossRF105: 1.1020, gain117: 0.35, gain105: 1.36, wins: 9, splits: 20,
+  scopes: [['Nearby areas held out', -1.89, '4 / 5'], ['Unfamiliar environments', -1.37, '2 / 5'], ['Whole climate zones', -2.61, '2 / 4'], ['Whole continents held out', 2.54, '1 / 6'], ['All 20 tests', -0.35, '9 / 20']],
+  aucTop: 0.721, aucRF: 0.726, kraemerBefore: 0.75, kraemerAfter: 0.89, kraemerFar: 0.82, neon: 0.92, params: 60, off2x: 82, trustFull: 43, trustRF: 3.6};
+
+/* 14 fusion strategies, loss by test type (Studio aggregate ranking, 105 local inputs, best variant of each) */
+const MT = [["Random forest on all 105 numbers", "One forest sees every number; the data types mix inside its trees", 1.102, 0.9304, 1.04, 1.1132, 1.2893], ["Support-decay pooling", "Expert models per data type; trust fades away from the data", 1.1088, 0.9179, 1.0266, 1.136, 1.3183], ["Equal pooling", "Expert models per data type, each with an equal say", 1.1113, 0.9356, 1.0081, 1.1323, 1.3298], ["Stacked weights", "Expert weights learned from held-out scores", 1.1115, 0.9155, 1.0005, 1.0584, 1.4025], ["Attention weights", "A small network sets the expert weights place by place", 1.1762, 0.9224, 1.1169, 1.1441, 1.4584], ["Gated mixture of experts", "Neural experts per data type, with a learned gate", 1.1886, 0.9421, 1.1126, 1.2053, 1.4461], ["Neural network", "One neural network on all 105 numbers", 1.1454, 0.9379, 1.0368, 1.1163, 1.4283], ["Neural network + coordinates", "The same, also given latitude and longitude", 1.1117, 0.9171, 1.024, 1.135, 1.3314], ["Boosted trees", "Trees fitted one after another (gradient boosting)", 1.1452, 0.9385, 1.0698, 1.1516, 1.3762], ["Logistic regression", "Straight-line effects only", 1.1858, 0.9901, 1.1189, 1.2405, 1.3681], ["Invariance penalty (V-REx)", "Penalises differences between training regions", 1.1268, 0.988, 1.1018, 1.1463, 1.2504], ["Worst-region training (group DRO)", "Fits to do well in the worst training region", 1.1586, 0.9675, 1.1248, 1.2111, 1.311], ["Nearest neighbours by location", "Copies the mix of reports nearby", 1.3126, 0.9797, 1.2059, 1.2139, 1.7447], ["No information", "The same global mix everywhere", 1.3197, 1.1473, 1.2466, 1.4089, 1.4648]];
+const MSCOPE = [['All 20 tests', 'all 20 tests'], ['Nearby areas', 'nearby areas'], ['Unfamiliar environments', 'unfamiliar environments'], ['Climate zones', 'whole climate zones'], ['Whole continents', 'whole continents']];
+/* before/after map statistics (tools/build_demo_maps.py) */
+const MS = {"cells": 373912, "deg": 0.2, "north": 85, "south": -60, "ramp": ["#0f2238", "#15568c", "#2b95c8", "#86d3dc", "#fff4c2"], "diverging": ["#B5432C", "#E3A48F", "#F4F1EA", "#8FB4CF", "#012169"], "spearman": 0.431, "moved_20": 50.1, "colour_residual_p95": 22.2, "boxes": {"sahara": {"name": "Sahara and Arabia", "bbox": [-15, 55, 15, 32], "cells": 27605, "rf": 85.2, "hf2": 25.9, "top_rf": 82.2, "top_hf2": 0.7}, "interior_asia": {"name": "Interior Asia", "bbox": [60, 105, 35, 50], "cells": 16866, "rf": 51.9, "hf2": 24.1, "top_rf": 0.1, "top_hf2": 0.9}, "europe": {"name": "Europe", "bbox": [-10, 30, 36, 56], "cells": 13437, "rf": 67.8, "hf2": 87.2, "top_rf": 44.1, "top_hf2": 73.9}, "e_us": {"name": "Eastern United States", "bbox": [-95, -70, 25, 42], "cells": 5844, "rf": 69.5, "hf2": 97.6, "top_rf": 23.8, "top_hf2": 99.3}, "se_asia": {"name": "South and Southeast Asia", "bbox": [70, 125, 0, 30], "cells": 19404, "rf": 90.1, "hf2": 81.0, "top_rf": 82.1, "top_hf2": 69.6}, "n_australia": {"name": "Northern Australia", "bbox": [120, 150, -25, -10], "cells": 7344, "rf": 42.7, "hf2": 60.5, "top_rf": 0.6, "top_hf2": 2.9}, "amazon": {"name": "Amazon basin", "bbox": [-75, -45, -15, 5], "cells": 14226, "rf": 58.0, "hf2": 73.1, "top_rf": 0.6, "top_hf2": 16.7}}};
+const solve3 = (A, b) => { const m = A.map((r, i) => [...r, b[i]]);
+  for (let c = 0; c < 3; c++) { let p = c; for (let r = c + 1; r < 3; r++) if (Math.abs(m[r][c]) > Math.abs(m[p][c])) p = r; [m[c], m[p]] = [m[p], m[c]];
+    for (let r = 0; r < 3; r++) if (r !== c) { const f = m[r][c] / m[c][c]; for (let k = c; k < 4; k++) m[r][k] -= f * m[c][k]; } }
+  return m.map((r, i) => r[3] / r[i]); };
+
+/*NARR_START*/const NARR = {"voices": [{"id": "lessac", "label": "Lessac · US female"}, {"id": "amy", "label": "Amy · US female"}, {"id": "hfcf", "label": "HFC · US female"}, {"id": "kristin", "label": "Kristin · US female"}, {"id": "cori", "label": "Cori · British female"}, {"id": "jenny", "label": "Jenny · British female"}, {"id": "ryan", "label": "Ryan · US male"}, {"id": "hfcm", "label": "HFC · US male"}, {"id": "joe", "label": "Joe · US male"}, {"id": "norman", "label": "Norman · US male, older"}, {"id": "alan", "label": "Alan · British male"}, {"id": "northern", "label": "Northern English male"}], "seconds": {"lessac": {"background": 31.32, "observations": 41.61, "inputs": 36.39, "fusion": 27.18, "methods": 34.31, "regional": 37.41, "learning": 40.29, "coherence": 41.05, "results": 34.59, "maps": 36.09, "implications": 29.1}, "amy": {"background": 33.85, "observations": 45.53, "inputs": 40.48, "fusion": 30.41, "methods": 37.86, "regional": 41.36, "learning": 42.69, "coherence": 43.7, "results": 38.49, "maps": 39.92, "implications": 31.09}, "hfcf": {"background": 32.44, "observations": 41.74, "inputs": 38.11, "fusion": 28.93, "methods": 34.74, "regional": 37.93, "learning": 38.53, "coherence": 41.46, "results": 35.29, "maps": 35.67, "implications": 28.85}, "kristin": {"background": 32.9, "observations": 42.76, "inputs": 41.72, "fusion": 29.1, "methods": 37.85, "regional": 41.66, "learning": 43.19, "coherence": 44.76, "results": 38.52, "maps": 40.77, "implications": 31.06}, "cori": {"background": 30.74, "observations": 41.82, "inputs": 38.4, "fusion": 28.5, "methods": 35.5, "regional": 40.4, "learning": 42.03, "coherence": 42.21, "results": 35.91, "maps": 37.59, "implications": 29.51}, "jenny": {"background": 32.23, "observations": 41.47, "inputs": 39.07, "fusion": 29.79, "methods": 34.74, "regional": 38.64, "learning": 40.6, "coherence": 41.41, "results": 35.2, "maps": 38.99, "implications": 30.12}, "ryan": {"background": 29.96, "observations": 39.62, "inputs": 37.17, "fusion": 26.15, "methods": 31.47, "regional": 35.82, "learning": 37.34, "coherence": 40.1, "results": 32.49, "maps": 35.35, "implications": 27.51}, "hfcm": {"background": 32.9, "observations": 42.38, "inputs": 39.17, "fusion": 28.62, "methods": 35.52, "regional": 38.52, "learning": 40.01, "coherence": 42.15, "results": 36.02, "maps": 37.64, "implications": 30.7}, "joe": {"background": 29.24, "observations": 40.39, "inputs": 36.12, "fusion": 27.45, "methods": 32.69, "regional": 35.14, "learning": 38.14, "coherence": 39.39, "results": 33.05, "maps": 34.38, "implications": 27.5}, "norman": {"background": 31.33, "observations": 38.06, "inputs": 37.64, "fusion": 26.03, "methods": 32.0, "regional": 37.59, "learning": 37.87, "coherence": 37.97, "results": 33.04, "maps": 38.51, "implications": 27.78}, "alan": {"background": 35.5, "observations": 48.51, "inputs": 43.78, "fusion": 32.87, "methods": 40.49, "regional": 43.8, "learning": 45.73, "coherence": 48.49, "results": 39.44, "maps": 41.89, "implications": 33.15}, "northern": {"background": 25.68, "observations": 33.92, "inputs": 30.08, "fusion": 23.48, "methods": 28.71, "regional": 31.28, "learning": 32.69, "coherence": 33.75, "results": 30.35, "maps": 30.15, "implications": 23.56}}, "cues": {"lessac": {"background": [0.0, 0.92, 9.68, 16.97, 21.4, 23.8, 25.82, 27.8, 29.9], "observations": [0.0, 1.62, 7.84, 15.59, 16.92, 23.5, 26.56, 28.8, 33.18, 36.56, 38.35], "inputs": [0.0, 2.76, 8.48, 12.74, 16.49, 21.02, 28.59], "fusion": [0.0, 3.43, 7.83, 11.12, 17.96, 23.09, 24.73], "methods": [0.0, 5.8, 9.55, 13.69, 16.33, 20.46, 22.23, 24.51, 28.65], "regional": [0.0, 3.26, 8.31, 14.17, 18.69, 23.0, 28.61, 34.09], "learning": [0.0, 2.59, 8.9, 15.48, 24.05, 30.37, 31.95, 37.25], "coherence": [0.0, 2.25, 5.46, 9.82, 14.76, 18.06, 24.16, 25.94, 27.79, 35.88], "results": [0.0, 1.36, 9.33, 13.85, 19.85, 21.55, 27.7, 30.44, 32.25], "maps": [0.0, 2.14, 9.14, 11.39, 14.51, 18.37, 29.24], "implications": [0.0, 1.54, 6.43, 13.39, 22.92, 28.04]}, "amy": {"background": [0.0, 0.99, 9.69, 17.32, 21.86, 24.69, 27.09, 29.57, 32.14], "observations": [0.0, 1.67, 8.01, 16.25, 17.9, 24.91, 28.45, 31.04, 36.03, 39.63, 41.76], "inputs": [0.0, 2.97, 9.27, 14.0, 18.19, 23.46, 32.16], "fusion": [0.0, 3.8, 9.17, 12.68, 20.0, 25.45, 27.46], "methods": [0.0, 6.4, 10.82, 15.24, 18.09, 22.49, 24.78, 27.61, 31.98], "regional": [0.0, 3.44, 8.95, 15.51, 20.1, 24.88, 31.09, 37.43], "learning": [0.0, 2.97, 9.33, 16.17, 24.68, 31.97, 33.86, 39.27], "coherence": [0.0, 2.31, 5.76, 10.87, 16.11, 19.65, 25.99, 27.85, 29.93, 38.17], "results": [0.0, 1.9, 10.14, 15.01, 21.74, 23.81, 30.56, 33.77, 35.84], "maps": [0.0, 2.63, 10.42, 12.98, 16.95, 21.28, 32.39], "implications": [0.0, 1.55, 7.04, 14.81, 24.06, 29.74]}, "hfcf": {"background": [0.0, 0.94, 9.53, 17.47, 21.6, 24.21, 26.62, 28.77, 30.99], "observations": [0.0, 1.76, 7.78, 15.92, 17.59, 23.86, 26.92, 29.08, 33.54, 36.8, 38.82], "inputs": [0.0, 2.66, 8.82, 13.45, 17.57, 22.38, 30.3], "fusion": [0.0, 3.52, 8.73, 11.92, 18.94, 24.31, 26.59], "methods": [0.0, 6.03, 10.0, 14.15, 16.79, 20.92, 22.81, 25.37, 29.49], "regional": [0.0, 3.09, 8.33, 14.05, 18.47, 23.1, 28.74, 34.39], "learning": [0.0, 2.9, 8.7, 14.73, 22.62, 29.14, 30.8, 35.51], "coherence": [0.0, 2.45, 5.63, 10.22, 15.11, 18.5, 24.63, 26.41, 28.44, 36.36], "results": [0.0, 1.43, 9.44, 13.67, 19.36, 21.5, 28.04, 30.88, 32.9], "maps": [0.0, 1.95, 9.26, 11.72, 15.08, 18.9, 29.16], "implications": [0.0, 1.34, 6.27, 13.76, 22.53, 27.49]}, "kristin": {"background": [0.0, 1.1, 9.13, 17.85, 22.09, 24.83, 27.02, 29.24, 31.23], "observations": [0.0, 1.67, 7.91, 16.37, 17.73, 24.44, 27.59, 29.92, 33.94, 37.33, 39.29], "inputs": [0.0, 3.27, 9.51, 14.74, 18.56, 24.19, 33.27], "fusion": [0.0, 3.51, 8.4, 11.8, 19.06, 24.8, 26.75], "methods": [0.0, 6.38, 10.47, 14.99, 17.92, 22.56, 24.6, 27.13, 31.29], "regional": [0.0, 3.74, 9.53, 15.91, 21.33, 25.81, 31.7, 37.75], "learning": [0.0, 2.71, 8.76, 15.55, 25.1, 32.75, 34.47, 39.68], "coherence": [0.0, 2.3, 5.81, 9.76, 15.67, 19.1, 25.67, 27.8, 29.95, 39.22], "results": [0.0, 1.41, 10.45, 15.16, 21.72, 23.65, 30.56, 33.93, 35.96], "maps": [0.0, 2.27, 10.37, 12.69, 16.37, 20.86, 32.7], "implications": [0.0, 1.3, 6.31, 14.47, 24.88, 29.74]}, "cori": {"background": [0.0, 0.97, 9.49, 16.82, 20.65, 23.23, 25.25, 27.45, 29.42], "observations": [0.0, 1.94, 7.87, 15.73, 16.89, 22.99, 26.09, 28.21, 33.07, 36.57, 38.54], "inputs": [0.0, 3.04, 8.79, 13.69, 17.59, 22.22, 30.38], "fusion": [0.0, 3.86, 8.54, 11.98, 19.22, 24.11, 25.98], "methods": [0.0, 6.03, 9.77, 14.1, 16.84, 21.48, 23.34, 25.77, 29.85], "regional": [0.0, 3.6, 9.61, 15.45, 20.87, 25.08, 31.05, 36.91], "learning": [0.0, 2.93, 9.23, 16.02, 25.13, 32.45, 34.17, 39.02], "coherence": [0.0, 2.08, 5.46, 9.98, 15.47, 18.71, 25.17, 27.12, 29.14, 37.45], "results": [0.0, 2.1, 10.48, 14.98, 20.67, 22.6, 28.65, 31.76, 33.61], "maps": [0.0, 2.12, 9.39, 11.55, 15.0, 18.96, 30.23], "implications": [0.0, 1.6, 6.27, 13.41, 23.71, 28.37]}, "jenny": {"background": [0.0, 0.82, 9.62, 17.85, 22.16, 24.62, 26.81, 28.68, 30.8], "observations": [0.0, 1.47, 7.6, 15.37, 16.61, 23.36, 26.38, 28.6, 33.24, 36.64, 38.43], "inputs": [0.0, 2.75, 8.05, 12.43, 16.18, 20.97, 30.45], "fusion": [0.0, 3.45, 8.94, 12.21, 20.49, 25.76, 27.58], "methods": [0.0, 5.93, 9.87, 13.93, 16.52, 20.61, 22.37, 24.8, 28.82], "regional": [0.0, 3.32, 8.75, 14.18, 18.47, 23.07, 29.36, 35.43], "learning": [0.0, 2.5, 8.5, 15.06, 23.88, 30.93, 32.45, 37.67], "coherence": [0.0, 2.23, 5.48, 10.35, 15.41, 18.64, 24.1, 25.85, 27.69, 36.88], "results": [0.0, 1.64, 10.4, 14.93, 21.02, 22.75, 28.9, 31.1, 32.85], "maps": [0.0, 1.9, 10.1, 12.23, 15.68, 19.55, 31.43], "implications": [0.0, 1.3, 6.36, 14.07, 23.83, 29.2]}, "ryan": {"background": [0.0, 0.9, 9.36, 16.55, 20.55, 22.75, 24.62, 26.55, 28.78], "observations": [0.0, 1.34, 7.04, 14.78, 16.0, 22.27, 25.52, 27.58, 32.01, 35.12, 36.94], "inputs": [0.0, 2.5, 8.01, 12.41, 16.26, 21.13, 29.05], "fusion": [0.0, 3.14, 7.56, 10.55, 17.51, 22.42, 24.21], "methods": [0.0, 5.54, 8.99, 12.56, 14.93, 19.15, 20.81, 22.99, 26.77], "regional": [0.0, 2.84, 7.85, 13.36, 17.43, 21.8, 27.28, 32.52], "learning": [0.0, 2.28, 8.05, 14.28, 22.44, 28.87, 30.21, 34.56], "coherence": [0.0, 2.2, 5.31, 9.44, 14.07, 17.29, 23.18, 25.08, 26.94, 35.31], "results": [0.0, 1.55, 9.28, 13.34, 18.6, 20.26, 26.27, 28.71, 30.4], "maps": [0.0, 1.86, 8.67, 10.72, 13.76, 17.51, 28.26], "implications": [0.0, 1.18, 6.02, 12.5, 21.56, 26.57]}, "hfcm": {"background": [0.0, 0.9, 10.48, 18.29, 22.74, 25.22, 27.25, 29.3, 31.45], "observations": [0.0, 1.35, 7.59, 15.58, 16.99, 23.68, 26.84, 29.13, 34.23, 37.45, 39.37], "inputs": [0.0, 2.71, 8.78, 13.17, 17.05, 22.5, 30.85], "fusion": [0.0, 3.68, 8.75, 12.09, 19.54, 24.51, 26.41], "methods": [0.0, 6.43, 10.37, 14.42, 17.01, 21.48, 23.47, 25.8, 29.93], "regional": [0.0, 3.48, 8.84, 14.69, 19.22, 23.61, 29.2, 35.24], "learning": [0.0, 2.51, 8.96, 15.52, 23.92, 30.66, 32.28, 36.98], "coherence": [0.0, 2.4, 5.8, 10.12, 15.08, 18.45, 24.69, 26.59, 28.56, 36.79], "results": [0.0, 1.52, 9.94, 14.52, 20.53, 22.44, 28.91, 31.72, 33.58], "maps": [0.0, 2.01, 9.56, 11.83, 15.02, 18.81, 30.51], "implications": [0.0, 1.45, 6.52, 14.07, 24.3, 29.59]}, "joe": {"background": [0.0, 0.81, 8.95, 15.78, 19.8, 22.02, 24.0, 25.94, 27.93], "observations": [0.0, 1.51, 7.59, 15.3, 16.76, 23.1, 26.09, 28.27, 32.53, 35.75, 37.39], "inputs": [0.0, 2.75, 8.21, 12.46, 16.31, 20.97, 28.84], "fusion": [0.0, 3.4, 8.13, 11.64, 18.43, 23.46, 25.28], "methods": [0.0, 5.87, 9.53, 13.44, 15.69, 19.85, 21.74, 24.02, 27.62], "regional": [0.0, 2.75, 7.62, 13.31, 17.28, 21.47, 26.69, 31.9], "learning": [0.0, 2.53, 8.39, 14.41, 22.91, 29.2, 30.62, 35.47], "coherence": [0.0, 2.25, 5.21, 9.26, 14.11, 17.16, 22.76, 24.4, 26.46, 34.57], "results": [0.0, 1.63, 8.9, 13.32, 19.06, 20.76, 26.77, 29.25, 31.01], "maps": [0.0, 1.89, 8.91, 10.93, 13.94, 17.91, 27.92], "implications": [0.0, 1.3, 5.7, 13.09, 21.74, 26.47]}, "norman": {"background": [0.0, 1.43, 10.99, 18.4, 22.05, 24.22, 26.1, 28.04, 30.03], "observations": [0.0, 1.55, 6.88, 14.16, 15.43, 21.88, 24.41, 26.18, 30.14, 33.36, 34.96], "inputs": [0.0, 2.78, 8.31, 13.12, 17.55, 22.22, 29.85], "fusion": [0.0, 3.49, 8.11, 11.1, 17.91, 22.56, 24.08], "methods": [0.0, 5.3, 8.9, 12.74, 15.09, 19.13, 20.7, 22.9, 26.5], "regional": [0.0, 3.19, 8.25, 14.0, 17.88, 22.48, 28.27, 33.79], "learning": [0.0, 2.19, 8.11, 14.16, 22.69, 29.36, 30.74, 35.33], "coherence": [0.0, 2.0, 5.09, 8.8, 13.17, 16.22, 22.17, 24.1, 25.65, 33.47], "results": [0.0, 1.88, 9.3, 13.32, 18.91, 20.42, 26.24, 29.06, 30.8], "maps": [0.0, 2.08, 9.4, 11.48, 14.83, 18.55, 31.78], "implications": [0.0, 1.23, 6.04, 13.55, 22.22, 26.71]}, "alan": {"background": [0.0, 0.96, 10.6, 19.06, 23.83, 26.58, 29.01, 31.28, 33.73], "observations": [0.0, 1.76, 8.74, 18.15, 19.75, 27.14, 30.77, 33.59, 38.65, 42.91, 45.04], "inputs": [0.0, 3.11, 10.03, 15.23, 19.82, 25.14, 34.38], "fusion": [0.0, 3.85, 9.38, 13.38, 21.92, 28.16, 30.22], "methods": [0.0, 7.28, 11.49, 16.33, 19.3, 24.5, 26.73, 29.35, 34.06], "regional": [0.0, 3.7, 9.59, 16.44, 21.63, 26.77, 33.1, 40.04], "learning": [0.0, 2.87, 9.46, 16.93, 26.74, 34.77, 36.59, 42.2], "coherence": [0.0, 2.61, 6.42, 12.16, 17.89, 21.72, 28.76, 30.7, 33.0, 43.11], "results": [0.0, 1.75, 10.79, 15.74, 22.3, 24.55, 31.48, 34.69, 36.83], "maps": [0.0, 2.46, 10.61, 13.23, 16.9, 21.18, 33.82], "implications": [0.0, 1.49, 7.2, 15.52, 25.87, 31.81]}, "northern": {"background": [0.0, 0.81, 7.43, 13.4, 17.09, 19.26, 21.09, 22.8, 24.52], "observations": [0.0, 1.28, 6.23, 12.16, 13.34, 18.86, 21.64, 23.38, 26.95, 29.57, 31.22], "inputs": [0.0, 2.08, 7.01, 10.63, 13.59, 17.8, 23.88], "fusion": [0.0, 3.01, 7.11, 9.9, 15.4, 19.79, 21.52], "methods": [0.0, 5.24, 8.27, 11.97, 14.15, 17.29, 18.95, 21.14, 24.41], "regional": [0.0, 2.58, 6.88, 11.78, 15.53, 19.31, 24.19, 28.94], "learning": [0.0, 2.46, 6.81, 12.09, 19.31, 24.67, 26.03, 30.22], "coherence": [0.0, 1.9, 4.6, 8.28, 12.37, 15.07, 20.32, 21.72, 23.56, 30.2], "results": [0.0, 1.41, 7.83, 11.65, 16.53, 18.39, 24.29, 26.63, 28.2], "maps": [0.0, 1.46, 7.58, 9.45, 11.95, 14.86, 25.09], "implications": [0.0, 1.25, 5.11, 10.82, 18.3, 22.57]}}, "text": {"background": "Welcome. In about seven minutes, you will see how one model, HiCo-Fuse 2, maps where the Asian tiger mosquito, Aedes albopictus, could live. This mosquito spreads dengue, chikungunya and Zika, and it has travelled from Southeast Asia to every inhabited continent. Health agencies want to know where to set traps and where to warn people. But nobody can survey the whole planet. What we have are scattered sightings. So the goal is to combine those sightings with what we know about every place on Earth, and rank every 5.5 km square of land. The map on the right is the result. Let's see how it is made.", "observations": "First, the data. Volunteers photograph mosquitoes with the iNaturalist app, and experts confirm the species. We have 17,232 confirmed reports in 7,004 map cells, sorted into five groups. Here is the catch. A city full of keen naturalists sends many more reports than a quiet village, even with the same mosquitoes. So the model does not predict the number of reports. It predicts the share of each group. Look at the formula: the count equals effort times how common the group is. When we divide by the total, the effort cancels out. Try the slider on the right. The counts grow, but the shares stay exactly the same.", "inputs": "Next, how the model describes a place. Every cell becomes a list of 105 numbers, averaged over a 500 m circle. Twenty-six describe climate, like temperature and rainfall through the year. Eleven describe the landscape, like vegetation and water. Four describe people: population, buildings, night lights and travel time. And sixty-four come from AlphaEarth, a satellite embedding from Google that squeezes a year of satellite images into a numeric fingerprint. Mathematically, each cell is one point in a 105-dimensional space, and places that sit close together in that space look alike.", "fusion": "Now, how do we combine four very different kinds of data? The simplest way is to give all 105 numbers to one random forest. A random forest is several hundred decision trees. Each tree asks a chain of yes or no questions, like the one on the right, and the forest averages all of their answers. Because any question can use any number, the data types get mixed inside the trees. But is simple really best? The next screen shows what else we tried.", "methods": "We tried thirteen other ways to combine the data, and scored every one on the same twenty hidden tests. The table on the right ranks them by loss, where lower is better. Over all twenty tests, the plain random forest comes first. Now press the button for nearby areas. Several fancier methods, like stacked weights, beat the forest there. Then press whole continents. The same methods fall far behind. Weights learned on familiar places do not carry over to new ones. That is why we kept one random forest, and built our new ideas on top of it, not inside it.", "regional": "Here is the first new idea, the regional term. The forest learns habitat, but a species can only live where it has actually arrived. Northern Australia looks a lot like Southeast Asia, so the forest expects tiger mosquitoes there. In reality, they live on the Torres Strait islands, not on the mainland. So, for each region about 55 km across, the model combines the forest's opinion with a species pool: historical records the forest never sees, including 2.55 million GBIF records and the Kraemer compendium. The formula adds an offset, a trust factor for the forest, and a weight on that pool evidence. Only sixty numbers are learned, and each one is pulled back towards simply agreeing with the forest. Try the Northern Australia preset, and watch the share drop.", "learning": "How does the model learn its sixty numbers? It starts by simply agreeing with the forest: offset zero, trust one, and pool weight zero. Each region's forest opinion comes from a forest that never saw that region, so its mistakes are honest ones. The model then compares its predictions with the reports actually seen in each region, and nudges the numbers, step by step, to lower the loss. A penalty pulls every number back towards agreeing with the forest, so a number only moves when the data insist. Press play on the right. Watch the rings move from the forest's guess towards what was observed, and the loss fall. Then raise the penalty, and see the numbers stay put.", "coherence": "The second idea is coherence. The local forest score does not create mosquitoes. It only decides which cells inside a region get more of the region's total. The last term in the formula guarantees that the cells always average back to the region. That means a city map can never contradict its region. When the two scales were fitted separately, eighty-two percent of regions were off by more than a factor of two. With this rule, none are. The third idea is trust. Where a region's environment is unlike anything seen in training, the regional correction fades out, and the model falls back to the plain forest. On the right, move any slider: the bars always average exactly to the dashed line.", "results": "So, does it work? Each test hides part of the data: nearby areas, unfamiliar environments, whole climate zones, or entire continents. The model is fitted on the rest, and scored on the hidden reports with a loss. Loss is the penalty for giving little probability to what was actually reported, so lower is better. Try the slider to feel it. The rival is a fair one: a random forest given exactly the same 117 inputs. Across all twenty tests, HiCo-Fuse 2 lowered the loss by 0.35%, and won nine of them. It does best near the data. But when a whole continent is hidden, it is 2.54% worse than the forest.", "maps": "Here is what changes on the map. On the left of the divider is an earlier random forest from this project, which compared sightings with random background points. On the right is HiCo-Fuse 2. Both are shown as rankings, from lowest to highest. Press play to sweep between them, or switch to the difference view. HiCo-Fuse 2 removes a false hotspot over the Sahara and Arabia, lowers interior Asia, and raises the eastern United States and Europe, where the mosquito is well established. Keep in mind that the two models were trained in different ways, so this shows the overall change, not the regional term alone.", "implications": "What does this mean? HiCo-Fuse 2 gives one consistent map from the whole globe down to a city block. It knows which species have arrived, and it stays cautious in unfamiliar places, with only sixty extra numbers to check. But the gain is modest, it does not yet travel well to unseen continents, and it ranks where reports would come from, not mosquito abundance or disease risk. The next step is a fair final exam: a mosquito survey that no model has seen. Thank you for watching."}};/*NARR_END*/
+const CH = [
+ {id: 'background', name: 'Background'}, {id: 'observations', name: 'Observations'}, {id: 'inputs', name: 'Inputs'},
+ {id: 'fusion', name: 'Fusion'}, {id: 'methods', name: 'Methods tried'}, {id: 'regional', name: 'Regional term'},
+ {id: 'learning', name: 'How it learns'}, {id: 'coherence', name: 'Coherence'}, {id: 'results', name: 'Results'},
+ {id: 'maps', name: 'Maps'}, {id: 'implications', name: 'Implications'}];
+let VOICE = NARR.voices[0].id;
+try { const v = localStorage.getItem('demo-voice'); if (NARR.seconds[v]) VOICE = v; } catch (e) {}
+const start = i => CH.slice(0, i).reduce((s, c) => s + c.t, 0);
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+let TOTAL = 0;
+function retime() { CH.forEach(c => { c.t = Math.round(NARR.seconds[VOICE][c.id]); }); TOTAL = start(CH.length); }
+retime();
+
+/* ------------------------------------------------------------------ screens */
+const S = {};
+
+S.background = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Background</span></div>
+    <h1>Why map one mosquito?</h1>
+    <p>The <b>Asian tiger mosquito</b> (<i>Aedes albopictus</i>) spreads dengue, chikungunya and Zika. It has spread from Southeast Asia to every inhabited continent, mostly by hitching rides in shipping.</p>
+    <p>Health agencies need to know <b>where it could live</b>, so they can decide where to set traps and where to warn people. Nobody can survey the whole planet. What we have are scattered sightings.</p>
+    <p>The goal: use those sightings and what we know about every place on Earth to <b>rank every 5.5 km square of land</b> by how likely the mosquito is to be there.</p>
+    <div class="figs"><div class="fig"><b>5.5<small>km</small></b><span>size of each map cell (0.05°)</span></div><div class="fig"><b>${D.reports.toLocaleString('en-US')}</b><span>sightings to learn from</span></div><div class="fig"><b>1</b><span>model followed in this tutorial</span></div></div>`,
+  right: `<div class="vis"><h3>Where the model expects reports of the tiger mosquito</h3><p class="sub">HiCo-Fuse 2’s global map. Brighter means a higher relative ranking.</p>
+    <div class="mapfig"><img src="assets/global_albopictus.webp" alt="World map of tiger mosquito suitability from HiCo-Fuse 2, brightest across the eastern United States, southern Europe, South and East Asia and parts of South America"></div>
+    <p class="cap">0.2° preview of 0.05° cells, 85° N to 60° S. The rest of this tutorial explains how a map like this is made, and how far to trust it.</p></div>`});
+
+S.observations = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Data · what we observe</span></div>
+    <h1>Count the mix, not the number</h1>
+    <p>Volunteers photograph mosquitoes for the iNaturalist app, and experts confirm the species. We have <b>${D.reports.toLocaleString('en-US')} confirmed reports</b> (2022–2025) in <b>${D.cells.toLocaleString('en-US')} cells</b>, in five groups.</p>
+    <p>A raw count is misleading: a city full of naturalists sends far more reports than a quiet village with the same mosquitoes. So the model predicts the <b>share</b> of each group, and in a share the observer effort cancels out.</p>
+    <div class="math">n<sub>k</sub>(x) = <span class="d">E(x)</span> · λ<sub>k</sub>(x) &nbsp;&nbsp;⇒&nbsp;&nbsp; p<sub>k</sub>(x) = <span class="up">n<sub>k</sub> / Σ<sub>j</sub> n<sub>j</sub></span> = λ<sub>k</sub>(x) / Σ<sub>j</sub> λ<sub>j</sub>(x)</div>
+    <p class="words"><b>In words:</b> reports of group k in cell x equal effort E times how common the group is (λ). Divide by the total and E disappears.</p>`,
+  right: `<div class="vis"><h3>Try it: more observers, same mix</h3><p class="sub">Move the effort slider. Report counts grow, but the shares the model learns stay the same. Group proportions are from the real data.</p>
+    <div class="ctl"><label for="eff">Observer effort E</label><input id="eff" type="range" min="1" max="20" value="3"><output id="effv"></output></div>
+    <svg id="effsvg" viewBox="0 0 520 290" role="img" aria-label="Report counts and shares by mosquito group"></svg></div>`,
+  init: () => {
+    const g = Object.entries(D.groups), tot = g.reduce((s, [, v]) => s + v, 0), lam = g.map(([, v]) => v / tot * 12);
+    const draw = () => {
+      const E = +$('#eff').value; $('#effv').textContent = E + '×';
+      const n = lam.map(l => E * l), maxN = 20 * Math.max(...lam);
+      let s = `<text class="lbl" x="0" y="14" style="font-weight:600">Reports in a cell</text><text class="lbl" x="290" y="14" style="font-weight:600">Share of reports (what the model learns)</text>`;
+      g.forEach(([name], i) => {
+        const y = 30 + i * 50;
+        s += `<text class="lbl" x="0" y="${y + 12}">${name}</text>`;
+        const w1 = n[i] / maxN * 230; s += `<rect x="0" y="${y + 18}" width="${Math.max(1, w1)}" height="14" rx="2" fill="#5B7FA6"/><text x="${Math.max(1, w1) + 5}" y="${y + 30}" font-size="12">${Math.round(n[i])}</text>`;
+        const sh = lam[i] / lam.reduce((a, b) => a + b, 0), w2 = sh * 200; s += `<rect x="290" y="${y + 18}" width="${w2}" height="14" rx="2" fill="#012169"/><text x="${290 + w2 + 5}" y="${y + 30}" font-size="12">${(sh * 100).toFixed(1)}%</text>`;
+      });
+      $('#effsvg').innerHTML = s;
+    };
+    $('#eff').oninput = draw; draw();
+  }});
+
+S.inputs = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Data · what each place looks like</span></div>
+    <h1>Describe every cell with 105 numbers</h1>
+    <p>For each 5.5 km cell, the model reads a list of 105 numbers, averaged over a 500 m circle at the cell centre:</p>
+    <p><b>26 climate</b> numbers (temperature, rain, humidity across the year) · <b>11 landscape</b> numbers (vegetation, water, land cover) · <b>4 human</b> numbers (population, buildings, night lights, travel time) · <b>64 AlphaEarth</b> numbers.</p>
+    <p><b>AlphaEarth</b> is a satellite embedding from Google: an AI system that condenses a year of satellite images of a place into 64 numbers, like a fingerprint. Similar places get similar fingerprints.</p>
+    <div class="math">x(cell) = [ <span class="a">climate<sub>1…26</sub></span>, <span class="b">landscape<sub>1…11</sub></span>, <span class="d">human<sub>1…4</sub></span>, <span class="c">AlphaEarth<sub>1…64</sub></span> ] ∈ ℝ<sup>105</sup></div>
+    <p class="words"><b>In words:</b> each cell becomes one point in a 105-dimensional space. Places close together in that space look alike.</p>`,
+  right: `<div class="vis"><h3>The 105 numbers of one cell</h3><p class="sub">Each square is one input. Colour shows its family.</p>
+    <div class="barcode" id="bc"></div>
+    <div class="legend"><span><i style="background:var(--c-clim)"></i>Climate · 26</span><span><i style="background:var(--c-land)"></i>Landscape · 11</span><span><i style="background:var(--c-hum)"></i>Human · 4</span><span><i style="background:var(--c-ae)"></i>AlphaEarth · 64</span></div>
+    <p class="cap" style="margin-top:14px">Tested alone, AlphaEarth carried the most signal of the four families. It also mirrors human presence, which is one reason the model learns shares, not counts.</p></div>`,
+  init: () => {
+    const fam = [['--c-clim', 26], ['--c-land', 11], ['--c-hum', 4], ['--c-ae', 64]];
+    let h = '', seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    fam.forEach(([c, n]) => { for (let i = 0; i < n; i++) h += `<i style="background:var(${c});opacity:${(.45 + .55 * rnd()).toFixed(2)}" title="${{'--c-clim': 'Climate', '--c-land': 'Landscape', '--c-hum': 'Human', '--c-ae': 'AlphaEarth'}[c]}"></i>`; });
+    $('#bc').innerHTML = h;
+  }});
+
+S.fusion = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Fusion · combining four kinds of data</span></div>
+    <h1>Let a random forest mix the data</h1>
+    <p>Four kinds of data must be combined. The simplest way is to give all 105 numbers to one <b>random forest</b>. A random forest is several hundred decision trees. Each tree asks a chain of yes/no questions about the numbers, and the forest averages the trees’ answers. Because any question can use any number, the data types get mixed inside the trees.</p>
+    <div class="math">P<sub>RF</sub>(k | x) = <span class="up">(1/T)</span> Σ<sub>t=1…T</sub> P<sub>t</sub>(k | x)</div>
+    <p class="words"><b>In words:</b> the forest’s probability for group k is the average over its T trees.</p>
+    <p>Is simple really best? The next screen compares it with thirteen other methods.</p>`,
+  right: `<div class="vis"><h3>One tree, one path <span class="tag">illustrative</span></h3><p class="sub">A cell is routed down the tree by its numbers. Its leaf holds the share of each group among the training reports that ended there.</p>
+    <svg viewBox="0 0 520 300" role="img" aria-label="Illustrative decision tree with a highlighted path">
+      <g fill="none" stroke-width="2"><path d="M260 52 L150 118" stroke="#012169"/><path d="M260 52 L380 118" stroke="rgba(27,31,39,.2)"/><path d="M150 148 L80 214" stroke="rgba(27,31,39,.2)"/><path d="M150 148 L230 214" stroke="#012169"/></g>
+      <rect x="160" y="14" width="200" height="38" rx="4" fill="#F7F5EF" stroke="#012169"/><text class="lbl" x="260" y="38" text-anchor="middle">Built-up share above 20%?</text>
+      <rect x="55" y="118" width="190" height="34" rx="4" fill="#F7F5EF" stroke="#012169"/><text class="lbl" x="150" y="140" text-anchor="middle">July mean above 22 °C?</text>
+      <rect x="290" y="118" width="180" height="34" rx="4" fill="#F7F5EF" stroke="rgba(27,31,39,.2)"/><text class="lbl" x="380" y="140" text-anchor="middle">AlphaEarth A12 below −0.3?</text>
+      <text class="lbl" x="196" y="86" text-anchor="middle">yes</text><text class="lbl" x="330" y="86" text-anchor="middle">no</text>
+      <rect x="10" y="214" width="140" height="64" rx="4" fill="#F1EEE6"/><text class="lbl" x="80" y="238" text-anchor="middle">Leaf: tiger 8%</text><text class="lbl" x="80" y="258" text-anchor="middle">other 92%</text>
+      <rect x="165" y="214" width="150" height="64" rx="4" fill="#FBE7B0" stroke="#A87400"/><text class="lbl" x="240" y="238" text-anchor="middle" style="font-weight:600">Leaf: tiger 45%</text><text class="lbl" x="240" y="258" text-anchor="middle">other groups 55%</text>
+      <text class="lbl" x="400" y="240">× several hundred trees,</text><text class="lbl" x="400" y="258">then average</text>
+    </svg></div>`});
+
+S.regional = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Model · step 2, the regional term</span></div>
+    <h1>Correct each region with what has actually been found there</h1>
+    <p>The forest learns <b>habitat</b>. But a species can only live where it has <b>arrived</b>. Northern Australia looks like Southeast Asia, so the forest expects tiger mosquitoes there. In fact they are on the Torres Strait islands, not the mainland.</p>
+    <p>So for each 55 km region, HiCo-Fuse 2 combines the forest’s opinion with a <b>species pool</b>: historical records the forest never sees (2.55 million GBIF records up to 2021 and the Kraemer occurrence compendium).</p>
+    <div class="math"><span class="a">A(P)</span> = α + γ · <span class="b">M(P)</span> + w · <span class="c">z(P)</span></div>
+    <p class="words"><b>In words:</b> region P’s level A = offset α + trust γ in the forest’s regional opinion M + weight w on the pool evidence z. Only ${D.params} such numbers are learned, each pulled toward “do nothing” (α = 0, γ = 1, w = 0).</p>`,
+  right: `<div class="vis"><h3>Regional term calculator <span class="tag">illustrative numbers</span></h3><p class="sub">Two groups only (tiger vs other) for clarity. Scores are log-odds: 0 means even odds, +1 means about 2.7 to 1.</p>
+    <div class="presets"><button type="button" data-p="0.8,-1.2,0.95">Northern Australia</button><button type="button" data-p="0.5,0.6,0.95">Northern Italy</button><button type="button" data-p="0.8,0,1">No pool evidence</button></div>
+    <div class="ctl"><label for="rm"><span class="b" style="color:var(--green)">M</span>: forest’s opinion</label><input id="rm" type="range" min="-2" max="2" step=".05" value=".8"><output id="rmv"></output></div>
+    <div class="ctl"><label for="rz"><span style="color:var(--gold-t)">w·z</span>: pool evidence</label><input id="rz" type="range" min="-2" max="2" step=".05" value="-1.2"><output id="rzv"></output></div>
+    <div class="ctl"><label for="rg">γ: trust in forest</label><input id="rg" type="range" min=".5" max="1.5" step=".05" value=".95"><output id="rgv"></output></div>
+    <div class="readout"><div><b id="ra"></b><span>regional score A (α = −0.1)</span></div><div><b id="rp0"></b><span>tiger share, forest alone</span></div><div><b id="rp1"></b><span>tiger share with the regional term</span></div></div>
+    <p class="cap" id="rtxt"></p></div>`,
+  init: () => {
+    const draw = () => {
+      const M = +$('#rm').value, z = +$('#rz').value, g = +$('#rg').value, A = -0.1 + g * M + z;
+      $('#rmv').textContent = fx(M); $('#rzv').textContent = (z >= 0 ? '+' : '') + fx(z); $('#rgv').textContent = fx(g);
+      $('#ra').textContent = fx(A); $('#rp0').textContent = Math.round(sig(M) * 100) + '%'; $('#rp1').textContent = Math.round(sig(A) * 100) + '%';
+      $('#rtxt').textContent = z < -0.2 ? 'Historical records rarely found the species here, so the regional term lowers the region below what the habitat alone suggests.'
+        : z > 0.2 ? 'Historical records confirm the species is established, so the regional term raises the region.' : 'With no pool evidence, the regional term stays close to the forest.';
+    };
+    ['#rm', '#rz', '#rg'].forEach(s => $(s).oninput = draw);
+    document.querySelectorAll('.presets button').forEach(b => b.onclick = () => { const [m, z, g] = b.dataset.p.split(','); $('#rm').value = m; $('#rz').value = z; $('#rg').value = g; draw(); });
+    draw();
+  }});
+
+S.coherence = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Model · steps 3 and 4, coherence and trust</span></div>
+    <h1>Share the region’s total out among its cells, and only trust what is familiar</h1>
+    <p><b>Coherence.</b> The forest’s local score B(x) does not add mosquitoes; it only decides <b>which cells</b> in the region get more of the regional total. The cells always average back to the region, so a city map can never contradict its region. Fitted separately, ${D.off2x}% of regions were off by more than 2×; with this rule, none are.</p>
+    <div class="math">η(x) = <span class="a">A(P)</span> + τ<span class="b">B(x)</span> − log mean<sub>x′∈P</sub> e<sup>τB(x′)</sup> &nbsp; ⇒ &nbsp; mean<sub>x∈P</sub> e<sup>η(x)</sup> = e<sup>A(P)</sup></div>
+    <p><b>Trust.</b> Where a region’s environment is unlike anything seen in fitting, the regional correction fades and the model falls back to the plain forest.</p>
+    <div class="math">A<sub>used</sub> = M + <span class="d">ρ</span> · (A − M), &nbsp;&nbsp; <span class="d">ρ</span> = clip(2 − d / q<sub>90</sub>, 0, 1)</div>
+    <p class="words"><b>In words:</b> ρ is 1 in familiar places and falls to 0 at twice the novelty seen in training (d: environmental distance). In the released maps, ${D.trustFull}% of regions get full trust and ${D.trustRF}% fall back fully to the forest.</p>`,
+  right: `<div class="vis"><h3>One region, six cells <span class="tag">illustrative numbers</span></h3><p class="sub">Bars are each cell’s odds of a tiger report, e<sup>η</sup>. The dashed line is the region’s level e<sup>A</sup>. Move any slider: the bars always average exactly to the line.</p>
+    <svg id="cohsvg" viewBox="0 0 520 230" role="img" aria-label="Six cells and their regional level"></svg>
+    <div class="ctl"><label for="cz">Pool evidence w·z</label><input id="cz" type="range" min="-2" max="2" step=".05" value="-.8"><output id="czv"></output></div>
+    <div class="ctl"><label for="cr">Trust ρ</label><input id="cr" type="range" min="0" max="1" step=".05" value="1"><output id="crv"></output></div>
+    <div class="ctl"><label for="ct">Local sharpness τ</label><input id="ct" type="range" min=".3" max="1.7" step=".05" value="1"><output id="ctv"></output></div>
+    <div class="readout"><div><b id="cmean"></b><span>average of the six cells’ odds</span></div><div><b id="creg"></b><span>region’s odds e<sup>A</sup></span></div><div><b id="cfor"></b><span>forest alone, region odds e<sup>M</sup></span></div></div></div>`,
+  init: () => {
+    const B = [1.4, 0.8, 0.3, -0.2, -0.9, -1.6], names = ['Port', 'Old town', 'Suburb', 'Farmland', 'Forest', 'Hills'];
+    const lme = (v, t) => Math.log(v.reduce((s, b) => s + Math.exp(t * b), 0) / v.length);
+    const M = lme(B, 1);
+    const draw = () => {
+      const wz = +$('#cz').value, rho = +$('#cr').value, tau = +$('#ct').value;
+      $('#czv').textContent = (wz >= 0 ? '+' : '') + fx(wz); $('#crv').textContent = fx(rho); $('#ctv').textContent = fx(tau);
+      const A = M + rho * wz, norm = lme(B, tau), eta = B.map(b => A + tau * b - norm), odds = eta.map(Math.exp);
+      const mean = odds.reduce((a, b) => a + b, 0) / odds.length, maxO = 6;
+      const x0 = 40, w = 72, H = 170, y = v => 10 + H - Math.min(v, maxO) / maxO * H;
+      let s = `<line class="ax" x1="${x0}" x2="510" y1="${10 + H}" y2="${10 + H}"/>`;
+      [0, 2, 4, 6].forEach(v => { s += `<text x="${x0 - 8}" y="${y(v) + 4}" font-size="11" text-anchor="end">${v}</text><line class="ax" x1="${x0}" x2="510" y1="${y(v)}" y2="${y(v)}" opacity=".5"/>`; });
+      odds.forEach((o, i) => { const X = x0 + 8 + i * 78; s += `<rect x="${X}" y="${y(o)}" width="${w - 14}" height="${10 + H - y(o)}" rx="2" fill="#012169" opacity=".85"/><text x="${X + (w - 14) / 2}" y="${y(o) - 4}" font-size="11" text-anchor="middle">${fx(o)}</text><text class="lbl" x="${X + (w - 14) / 2}" y="${H + 26}" text-anchor="middle" style="font-size:11px">${names[i]}</text>`; });
+      s += `<line x1="${x0}" x2="510" y1="${y(Math.exp(A))}" y2="${y(Math.exp(A))}" stroke="#A87400" stroke-width="2" stroke-dasharray="6 4"/><text x="508" y="${y(Math.exp(A)) - 5}" font-size="11" text-anchor="end" style="fill:#A87400">region e^A = ${fx(Math.exp(A))}</text>`;
+      $('#cohsvg').innerHTML = s;
+      $('#cmean').textContent = fx(mean); $('#creg').textContent = fx(Math.exp(A)); $('#cfor').textContent = fx(Math.exp(M));
+    };
+    ['#cz', '#cr', '#ct'].forEach(s => $(s).oninput = draw); draw();
+  }});
+
+S.results = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Results · tested on data the model never saw</span></div>
+    <h1>Twenty held-out tests against a fair rival</h1>
+    <p>Each test <b>hides</b> part of the data (nearby areas, unfamiliar environments, whole climate zones or whole continents), fits on the rest and scores the hidden reports with <b>loss</b>:</p>
+    <div class="math">Loss = −<span class="up">(1/N)</span> Σ<sub>i</sub> log p<sub>model</sub>(true group of report i)</div>
+    <p class="words"><b>In words:</b> the penalty for giving little probability to what was actually reported. Lower is better. Try it below.</p>
+    <div class="ctl"><label for="lp">Probability given to the true group</label><input id="lp" type="range" min=".02" max=".98" step=".01" value=".6"><output id="lpv"></output></div>
+    <svg id="losssvg" viewBox="0 0 420 120" role="img" aria-label="Loss as a function of probability"></svg>
+    <p>The rival is a <b>random forest given the same 117 inputs</b>, so any gain comes from the model’s structure, not from extra data.</p>`,
+  right: `<div class="vis"><h3>Loss compared with the matched random forest</h3><p class="sub">Bars to the left: HiCo-Fuse 2 has lower loss (better). To the right: the random forest is better. Tests won shown at the end.</p>
+    <svg id="ressvg" viewBox="0 0 520 260" role="img" aria-label="Change in loss by test type"></svg>
+    <div class="readout"><div><b>${D.gain117}%</b><span>lower loss overall</span></div><div><b>${D.wins} / ${D.splits}</b><span>tests won</span></div><div><b>${D.kraemerBefore} → ${D.kraemerAfter}</b><span>AUC vs independent Kraemer records, before and after the support step</span></div></div></div>`,
+  init: () => {
+    const loss = () => {
+      const p = +$('#lp').value, L = -Math.log(p); $('#lpv').textContent = fx(p);
+      const X = q => 30 + q * 380, Y = l => 105 - Math.min(l, 4) / 4 * 95;
+      let path = ''; for (let q = .02; q <= .99; q += .01) path += (path ? 'L' : 'M') + X(q).toFixed(1) + ' ' + Y(-Math.log(q)).toFixed(1);
+      $('#losssvg').innerHTML = `<line class="ax" x1="30" x2="410" y1="105" y2="105"/><line class="ax" x1="30" x2="30" y1="10" y2="105"/>
+        <path d="${path}" fill="none" stroke="#012169" stroke-width="2"/><circle cx="${X(p)}" cy="${Y(L)}" r="5" fill="#F2A900" stroke="#1B1F27"/>
+        <text x="${Math.min(X(p) + 8, 330)}" y="${Math.max(Y(L) - 8, 20)}" font-size="12">loss ${fx(L)}</text>
+        <text x="30" y="119" font-size="11">0</text><text x="410" y="119" font-size="11" text-anchor="end">1</text><text x="34" y="18" font-size="11">loss</text>`;
+    };
+    $('#lp').oninput = loss; loss();
+    const x0 = 270, sc = 70, rows = D.scopes;
+    let s = `<line class="ax" x1="${x0}" x2="${x0}" y1="6" y2="226"/>`;
+    [-3, -2, -1, 1, 2, 3].forEach(v => { s += `<line class="ax" x1="${x0 + v * sc / 1.4}" x2="${x0 + v * sc / 1.4}" y1="6" y2="226" opacity=".45"/><text x="${x0 + v * sc / 1.4}" y="242" font-size="11" text-anchor="middle">${v > 0 ? '+' : ''}${v}%</text>`; });
+    s += `<text x="${x0}" y="242" font-size="11" text-anchor="middle">0</text><text class="lbl" x="${x0 - 8}" y="257" text-anchor="end" style="fill:#2E6B3A;font-size:11px">← HiCo-Fuse 2 better</text><text class="lbl" x="${x0 + 8}" y="257" style="fill:#B5432C;font-size:11px">random forest better →</text>`;
+    rows.forEach(([n, v, w], i) => { const y = 12 + i * 44, len = Math.abs(v) * sc / 1.4, X = v < 0 ? x0 - len : x0;
+      s += `<text class="lbl" x="4" y="${y + 18}" ${i === rows.length - 1 ? 'style="font-weight:600"' : ''}>${n}</text><rect x="${X}" y="${y + 6}" width="${len}" height="18" rx="2" fill="${v < 0 ? '#2E6B3A' : '#B5432C'}"/>
+        <text x="${v < 0 ? X - 6 : X + len + 6}" y="${y + 20}" font-size="12" text-anchor="${v < 0 ? 'end' : 'start'}">${v > 0 ? '+' : ''}${v.toFixed(2)}%</text><text x="514" y="${y + 20}" font-size="11.5" text-anchor="end">${w}</text>`; });
+    $('#ressvg').innerHTML = s;
+  }});
+
+S.implications = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Implications</span></div>
+    <h1>What it means, and what it does not</h1>
+    <ul class="list"><li><em>✓</em><span><b>One consistent map from globe to city block.</b> Regional and local views never contradict, at no cost in accuracy.</span></li>
+      <li><em>✓</em><span><b>It knows which species have arrived,</b> from independent historical records.</span></li>
+      <li><em>✓</em><span><b>It is cautious and small.</b> It falls back to the random forest in unfamiliar places, and adds only ${D.params} numbers, so it is easy to audit.</span></li></ul>
+    <ul class="list bad" style="margin-top:6px"><li><em>!</em><span><b>The gain is modest:</b> ${D.gain117}% lower loss than the matched random forest.</span></li>
+      <li><em>!</em><span><b>It does not yet travel across continents:</b> with a whole continent hidden, its loss is 2.54% higher.</span></li>
+      <li><em>!</em><span><b>It ranks where reports would come from.</b> It is not mosquito abundance or disease risk.</span></li></ul>
+    <p style="margin-top:12px"><b>Next:</b> test it on a mosquito survey that no model has seen, locked before anyone looks at the results.</p>`,
+  right: `<div class="vis"><h3>The whole model on one card</h3><p class="sub">From a photo on a phone to a map cell.</p>
+    <div class="chain">
+      <div><b>Data</b><span>${D.reports.toLocaleString('en-US')} reports → share of 5 groups per cell; effort cancels</span></div>
+      <div><b>Inputs</b><span>105 numbers per cell: climate, landscape, human, AlphaEarth</span></div>
+      <div><b>Local term</b><code>B(x) = log P<sub>RF</sub>(k|x) − log P<sub>RF</sub>(other|x)</code></div>
+      <div><b>Regional term</b><code>A(P) = α + γM(P) + w·z(P)</code></div>
+      <div><b>Coherence</b><code>η(x) = A + τB(x) − log mean e<sup>τB</sup></code></div>
+      <div><b>Trust</b><code>A<sub>used</sub> = M + ρ(A − M)</code></div>
+      <div><b>Prediction</b><code>p<sub>k</sub>(x) = softmax(η<sub>1</sub>…η<sub>4</sub>, 0)<sub>k</sub></code></div>
+      <div><b>Published map</b><code>support(x) × p<sub>tiger</sub>(x)</code></div>
+      <div><b>Result</b><span>${D.gain117}% lower loss than a matched random forest, ${D.wins} of ${D.splits} tests won; worse on unseen continents</span></div>
+    </div></div>`});
+
+S.methods = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Fusion · what else we tried</span></div>
+    <h1>Fourteen ways to combine the data, one fair test</h1>
+    <p>Every method saw the same 105 numbers and was scored on the same <b>20 hidden tests</b> with loss (lower is better; the Results screen explains it).</p>
+    <p><b>Over all 20 tests, the plain random forest comes first.</b> Some fancier methods win on <b>nearby areas</b>, where hidden data resemble the training data, then lose far more on <b>whole continents</b>: weights learned on familiar places do not carry over to new ones.</p>
+    <div class="math">Δ = <span class="up">(Loss<sub>method</sub> − Loss<sub>forest</sub>) / Loss<sub>forest</sub></span></div>
+    <p class="words"><b>In words:</b> how much higher (+, worse) or lower (−, better) each method’s loss is than the random forest’s, in percent.</p>
+    <p><b>Why one random forest:</b> it is best overall, it has no extra weights per data type to learn, and it gives HiCo-Fuse 2 a clean base to build on. One exception: an invariance penalty (V-REx) does better on hidden continents, but worse in every other test type.</p>`,
+  right: `<div class="vis"><h3>Loss by method <span class="tag">real results</span></h3><p class="sub">Choose a test type: rows re-rank, and bars show the change in loss against the random forest. Best variant of each method; all use the 105 local numbers only.</p>
+    <div class="presets" id="mscope"></div>
+    <div class="mtab" id="mtab"></div><p class="cap" id="mcap"></p></div>`,
+  init: () => {
+    const rows = MT.map((r, i) => ({i, name: r[0], what: r[1], L: r.slice(2)}));
+    $('#mscope').innerHTML = MSCOPE.map(([n], j) => `<button type="button" data-j="${j}"${j ? '' : ' class="on"'}>${n}</button>`).join('');
+    $('#mtab').innerHTML = rows.map(r => `<div class="mrow${r.i ? '' : ' rf'}" id="mr${r.i}"><span class="rk"></span><span class="nm"><b>${r.name}</b><small>${r.what}</small></span><span class="lv"></span><span class="bar"><i></i><em></em></span></div>`).join('');
+    const draw = j => {
+      document.querySelectorAll('#mscope button').forEach(b => b.classList.toggle('on', +b.dataset.j === j));
+      const f = rows[0].L[j], ord = [...rows].sort((a, b) => a.L[j] - b.L[j]);
+      ord.forEach((r, k) => {
+        const el = $('#mr' + r.i), d = (r.L[j] - f) / f * 100, w = Math.min(Math.abs(d), 15) / 15 * 50;
+        el.style.top = k * 36 + 'px'; el.querySelector('.rk').textContent = k + 1; el.querySelector('.lv').textContent = r.L[j].toFixed(3);
+        const bar = el.querySelector('.bar i'); bar.style.width = (r.i ? w : 0) + '%'; bar.style.left = d < 0 ? (50 - w) + '%' : '50%'; bar.style.background = d < 0 ? 'var(--green)' : 'var(--terra)';
+        const em = el.querySelector('.bar em'); em.textContent = r.i ? (d > 0 ? '+' : '−') + Math.abs(d).toFixed(1) + '%' + (Math.abs(d) > 15 ? ' ›' : '') : 'reference';
+        em.style.left = d < 0 ? 'auto' : '52%'; em.style.right = d < 0 ? '52%' : 'auto'; if (!r.i) { em.style.left = '50%'; em.style.right = 'auto'; em.style.transform = 'translateX(-50%)'; }
+      });
+      const win = rows.filter(r => r.i && r.L[j] < f);
+      $('#mcap').textContent = win.length ? `${win.length} of 13 methods beat the random forest on ${MSCOPE[j][1]}: ${win.map(r => r.name.toLowerCase()).join(', ')}.` : `No method beats the random forest on ${MSCOPE[j][1]}.`;
+    };
+    document.querySelectorAll('#mscope button').forEach(b => b.onclick = () => draw(+b.dataset.j));
+    draw(0);
+  }});
+
+S.learning = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Model · how the regional term is learned</span></div>
+    <h1>Start from the forest, then let the data nudge sixty numbers</h1>
+    <p><b>1 · Honest forest opinions.</b> Each region’s forest opinion M comes from a forest trained <b>without that region’s 5° block</b> (out-of-fold). A forest that had already seen the region would look right there, leaving nothing to learn.</p>
+    <p><b>2 · Start at “do nothing”.</b> α = 0, γ = 1, τ = 1, w = 0: the model equals the forest exactly.</p>
+    <p><b>3 · Nudge to lower the loss, on a leash.</b> An optimiser moves the numbers step by step to fit the reports seen in each region, while a ridge penalty pulls them back towards “do nothing”.</p>
+    <div class="math">θ̂ = argmin<sub>θ</sub> −<span class="up">(1/N)</span> Σ<sub>i</sub> log p<sub>θ</sub>(y<sub>i</sub>) + <span class="d">λ</span>[α² + (γ−1)² + (τ−1)² + ‖w‖²]</div>
+    <p class="words"><b>In words:</b> choose the numbers θ that best explain the reports, but pay <span style="color:var(--terra)">λ</span> for every step away from the forest. Per mosquito group: α, γ, τ and 12 pool weights w; four groups (the fifth is the reference) make 60.</p>`,
+  right: `<div class="vis"><h3>Watch the fit <span class="tag">simulated regions</span></h3><p class="sub">Each dot is a region: the forest’s guess (across) against the tiger share actually reported (up). <b style="color:#012169">Navy</b>: the pool shows the species established. <b style="color:#B5432C">Red</b>: the pool rarely recorded it. Gold rings are the model’s current predictions.</p>
+    <div class="presets"><button type="button" id="lplay">▶ Play</button><button type="button" id="lstep">Step</button><button type="button" id="lreset">Reset</button></div>
+    <svg id="lsvg" viewBox="0 0 520 292" role="img" aria-label="Regions, observed shares and the model's predictions during fitting"></svg>
+    <div class="ctl"><label for="llam">Penalty λ (the leash)</label><input id="llam" type="range" min="0" max="7" step="1" value="3"><output id="llamv"></output></div>
+    <svg id="lcurve" viewBox="0 0 520 64" role="img" aria-label="Loss by fitting step"></svg>
+    <div class="readout r4"><div><b id="la"></b><span>offset α</span></div><div><b id="lg"></b><span>trust in forest γ</span></div><div><b id="lw"></b><span>pool weight w</span></div><div><b id="ll"></b><span id="lit"></span></div></div></div>`,
+  init: () => {
+    let seed = 11; const r = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const R = []; for (let i = 0; i < 34; i++) { const M = -2.2 + 4.4 * r(), arr = r() < .55, z = arr ? .4 + .8 * r() : -1.6 + .8 * r();
+      const n = 25 + Math.floor(70 * r()), k = Math.round(n * sig(-.3 + .8 * M + 1.1 * z + (r() - .5) * .5)); R.push({M, z, n, k, arr}); }
+    const N = R.reduce((s, q) => s + q.n, 0), LAMS = [0, .001, .003, .01, .03, .1, .3, 1], th0 = [0, 1, 0];
+    let th, hist, lam, it;
+    const pen = t => lam * ((t[0]) ** 2 + (t[1] - 1) ** 2 + t[2] ** 2);
+    const nll = t => -R.reduce((s, q) => { const p = sig(t[0] + t[1] * q.M + t[2] * q.z); return s + q.k * Math.log(p) + (q.n - q.k) * Math.log(1 - p); }, 0) / N;
+    const reset = () => { lam = LAMS[+$('#llam').value]; th = [...th0]; it = 0; hist = [nll(th) + pen(th)]; $('#llamv').textContent = lam; draw(); };
+    const step = () => {
+      const g = [0, 0, 0], H = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+      R.forEach(q => { const x = [1, q.M, q.z], p = sig(th[0] + th[1] * q.M + th[2] * q.z);
+        for (let a = 0; a < 3; a++) { g[a] += (q.n * p - q.k) * x[a] / N; for (let b = 0; b < 3; b++) H[a][b] += q.n * p * (1 - p) * x[a] * x[b] / N; } });
+      for (let a = 0; a < 3; a++) { g[a] += 2 * lam * (th[a] - th0[a]); H[a][a] += 2 * lam; }
+      const d = solve3(H, g); th = th.map((v, a) => v - .3 * d[a]); it++; hist.push(nll(th) + pen(th)); draw();
+      return Math.hypot(...d) > 2e-3 && it < 60;
+    };
+    const X = p => 46 + p * 460, Y = p => 262 - p * 244;
+    function draw() {
+      let s = `<line class="ax" x1="46" x2="506" y1="262" y2="262"/><line class="ax" x1="46" x2="46" y1="18" y2="262"/>`;
+      [0, .5, 1].forEach(v => { s += `<text x="${X(v)}" y="278" font-size="11" text-anchor="middle">${v * 100}%</text><text x="40" y="${Y(v) + 4}" font-size="11" text-anchor="end">${v * 100}%</text>`; });
+      s += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(1)}" y2="${Y(1)}" stroke="#7D828C" stroke-dasharray="5 4"/><text class="lbl" x="${X(.97)}" y="${Y(.97) + 16}" text-anchor="end" style="font-size:11px;fill:#7D828C">forest’s guess = what was reported</text>
+        <text class="lbl" x="276" y="291" text-anchor="middle" style="font-size:11.5px">Forest’s guess for the region (tiger share)</text><text class="lbl" x="12" y="140" transform="rotate(-90 12 140)" text-anchor="middle" style="font-size:11.5px">Tiger share actually reported</text>`;
+      R.forEach(q => { const x = X(sig(q.M)), yo = Y(q.k / q.n), yp = Y(sig(th[0] + th[1] * q.M + th[2] * q.z));
+        s += `<line x1="${x}" x2="${x}" y1="${yo}" y2="${yp}" stroke="#A87400" stroke-opacity=".35"/><circle cx="${x}" cy="${yo}" r="${(2 + Math.sqrt(q.n) / 2.6).toFixed(1)}" fill="${q.arr ? '#012169' : '#B5432C'}" fill-opacity=".8"/><circle cx="${x}" cy="${yp}" r="5" fill="none" stroke="#A87400" stroke-width="2"/>`; });
+      $('#lsvg').innerHTML = s;
+      const mx = Math.max(...hist), mn = Math.min(...hist, hist[0] - .01), cx = i => 46 + Math.min(i, 30) / 30 * 460, cy = v => 52 - (v - mn) / (mx - mn || 1) * 40;
+      $('#lcurve').innerHTML = `<line class="ax" x1="46" x2="506" y1="54" y2="54"/><text x="40" y="16" font-size="11" text-anchor="end">loss</text><text x="506" y="64" font-size="11" text-anchor="end">fitting step →</text>
+        <polyline fill="none" stroke="#012169" stroke-width="2" points="${hist.map((v, i) => cx(i).toFixed(1) + ',' + cy(v).toFixed(1)).join(' ')}"/><circle cx="${cx(hist.length - 1)}" cy="${cy(hist[hist.length - 1])}" r="4" fill="#F2A900" stroke="#1B1F27"/>`;
+      $('#la').textContent = fx(th[0]); $('#lg').textContent = fx(th[1]); $('#lw').textContent = fx(th[2]); $('#ll').textContent = fx(hist[hist.length - 1], 3);
+      $('#lit').textContent = `loss (with penalty) · step ${it}`;
+    }
+    const stop = () => { clearInterval(window.__t); window.__t = null; $('#lplay').textContent = '▶ Play'; };
+    const play = () => { if (window.__t) return stop(); $('#lplay').textContent = '❚❚ Pause'; window.__t = setInterval(() => { if (!step()) stop(); }, 170); };
+    $('#lplay').onclick = play; $('#lstep').onclick = () => { stop(); step(); }; $('#lreset').onclick = () => { stop(); reset(); };
+    $('#llam').oninput = () => { stop(); reset(); play(); };
+    reset();
+  }});
+
+S.maps = () => ({
+  left: `<div class="kicker"><span class="n"></span><span class="c">Results · what changes on the map</span></div>
+    <h1>Before and after: where the tiger mosquito map moved</h1>
+    <p><b>Before:</b> an earlier random forest from this project (Fusion 105, the same four kinds of input), trained to tell sightings from random background points. <b>After:</b> HiCo-Fuse 2’s published map (support × tiger share).</p>
+    <p>The two score different things on different scales, so both are shown as <b>rankings</b>: each cell’s percentile among the ${MS.cells.toLocaleString('en-US')} land cells both maps cover (0.2° cells, 85° N to 60° S).</p>
+    <div class="math">Δ(x) = rank<sub>HiCo-Fuse 2</sub>(x) − rank<sub>earlier forest</sub>(x)</div>
+    <p class="words"><b>In words:</b> positive where HiCo-Fuse 2 ranks a cell higher. The two rankings correlate at only ${MS.spearman.toFixed(2)}, and ${Math.round(MS.moved_20)}% of cells move by more than 20 percentile points.</p>
+    <p><b>Caution:</b> the models differ in training data and target as well as structure, so this is the overall change from the earlier map, not the regional term alone. The HiCo-Fuse 2 ranks are read back from its published colour preview, so small differences are noise.</p>`,
+  right: `<div class="vis"><h3>Earlier forest ⇄ HiCo-Fuse 2 <span class="tag">real maps</span></h3><p class="sub">Drag the divider or press play. Pick a region to zoom in and compare the numbers.</p>
+    <div class="presets" id="mview"><button type="button" data-v="swipe" class="on">Swipe</button><button type="button" data-v="diff">Difference</button><button type="button" id="mplay">▶ Play sweep</button></div>
+    <div class="mapcmp" id="mapcmp"><div class="lyr" id="lyr-rf"><div class="mz"><img src="assets/map_rf.webp" alt="Earlier random forest ranking of tiger mosquito suitability"></div></div>
+      <div class="lyr" id="lyr-hf"><div class="mz"><img src="assets/map_hf2.webp" alt="HiCo-Fuse 2 ranking of tiger mosquito suitability"></div></div>
+      <div class="lyr" id="lyr-df" hidden><div class="mz"><img src="assets/map_diff.webp" alt="Change in ranking from the earlier forest to HiCo-Fuse 2"></div></div>
+      <i class="divider" id="mdiv"></i><span class="chip l" id="chl">Earlier forest</span><span class="chip r" id="chr">HiCo-Fuse 2</span></div>
+    <div class="ctl" id="mctl"><label for="msw">Divider</label><input id="msw" type="range" min="0" max="100" value="50"><output id="mswv"></output></div>
+    <div class="legend" id="mleg"></div>
+    <div class="presets" id="mreg" style="margin-top:10px"></div>
+    <div class="readout"><div><b id="mr0"></b><span>average rank, earlier forest</span></div><div><b id="mr1"></b><span>average rank, HiCo-Fuse 2</span></div><div><b id="mr2"></b><span>cells in the top 20%, before → after</span></div></div></div>`,
+  init: () => {
+    const sw = v => { $('#lyr-hf').style.clipPath = `inset(0 0 0 ${v}%)`; $('#mdiv').style.left = v + '%'; $('#msw').value = v; $('#mswv').textContent = Math.round(v) + '%'; };
+    const legend = d => $('#mleg').innerHTML = d ? `<span style="flex:1;min-width:200px"><i style="width:100%;height:9px;background:linear-gradient(90deg,${MS.diverging.join(',')})"></i><br>HiCo-Fuse 2 ranks lower ← 0 → ranks higher (±50 points)</span>`
+      : `<span style="flex:1;min-width:200px"><i style="width:100%;height:9px;background:linear-gradient(90deg,${MS.ramp.join(',')})"></i><br>Lowest rank → highest rank (same scale on both maps)</span>`;
+    const view = v => { const d = v === 'diff'; document.querySelectorAll('#mview [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+      $('#lyr-df').hidden = !d; ['#lyr-hf', '#mdiv', '#chl', '#chr', '#mctl', '#mplay'].forEach(s => $(s).style.visibility = d ? 'hidden' : ''); legend(d); if (d) stop(); };
+    const stop = () => { clearInterval(window.__t); window.__t = null; $('#mplay').textContent = '▶ Play sweep'; };
+    $('#mplay').onclick = () => { if (window.__t) return stop(); $('#mplay').textContent = '❚❚ Pause'; let t = 0;
+      window.__t = setInterval(() => { t += 1; sw(50 + 50 * Math.cos(t / 38 * Math.PI)); if (t >= 76) stop(); }, 50); };
+    document.querySelectorAll('#mview [data-v]').forEach(b => b.onclick = () => view(b.dataset.v));
+    $('#msw').oninput = e => { stop(); sw(+e.target.value); };
+    const regs = [['world', 'World']].concat(Object.entries(MS.boxes).map(([k, b]) => [k, b.name]));
+    $('#mreg').innerHTML = regs.map(([k, n]) => `<button type="button" data-k="${k}"${k === 'world' ? ' class="on"' : ''}>${n}</button>`).join('');
+    const zoom = k => {
+      document.querySelectorAll('#mreg button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+      let tf = 'none';
+      if (k !== 'world') { const [w, e, s, n] = MS.boxes[k].bbox, x0 = (w + 180) / 360, x1 = (e + 180) / 360, y0 = (85 - n) / 145, y1 = (85 - s) / 145;
+        const sc = Math.min(6, .85 / Math.max(x1 - x0, y1 - y0)), tx = Math.min(0, Math.max(1 - sc, .5 - (x0 + x1) / 2 * sc)), ty = Math.min(0, Math.max(1 - sc, .5 - (y0 + y1) / 2 * sc));
+        tf = `translate(${tx * 100}%,${ty * 100}%) scale(${sc})`; }
+      document.querySelectorAll('#mapcmp .mz').forEach(m => m.style.transform = tf);
+      const b = k === 'world' ? null : MS.boxes[k];
+      $('#mr0').textContent = b ? Math.round(b.rf) : '50'; $('#mr1').textContent = b ? Math.round(b.hf2) : '50';
+      $('#mr2').textContent = b ? `${Math.round(b.top_rf)}% → ${Math.round(b.top_hf2)}%` : '20% → 20%';
+    };
+    document.querySelectorAll('#mreg button').forEach(b => b.onclick = () => zoom(b.dataset.k));
+    sw(50); view('swipe'); zoom('world');
+  }});
+
+const BAND = `<section class="band fade" aria-label="Research title and author">
+  <div class="lock"><img src="assets/emory-college-logo.svg" alt="Emory College of Arts and Sciences"><span>Department of Environmental Sciences</span></div>
+  <div class="tt"><b>HiCo-Fuse 2: Coherent Global-to-Local Habitat Mapping of the Asian Tiger Mosquito from Citizen Science</b>
+    <p><strong>Dr. Zihui Ma</strong> · Postdoctoral Researcher · Department of Environmental Sciences, Emory University <span class="nasa">NASA-funded research</span></p></div></section>`;
+
+/* ------------------------------------------------------------------ narration */
+const au = $('#voice'); let touring = false, captions = true;
+const SENT = Object.fromEntries(Object.entries(NARR.text).map(([k, t]) => [k, (t.match(/[^.!?]+[.!?]+(?:\s|$)/g) || [t]).map(p => ({text: p.trim()}))]));
+function caption(t) {   /* t: seconds into this screen's audio, or null when not playing */
+  const id = CH[cur].id, ss = SENT[id], cue = NARR.cues[VOICE][id];
+  if (!captions) { $('#say').innerHTML = ''; return; }
+  if (t == null) { $('#say').innerHTML = `<span>Press <b style="color:#F4F2EC">Play narrated tour</b> to hear this screen explained. ${ss.length} sentences, ${CH[cur].t} s.</span>`; return; }
+  let k = 0; while (k + 1 < cue.length && cue[k + 1] <= t + 0.08) k++;
+  $('#say').textContent = ss[k].text;
+}
+function load(play) {
+  au.src = `audio/${VOICE}/${CH[cur].id}.mp4`;
+  if (play) au.play().catch(() => setTouring(false));
+}
+function setTouring(on) {
+  touring = on;
+  $('#play').classList.toggle('on', on);
+  $('#playtxt').textContent = on ? 'Pause' : (au.currentTime > 0 && !au.ended ? 'Resume' : 'Play narrated tour');
+  $('#play').setAttribute('aria-label', on ? 'Pause the narration' : 'Play the narrated tour');
+}
+$('#play').onclick = () => {
+  if (touring) { au.pause(); setTouring(false); return; }
+  if (!au.src || au.ended) load(false);
+  au.play().then(() => setTouring(true)).catch(() => { $('#say').textContent = 'Audio could not start in this browser. The captions still follow each screen.'; });
+};
+$('#voicesel').innerHTML = NARR.voices.map(v => `<option value="${v.id}"${v.id === VOICE ? ' selected' : ''}>${v.label}</option>`).join('');
+$('#voicesel').onchange = e => {
+  VOICE = e.target.value; try { localStorage.setItem('demo-voice', VOICE); } catch (err) {}
+  const was = touring, t = au.duration ? au.currentTime / au.duration : 0;
+  retime(); render(); load(false);
+  au.onloadedmetadata = () => { au.onloadedmetadata = null; au.currentTime = t * au.duration; if (was) au.play().catch(() => setTouring(false)); };
+  caption(was ? 0 : null);
+};
+$('#replay').onclick =() => { load(false); au.currentTime = 0; au.play().then(() => setTouring(true)).catch(() => {}); };
+$('#cc').onclick = () => { captions = !captions; $('#cc').textContent = captions ? 'Hide captions' : 'Show captions'; caption(au.duration && au.currentTime > 0 ? au.currentTime : null); };
+au.ontimeupdate = () => {
+  if (!au.duration) return;
+  const f = au.currentTime / au.duration, bar = $(`#chapters button[data-i="${cur}"] i b`);
+  if (bar) bar.style.width = (f * 100).toFixed(1) + '%';
+  caption(au.currentTime);
+  $('#clock').innerHTML = `Screen ${cur + 1} of ${CH.length} · <b>${mmss(start(cur) + au.currentTime)}</b> of ${mmss(TOTAL)}`;
+};
+au.onended = () => { if (touring && cur < CH.length - 1) { go(cur + 1); } else { setTouring(false); $('#playtxt').textContent = 'Play again'; } };
+
+/* ------------------------------------------------------------------ navigation */
+let cur = 0;
+function render() {
+  clearInterval(window.__t); window.__t = null;
+  const c = CH[cur], sc = S[c.id]();
+  $('#stage').innerHTML = (cur === 0 || cur === CH.length - 1 ? BAND : '') + `<section class="panel fade">${sc.left}</section><section class="panel fade">${sc.right}</section>`;
+  document.querySelectorAll('.kicker .n').forEach(n => { n.textContent = `${cur + 1} / ${CH.length}`; });
+  sc.init && sc.init();
+  $('#chapters').innerHTML = CH.map((x, i) => `<button type="button" data-i="${i}" class="${i === cur ? 'on' : i < cur ? 'done' : ''}" aria-current="${i === cur ? 'step' : 'false'}"><i><b></b></i><span>${x.name}</span><small>${mmss(start(i))}</small></button>`).join('');
+  $('#chapters').querySelectorAll('button').forEach(b => b.onclick = () => go(+b.dataset.i));
+  $('#clock').innerHTML = `Screen ${cur + 1} of ${CH.length} · <b>${mmss(start(cur))}</b> of ${mmss(TOTAL)}`;
+  $('#prev').disabled = cur === 0;
+  $('#next').textContent = cur === CH.length - 1 ? 'Start again ↺' : 'Next →';
+  if (location.hash.slice(1) !== c.id) history.replaceState(null, '', '#' + c.id);
+}
+function go(i) { cur = (i + CH.length) % CH.length; render(); scrollTo({top: 0}); load(touring); caption(touring ? 0 : null); }
+$('#prev').onclick = () => go(cur - 1);
+$('#next').onclick = () => go(cur + 1);
+addEventListener('keydown', e => { if (e.target.closest('input,button')) return; if (e.key === 'ArrowRight') go(cur + 1); if (e.key === 'ArrowLeft' && cur > 0) go(cur - 1);
+  if (e.key === ' ') { e.preventDefault(); $('#play').click(); } });
+addEventListener('hashchange', () => { const i = CH.findIndex(c => c.id === location.hash.slice(1)); if (i >= 0 && i !== cur) { cur = i; render(); } });
+cur = Math.max(0, CH.findIndex(c => c.id === location.hash.slice(1)));
+render(); load(false); caption(null);
+</script>
+
+</body>
+</html>

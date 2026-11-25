@@ -1,0 +1,123 @@
+{
+ "cells": 373912,
+ "deg": 0.2,
+ "north": 85,
+ "south": -60,
+ "ramp": [
+  "#0f2238",
+  "#15568c",
+  "#2b95c8",
+  "#86d3dc",
+  "#fff4c2"
+ ],
+ "diverging": [
+  "#B5432C",
+  "#E3A48F",
+  "#F4F1EA",
+  "#8FB4CF",
+  "#012169"
+ ],
+ "spearman": 0.431,
+ "moved_20": 50.1,
+ "colour_residual_p95": 22.2,
+ "boxes": {
+  "sahara": {
+   "name": "Sahara and Arabia",
+   "bbox": [
+    -15,
+    55,
+    15,
+    32
+   ],
+   "cells": 27605,
+   "rf": 85.2,
+   "hf2": 25.9,
+   "top_rf": 82.2,
+   "top_hf2": 0.7
+  },
+  "interior_asia": {
+   "name": "Interior Asia",
+   "bbox": [
+    60,
+    105,
+    35,
+    50
+   ],
+   "cells": 16866,
+   "rf": 51.9,
+   "hf2": 24.1,
+   "top_rf": 0.1,
+   "top_hf2": 0.9
+  },
+  "europe": {
+   "name": "Europe",
+   "bbox": [
+    -10,
+    30,
+    36,
+    56
+   ],
+   "cells": 13437,
+   "rf": 67.8,
+   "hf2": 87.2,
+   "top_rf": 44.1,
+   "top_hf2": 73.9
+  },
+  "e_us": {
+   "name": "Eastern United States",
+   "bbox": [
+    -95,
+    -70,
+    25,
+    42
+   ],
+   "cells": 5844,
+   "rf": 69.5,
+   "hf2": 97.6,
+   "top_rf": 23.8,
+   "top_hf2": 99.3
+  },
+  "se_asia": {
+   "name": "South and Southeast Asia",
+   "bbox": [
+    70,
+    125,
+    0,
+    30
+   ],
+   "cells": 19404,
+   "rf": 90.1,
+   "hf2": 81.0,
+   "top_rf": 82.1,
+   "top_hf2": 69.6
+  },
+  "n_australia": {
+   "name": "Northern Australia",
+   "bbox": [
+    120,
+    150,
+    -25,
+    -10
+   ],
+   "cells": 7344,
+   "rf": 42.7,
+   "hf2": 60.5,
+   "top_rf": 0.6,
+   "top_hf2": 2.9
+  },
+  "amazon": {
+   "name": "Amazon basin",
+   "bbox": [
+    -75,
+    -45,
+    -15,
+    5
+   ],
+   "cells": 14226,
+   "rf": 58.0,
+   "hf2": 73.1,
+   "top_rf": 0.6,
+   "top_hf2": 16.7
+  }
+ }
+}
